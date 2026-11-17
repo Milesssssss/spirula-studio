@@ -1,0 +1,12 @@
+[package]
+name = "spirula-backend"
+description = "CPU reference and Vulkan compute backends for the Rust port of Spirula Studio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+spirula-core = { path = "../spirula-core" }
+ash = { version = "0.38", default-features = false, features = ["loaded"] }

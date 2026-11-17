@@ -51,6 +51,19 @@ jobs:
           python3 tools/check_comment_length.py
           python3 tools/check_ui_text.py
 
+  rust:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Test
+        run: cargo test --workspace
+
+      - name: Build
+        run: cargo build --workspace --release
+
   linux:
     runs-on: ubuntu-24.04
     steps:

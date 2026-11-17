@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/spirula-core",
+    "crates/spirula-data",
+    "crates/spirula-backend",
+    "crates/spirula-engine",
+    "crates/spirula",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+authors = ["Spirula Studio contributors"]
+rust-version = "1.85"

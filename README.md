@@ -162,6 +162,16 @@ If it builds successfully, you get `build_cuda/spirula` binary.
 
 </details>
 
+## Rust workspace
+
+A Rust port lives in `crates/` next to the C++ trainer. It is not a replacement: `cargo build --release` produces a `spirula` that can read a COLMAP or Nerfstudio dataset and run a pinhole training step, and the C++ binary remains the full application. Build, tests and the list of what is ported are in [docs/rust.md](docs/rust.md).
+
+```bash
+cargo test --workspace
+cargo build --release
+./target/release/spirula train --synthetic
+```
+
 ## Gallery
 
 You can find some professional-quality splats trained by Spirula Studio from [Megascapes Library](https://library.getmegascapes.com/) and their [SuperSplat page](https://superspl.at/user/megascapes).
