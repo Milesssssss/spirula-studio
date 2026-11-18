@@ -49,7 +49,13 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
 - Nerfstudio `transforms.json` in that same exact-tier subset. Poses stay in
   the file frame. `applied_transform` is reported and not inverted.
 - 3DGS PLY read and write, including `f_rest` and `sb_params`, plus an xyz/rgb
-  point cloud.
+  point cloud. A file whose header says
+  `comment spirula_coordinate_system supersplat_y_up` is SuperSplat's Y-up
+  turn of geometry, SH and spherical-beta lobe axes; reading it, including
+  as `init_ply`, restores native coordinates. An unmarked PLY is unchanged.
+  A run folder resolves in the C++ order: a root `state.tar` and its paired
+  PLY, otherwise the `.tar` whose `state.json` step is greatest, otherwise
+  `<run>.ply`, `splat.ply`, or a `step-*.ckpt` model.
 - Pinhole 3DGS projection (means, quaternion, log-scale, logit opacity) on
   the CPU and, when a device exists, as a Vulkan compute dispatch. The two
   are tested against each other. The dispatch is a GLSL compute shader of
@@ -62,6 +68,9 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
   (`image_color_is_linear` false). The run writes `config.json` with
   `splat_color_is_linear` set the same way, which is what the viewer reads.
   SH above DC and spherical-beta lobes are evaluated and not updated.
+  The run writes one PLY in the output folder, named `<run>.ply`, or
+  `<run>_step-NNNNNNNNN.ply` when `save_only_latest_checkpoint` is false.
+  `export_y_up` rotates that same file. It does not write `<run>.tar`.
   `spirula train --synthetic` is a closed scene whose loss falls.
 - l1, PSNR and an 11x11 SSIM metric (the no-mask path of `src/app/EvalMetrics.cpp`).
   SSIM is not in the gradient.
@@ -83,10 +92,11 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
   in `rust-port.json` and ignored. Defaults for the known flags match
   `src/config/TrainConfig.h`.
 - Bilateral grid, PPISP, mask, depth, normal and pose-normalization flags are
-  not applied, and neither is a non-color background or checkpoint resume.
-  If they are on, the log says so. `--require-ported` refuses to start when
-  one of those result-changing settings is enabled, or when the config has
-  an unknown key.
+  not applied, and neither is a non-color background, FLIP, or checkpoint
+  resume. If they are on, the log says so. `--require-ported` refuses to
+  start when one of those result-changing settings is enabled, or when the
+  config has an unknown key. `save_only_latest_checkpoint` false still writes
+  only the final PLY, not a pair at every `steps_per_save`.
 - The Vulkan backend projects. Compositing and the optimizer stay on the CPU.
 - `--viewer` binds a status URL that returns JSON. It is not `viewer.html`.
 - Images are resized to the tighter positive cap of `--max-edge` (default
@@ -96,10 +106,13 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
 
 ## Still C++
 
-SfM, masking, meshing, geometry models, partitioning, the GUI, i18n, the
-fused training kernels, MCMC densification, checkpoints (`state.tar`), and
-the CUDA backend. `spirula sfm`, `sam`, `mesh`, `geometry` and `partition`
-exit 2 and point here.
+SfM, masking and the mask editor, meshing, geometry models, partitioning,
+the GUI, i18n, the fused training kernels, FLIP, MCMC densification,
+checkpoint archives, and the CUDA backend. C++ now stores Vulkan FLIP mask
+coverage as float32 and writes `<run>.tar` beside the PLY (legacy `state.tar`
+and `step-*.ckpt` still load there). This port does not compute FLIP, edit
+masks, or resume from an archive. `spirula sfm`, `sam`, `mesh`, `geometry`
+and `partition` exit 2 and point here.
 
 Metashape projects, and COLMAP models that the C++ reader fits (FOV, division,
 EUCM, a rational `FULL_OPENCV`), are errors rather than a silent pinhole.
@@ -110,5 +123,5 @@ EUCM, a rational `FULL_OPENCV`), are errors rather than a silent pinhole.
    kernels under `src/backend/vulkan/shaders/` instead of new WGSL.
 2. Covariance backward, then SH bands and spherical-beta lobes.
 3. The densification strategy the C++ trainer actually runs.
-4. `state.tar` resume and the rest of `TrainConfig`.
+4. `<run>.tar` resume, including legacy `state.tar`, and the rest of `TrainConfig`.
 5. Bilateral grid and PPISP, after the raster matches on a pinhole scene.

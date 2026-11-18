@@ -124,10 +124,10 @@ pub fn port_gaps(cfg: &TrainConfig) -> Vec<Gap> {
             true,
         ));
     }
-    if cfg.steps_per_save != TrainConfig::default().steps_per_save {
+    if cfg.steps_per_save != TrainConfig::default().steps_per_save || !cfg.save_only_latest_checkpoint {
         gaps.push(gap(
-            "steps_per_save",
-            "intermediate checkpoints are not written",
+            "checkpoints",
+            "only the final PLY is written; earlier step pairs and the TAR archive are not",
             false,
         ));
     }
