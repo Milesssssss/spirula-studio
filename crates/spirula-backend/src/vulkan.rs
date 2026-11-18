@@ -3,7 +3,7 @@
 
 use crate::{Backend, Error, ProjectedSplat, ProjectionBatch, Result};
 use ash::{vk, Device, Entry, Instance};
-use std::ffi::{CStr, CString};
+use std::ffi::{c_char, CStr, CString};
 
 pub struct VulkanDevice {
     pub name: String,
@@ -40,7 +40,7 @@ impl VulkanBackend {
             .engine_name(engine.as_c_str())
             .api_version(vk::API_VERSION_1_1);
         let (flags, ext_names) = portability_instance(&entry)?;
-        let ext_ptrs: Vec<*const i8> = ext_names.iter().map(|n| n.as_ptr()).collect();
+        let ext_ptrs: Vec<*const c_char> = ext_names.iter().map(|n| n.as_ptr()).collect();
         let create = vk::InstanceCreateInfo::default()
             .application_info(&app_info)
             .flags(flags)
@@ -69,7 +69,7 @@ pub fn list_devices() -> Result<Vec<VulkanDevice>> {
         .application_name(app.as_c_str())
         .api_version(vk::API_VERSION_1_1);
     let (flags, ext_names) = portability_instance(&entry)?;
-    let ext_ptrs: Vec<*const i8> = ext_names.iter().map(|n| n.as_ptr()).collect();
+    let ext_ptrs: Vec<*const c_char> = ext_names.iter().map(|n| n.as_ptr()).collect();
     let create = vk::InstanceCreateInfo::default()
         .application_info(&app_info)
         .flags(flags)
@@ -137,7 +137,7 @@ fn build(entry: &Entry, instance: Instance, phys: vk::PhysicalDevice) -> Result<
         .queue_family_index(queue_family)
         .queue_priorities(&priorities);
     let dev_exts = portability_device(&instance, phys)?;
-    let dev_ptrs: Vec<*const i8> = dev_exts.iter().map(|n| n.as_ptr()).collect();
+    let dev_ptrs: Vec<*const c_char> = dev_exts.iter().map(|n| n.as_ptr()).collect();
     let device_info = vk::DeviceCreateInfo::default()
         .queue_create_infos(std::slice::from_ref(&queue_info))
         .enabled_extension_names(&dev_ptrs);

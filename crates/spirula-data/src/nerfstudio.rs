@@ -31,7 +31,7 @@ pub struct NsDataset {
     pub notes: Vec<String>,
 }
 
-pub fn read_transforms(dataset_dir: &Path) -> Result<NsDataset> {
+pub fn read_transforms(dataset_dir: &Path, skip_point_cloud: bool) -> Result<NsDataset> {
     let path = dataset_dir.join("transforms.json");
     let text = std::fs::read_to_string(&path)
         .map_err(|e| Error::new(format!("cannot read {}: {e}", path.display())))?;
@@ -56,7 +56,9 @@ pub fn read_transforms(dataset_dir: &Path) -> Result<NsDataset> {
         frames.push(read_frame(dataset_dir, &meta, fr, i)?);
     }
     let mut points = PointCloud::default();
-    if let Some(ply_name) = meta.get("ply_file_path").and_then(|v| v.as_str()) {
+    if skip_point_cloud {
+        notes.push("ply_file_path skipped because seed_pointcloud is set".into());
+    } else if let Some(ply_name) = meta.get("ply_file_path").and_then(|v| v.as_str()) {
         let ply_path = dataset_dir.join(ply_name);
         if ply_path.is_file() {
             points = ply::read_point_ply(&ply_path).or_else(|_| {

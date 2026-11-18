@@ -96,7 +96,7 @@ fn has_metashape(root: &Path) -> bool {
 }
 
 fn load_nerfstudio(root: &Path, cfg: &TrainConfig) -> Result<Dataset> {
-    let ns = nerfstudio::read_transforms(root)?;
+    let ns = nerfstudio::read_transforms(root, !cfg.seed_pointcloud.is_empty())?;
     let frames = ns
         .frames
         .into_iter()
@@ -352,6 +352,42 @@ mod tests {
         let ds = load_dataset(&dir, &cfg).unwrap();
         assert_eq!(ds.points.xyz, vec![[4.0, 5.0, 6.0]]);
         assert!(ds.notes.iter().any(|n| n.contains("seed points")));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn seed_pointcloud_skips_an_unreadable_source_cloud() {
+        let dir = std::env::temp_dir().join(format!("spirula-badply-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(
+            dir.join("bad.ply"),
+            b"ply\nformat binary_big_endian 1.0\nelement vertex 1\nproperty float x\nproperty float y\nproperty float z\nend_header\n",
+        )
+        .unwrap();
+        std::fs::write(
+            dir.join("seed.ply"),
+            b"ply\nformat ascii 1.0\nelement vertex 1\nproperty float x\nproperty float y\nproperty float z\nproperty uchar red\nproperty uchar green\nproperty uchar blue\nend_header\n9 8 7 1 2 3\n",
+        )
+        .unwrap();
+        std::fs::write(
+            dir.join("transforms.json"),
+            r#"{
+                "camera_model": "PINHOLE",
+                "fl_x": 10, "fl_y": 10, "cx": 4, "cy": 3, "w": 8, "h": 6,
+                "ply_file_path": "bad.ply",
+                "frames": [{"file_path": "a.png", "transform_matrix": [
+                    [1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}]
+            }"#,
+        )
+        .unwrap();
+        let mut cfg = TrainConfig::default();
+        cfg.seed_pointcloud = "seed.ply".into();
+        let ds = load_dataset(&dir, &cfg).unwrap();
+        assert_eq!(ds.points.xyz, vec![[9.0, 8.0, 7.0]]);
+        let bare = TrainConfig::default();
+        let err = load_dataset(&dir, &bare).unwrap_err();
+        assert!(err.message.contains("binary_big_endian"), "{}", err.message);
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

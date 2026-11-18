@@ -40,6 +40,37 @@ impl GaussianModel {
         self.basis().sh_coeffs() as usize * 3 + self.sb_lobes as usize * 6
     }
 
+    /// Keep the `cap` most opaque splats. Returns how many were removed.
+    pub fn cap_to(&mut self, cap: usize) -> usize {
+        if self.len() <= cap {
+            return 0;
+        }
+        let mut keep: Vec<usize> = (0..self.len()).collect();
+        keep.sort_by(|&a, &b| {
+            self.opacity_logit[b]
+                .partial_cmp(&self.opacity_logit[a])
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        keep.truncate(cap);
+        keep.sort_unstable();
+        let dropped = self.len() - keep.len();
+        let stride = self.row_stride();
+        self.means = keep.iter().map(|&i| self.means[i]).collect();
+        self.quats = keep.iter().map(|&i| self.quats[i]).collect();
+        self.log_scales = keep.iter().map(|&i| self.log_scales[i]).collect();
+        self.opacity_logit = keep.iter().map(|&i| self.opacity_logit[i]).collect();
+        self.dc = keep.iter().map(|&i| self.dc[i]).collect();
+        if stride > 0 && !self.features_sh.is_empty() {
+            let mut next = Vec::with_capacity(keep.len() * stride);
+            for i in keep {
+                let start = i * stride;
+                next.extend_from_slice(&self.features_sh[start..start + stride]);
+            }
+            self.features_sh = next;
+        }
+        dropped
+    }
+
     pub fn to_cloud(&self) -> spirula_data::SplatCloud {
         spirula_data::SplatCloud {
             sh_degree: self.sh_degree,

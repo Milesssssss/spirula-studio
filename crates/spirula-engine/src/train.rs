@@ -102,6 +102,16 @@ pub fn train(
     if model.len() == 0 {
         return Err(Error::new("no splats to train"));
     }
+    let dropped = model.cap_to(opts.cap_max);
+    if dropped > 0 {
+        notes.push(format!(
+            "initial model capped by {dropped} splats to {}",
+            opts.cap_max
+        ));
+    }
+    if model.len() == 0 {
+        return Err(Error::new("cap_max left no splats"));
+    }
     let mut adam_m = Adam::new(model.len() * 3);
     let mut adam_o = Adam::new(model.len());
     let mut adam_c = Adam::new(model.len() * 3);
@@ -429,5 +439,22 @@ mod tests {
         let snapshot = model.opacity_logit.clone();
         adam.step(&mut model.opacity_logit, &[0.0, 0.0], 0.1);
         assert_eq!(model.opacity_logit, snapshot);
+    }
+
+    #[test]
+    fn cap_applies_before_the_first_step() {
+        let (mut model, views, mut opts) = synthetic_scene();
+        model.means = vec![[0.0, 0.0, 2.0]; 4];
+        model.quats = vec![[1.0, 0.0, 0.0, 0.0]; 4];
+        model.log_scales = vec![[0.1_f32.ln(); 3]; 4];
+        model.opacity_logit = vec![0.0, 1.0, 2.0, 3.0];
+        model.dc = vec![[0.0; 3]; 4];
+        opts.iterations = 3;
+        opts.cap_max = 2;
+        opts.densify = DensifyMode::Off;
+        opts.refine_start = 500;
+        let out = train(model, &views, &opts, &mut CpuBackend, Vec::new(), Vec::new()).unwrap();
+        assert!(out.steps.iter().all(|s| s.splats == 2));
+        assert!(out.notes.iter().any(|n| n.contains("capped")));
     }
 }

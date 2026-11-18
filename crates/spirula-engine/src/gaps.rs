@@ -72,6 +72,23 @@ pub fn port_gaps(cfg: &TrainConfig) -> Vec<Gap> {
             true,
         ));
     }
+    if cfg.background_mode != "color" {
+        gaps.push(gap(
+            "background_mode",
+            &format!(
+                "background_mode is '{}'; only color is applied",
+                cfg.background_mode
+            ),
+            true,
+        ));
+    }
+    if !cfg.resume.is_empty() {
+        gaps.push(gap(
+            "resume",
+            "resume is set; checkpoint resume is not implemented",
+            true,
+        ));
+    }
     if cfg.orientation_method != "none" {
         gaps.push(gap(
             "pose_normalization",
@@ -121,5 +138,26 @@ mod tests {
         assert!(names.contains(&"mask_loss"));
         assert!(names.contains(&"depth_supervision"));
         assert!(names.contains(&"pose_normalization"));
+    }
+
+    #[test]
+    fn random_background_and_resume_block_a_strict_run() {
+        let mut cfg = TrainConfig::default();
+        cfg.use_bilateral_grid = false;
+        cfg.use_ppisp = false;
+        cfg.ssim_lambda = 0.0;
+        cfg.sh_degree = 0;
+        cfg.normal_supervision_weight = 0.0;
+        cfg.load_masks = false;
+        cfg.orientation_method = "none".into();
+        cfg.background_mode = "random".into();
+        cfg.resume = "missing".into();
+        let names: Vec<_> = port_gaps(&cfg)
+            .into_iter()
+            .filter(|g| g.affects_result)
+            .map(|g| g.name)
+            .collect();
+        assert!(names.contains(&"background_mode"));
+        assert!(names.contains(&"resume"));
     }
 }

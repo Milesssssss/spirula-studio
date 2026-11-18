@@ -66,7 +66,8 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
 - l1, PSNR and an 11x11 SSIM metric (the no-mask path of `src/app/EvalMetrics.cpp`).
   SSIM is not in the gradient.
 - `--densify split-prune` prunes faint splats and splits large ones, and it
-  stops at `cap_max`. `--densify mcmc` exits before any step is run.
+  stops at `cap_max`. The same cap is applied to the initial model before
+  the first step. `--densify mcmc` exits before any step is run.
 
 ## What is partial
 
@@ -79,8 +80,10 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
   in `rust-port.json` and ignored. Defaults for the known flags match
   `src/config/TrainConfig.h`.
 - Bilateral grid, PPISP, mask, depth, normal and pose-normalization flags are
-  not applied. If they are on, the log says so. `--require-ported` refuses
-  to start when one of those result-changing flags is enabled.
+  not applied, and neither is a non-color background or checkpoint resume.
+  If they are on, the log says so. `--require-ported` refuses to start when
+  one of those result-changing settings is enabled, or when the config has
+  an unknown key.
 - The Vulkan backend projects. Compositing and the optimizer stay on the CPU.
 - `--viewer` binds a status URL that returns JSON. It is not `viewer.html`.
 - Images are resized so the long edge is `--max-edge` (default 64). The seed
