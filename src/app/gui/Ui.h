@@ -344,14 +344,26 @@ inline void corner_key(const char* key) {
 }
 // A button with its key in the corner, drawn pressed while `on`.
 inline bool KeyButton(const Msg& m, float w, const char* key, bool on = false) {
+    const ImGuiStyle& style = ImGui::GetStyle();
+    const float label_width = ImGui::CalcTextSize(m.get()).x;
+    const float key_width = key && *key ? ImGui::CalcTextSize(key).x : 0.0f;
+    const float width = w > 0.0f ? w : w < 0.0f
+        ? std::max(4.0f, ImGui::GetContentRegionAvail().x + w)
+        : label_width + 2.0f * style.FramePadding.x;
+    const bool inline_key = key_width > 0.0f &&
+        label_width + key_width + style.ItemInnerSpacing.x + 2.0f * style.FramePadding.x <= width;
     if (on) {
         const ImVec4 c = ImGui::GetStyle().Colors[ImGuiCol_ButtonActive];
         ImGui::PushStyleColor(ImGuiCol_Button, c);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, c);
     }
+    if (inline_key) ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0, 0.5f));
     const bool hit = ImGui::Button(detail::label(m), ImVec2(w, 0));
+    if (inline_key) ImGui::PopStyleVar();
     if (on) ImGui::PopStyleColor(2);
-    corner_key(key);
+    if (inline_key) corner_key(key);
+    else if (key_width > 0.0f && ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+        SetTooltipRaw(std::string(m.get()) + " (" + key + ")");
     return hit;
 }
 namespace detail {

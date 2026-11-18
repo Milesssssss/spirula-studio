@@ -103,14 +103,14 @@ public:
     void draw_panel();
     // The strip under the panes: transport, ruler, keys, shots.
     void draw_timeline();
-    float timeline_height() const;
+    float timeline_height(float available_width = 0.0f) const;
     // The camera's own view, in the pane's space or on its own.
     enum class PreviewMode { Corner = 0, Beside, Through };
     PreviewMode preview_mode() const { return _preview_mode; }
     // Side by side: the camera's share of the width, which a splitter drags.
     float& beside_share() { return _beside_share; }
     void draw_preview_pane();
-    void draw_status();
+    void draw_status(bool compact = false);
 
     // The project on disk has changes it does not.
     bool dirty() const;

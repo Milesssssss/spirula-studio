@@ -9,6 +9,7 @@
 #include "imgui.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdio>
 
@@ -23,6 +24,52 @@ namespace {
 constexpr double kPi = 3.14159265358979323846;
 constexpr ImU32 kShotCols[4] = {IM_COL32(70, 110, 160, 255), IM_COL32(120, 90, 160, 255),
                                 IM_COL32(80, 140, 100, 255), IM_COL32(160, 110, 70, 255)};
+
+void time_label(const RenderProject& project, double time, char (&label)[64]) {
+    const double first = project.keys.empty() ? 0.0 : project.keys.front().time;
+    const double fps = std::max(project.output.fps, 1.0);
+    std::snprintf(label, sizeof label, "%6.2f / %.2f s   #%d", time, project.duration(),
+                  std::max(1, (int)std::lround((time - first) * fps) + 1));
+}
+
+std::array<float, 11> transport_widths(const RenderProject& project, double time) {
+    const ImGuiStyle& st = ImGui::GetStyle();
+    const auto button = [&](const char* label) {
+        return ImGui::CalcTextSize(label).x + 2.0f * st.FramePadding.x;
+    };
+    char now[64], last[64];
+    time_label(project, time, now);
+    time_label(project, project.duration(), last);
+    char widest = '0';
+    float digit_w = 0.0f;
+    for (char d = '0'; d <= '9'; d++) {
+        const char text[] = {d, 0};
+        const float w = ImGui::CalcTextSize(text).x;
+        if (w > digit_w) { digit_w = w; widest = d; }
+    }
+    // Playback must not change the number of transport rows as the digits grow.
+    for (char* c = last; *c; c++)
+        if (*c >= '0' && *c <= '9') *c = widest;
+    return {button("|<"), button("<"),
+            std::max({px(80.0f), button(msg::tl_play.get()), button(msg::tl_pause.get())}),
+            button(">"), button(">|"),
+            std::max(ImGui::CalcTextSize(now).x, ImGui::CalcTextSize(last).x),
+            ImGui::GetFrameHeight() + st.ItemInnerSpacing.x + ImGui::CalcTextSize(msg::tl_loop.get()).x,
+            button(msg::pv_corner.get()), button(msg::pv_beside.get()),
+            button(msg::pv_through.get()), px(90.0f)};
+}
+
+// Keep the packing rule aligned with FlowRow::place.
+int transport_rows(const std::array<float, 11>& widths, float available) {
+    int rows = 0;
+    float used = 0.0f;
+    const float gap = ImGui::GetStyle().ItemSpacing.x;
+    for (float width : widths) {
+        if (used > 0.0f && used + gap + width <= available) used += gap + width;
+        else { used = width; rows++; }
+    }
+    return rows;
+}
 
 // A step on the ruler that leaves about `px_per` pixels between labels.
 double nice_step(double seconds_per_px, double px_per) {
@@ -40,21 +87,33 @@ void axis_rotate(const double axis[3], double angle, const double v[3], double o
 
 }  // namespace
 
-float RenderSession::timeline_height() const {
-    return ImGui::GetFrameHeightWithSpacing() + px(66.0f) + ImGui::GetStyle().ItemSpacing.y;
+float RenderSession::timeline_height(float available_width) const {
+    const auto widths = transport_widths(_project, _time);
+    const float width = available_width > 0.0f ? available_width : ImGui::GetContentRegionAvail().x;
+    const int rows = transport_rows(widths, width);
+    return rows * ImGui::GetFrameHeightWithSpacing() + px(66.0f) + ImGui::GetStyle().ItemSpacing.y;
 }
 
 void RenderSession::draw_timeline() {
     if (!_panel || !_have_project) return;
-    const ImGuiStyle& st = ImGui::GetStyle();
     const double T = std::max(_project.duration(), 1e-3);
     const double first = _project.keys.empty() ? 0.0 : _project.keys.front().time;
+    const double fps = std::max(_project.output.fps, 1.0);
 
     // ---- transport ----
+    const auto widths = transport_widths(_project, _time);
+    FlowRow transport;
+    size_t next_control = 0;
+    auto place = [&] {
+        const float width = widths[next_control++];
+        transport.place(width);
+        return width;
+    };
     auto jump = [&](double t) { _time = std::clamp(t, 0.0, T); _playing = false; };
+    place();
     if (ui::ButtonRaw("|<##start")) jump(first);
     ui::help_on_hover(msg::tl_start);
-    ImGui::SameLine();
+    place();
     const std::vector<double> visits = trajectory().key_times();
     if (ui::ButtonRaw("<##prevkey")) {
         double best = first;
@@ -62,11 +121,11 @@ void RenderSession::draw_timeline() {
         jump(best);
     }
     ui::help_on_hover(msg::tl_prev_key);
-    ImGui::SameLine();
-    if (ui::KeyButton(_playing ? msg::tl_pause : msg::tl_play, px(80.0f), nullptr, _playing))
+    const float play_w = place();
+    if (ui::KeyButton(_playing ? msg::tl_pause : msg::tl_play, play_w, nullptr, _playing))
         set_playing(!_playing);
     ui::help_on_hover(msg::tl_play_help);
-    ImGui::SameLine();
+    place();
     if (ui::ButtonRaw(">##nextkey")) {
         double best = T;
         for (double t : visits)
@@ -74,36 +133,29 @@ void RenderSession::draw_timeline() {
         jump(best);
     }
     ui::help_on_hover(msg::tl_next_key);
-    ImGui::SameLine();
+    place();
     if (ui::ButtonRaw(">|##end")) jump(T);
     ui::help_on_hover(msg::tl_end);
-    ImGui::SameLine();
+    place();
     char now[64];
-    const double fps = std::max(_project.output.fps, 1.0);
-    std::snprintf(now, sizeof now, "%6.2f / %.2f s   #%d", _time, _project.duration(),
-                  std::max(1, (int)std::lround((_time - first) * fps) + 1));
+    time_label(_project, _time, now);
+    ImGui::AlignTextToFramePadding();
     ui::TextRaw(now);
-    ImGui::SameLine();
+    place();
     ui::Checkbox(msg::tl_loop, &_loop);
 
     // Preview: where the camera's picture goes, and how sharp it is drawn.
     const Msg* modes[3] = {&msg::pv_corner, &msg::pv_beside, &msg::pv_through};
-    float modes_w = 0.0f;
-    for (const Msg* m : modes)
-        modes_w += ImGui::CalcTextSize(m->get()).x + 2.0f * st.FramePadding.x + st.ItemSpacing.x;
-    const float scale_w = px(90.0f);
-    ImGui::SameLine(std::max(ImGui::GetCursorPosX(),
-                             ImGui::GetContentRegionMax().x - modes_w - scale_w));
     for (int i = 0; i < 3; i++) {
-        if (i) ImGui::SameLine();
+        const float mode_w = place();
         const bool on = (int)_preview_mode == i;
-        if (ui::KeyButton(*modes[i], 0.0f, nullptr, on) && !on) {
+        if (ui::KeyButton(*modes[i], mode_w, nullptr, on) && !on) {
             _preview_mode = (PreviewMode)i;
             _preview_key.clear();
         }
         ui::help_on_hover(msg::pv_help);
     }
-    ImGui::SameLine();
+    const float scale_w = place();
     int q = _preview_scale <= 0.26f ? 0 : _preview_scale <= 0.51f ? 1 : 2;
     const char* qs[] = {"25%", "50%", "100%"};
     ImGui::SetNextItemWidth(scale_w);

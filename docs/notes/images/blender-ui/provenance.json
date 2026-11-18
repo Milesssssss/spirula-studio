@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "base_commit": "620b24ebf2007db3bd3c312f98246e2990aaa156",
+  "ui_source_sha256": "514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581",
+  "captures": [
+    {
+      "file": "wide-en-home-recent.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "home/home-recent.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state home/home-recent.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "ee5c87f18307aeaaa4ffc6bbb6244fc5d16971c1a2aeb5c0270e48a2f135582c"
+    },
+    {
+      "file": "wide-en-dataset-photos.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "dataset/dataset-photos.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state dataset/dataset-photos.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "9259fec028cacfeaacce74432bde2b41a8d4bee481b4fd8535f7b54ec2a4e7b3"
+    },
+    {
+      "file": "wide-en-train-ready.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "train/train-ready.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state train/train-ready.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "f80fd70afdf150a0400115ed723aa7f2cd0d293e9803e33710666d80d8d8a65c"
+    },
+    {
+      "file": "wide-en-mesh.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "mesh/mesh.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state mesh/mesh.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "da0040591320b031b7a5c4a5c58fd9c3689c800aef39bed6d6c12b488003d883"
+    },
+    {
+      "file": "wide-en-batch.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "batch/batch.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state batch/batch.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "d0ee72e7e64d9fe343c2209af6a45c1645993cbc8b61e892f9914c8b9ba13044"
+    },
+    {
+      "file": "wide-en-viewer.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "viewer/viewer.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state viewer/viewer.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "aeedd05debb519a00dcb7ebc8acd0ba5e6bd697a022e138f59bcd8c5da3f1739"
+    },
+    {
+      "file": "wide-en-edit.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "viewer/edit.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state viewer/edit.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "f8b84a0251f77dea10e4637918cbc360df997cc1bf1f283646fe5ae8914e2f2d"
+    },
+    {
+      "file": "wide-en-render.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "viewer/render.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, en, UI scale 100%; page/state viewer/render.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "efa25fd4d0d47ece127336ac89d5b1a725bf68916c42c706396d7da053c958a7"
+    },
+    {
+      "file": "compact-en-train-settings.png",
+      "viewport": [
+        800,
+        600
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "train/train-settings.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 800x600, en, UI scale 100%; page/state train/train-settings.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "0768943471f9c0e1471068595306223ccf1e71c6a1b1d91b113016e0cd1ef567"
+    },
+    {
+      "file": "compact-en-render.png",
+      "viewport": [
+        800,
+        600
+      ],
+      "locale": "en",
+      "ui_scale": 1,
+      "page_state": "viewer/render.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 800x600, en, UI scale 100%; page/state viewer/render.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "5e6b8078f807de00945b0783f11cfdb28e785d628fb1f19c6eb41e752cdcb159"
+    },
+    {
+      "file": "large-zh-home-recent.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "zh-Hans",
+      "ui_scale": 2,
+      "page_state": "home/home-recent.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, zh-Hans, UI scale 200%; page/state home/home-recent.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "487d19d99f53893a4deeff5e5563dfbb478dff077a32c946033b20de6ae564da"
+    },
+    {
+      "file": "large-zh-dataset-preview.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "zh-Hans",
+      "ui_scale": 2,
+      "page_state": "dataset/dataset-preview.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, zh-Hans, UI scale 200%; page/state dataset/dataset-preview.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "2b0b5f53ef4a1b7bfc2903627b8e10ed23576f1ad4c772509e2bb457af7e594a"
+    },
+    {
+      "file": "large-zh-train-settings.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "zh-Hans",
+      "ui_scale": 2,
+      "page_state": "train/train-settings.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, zh-Hans, UI scale 200%; page/state train/train-settings.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "67763d05cc994280dfc07cada0896a094575bd360c5f8a52fe8196691521f65a"
+    },
+    {
+      "file": "large-zh-render.png",
+      "viewport": [
+        1600,
+        950
+      ],
+      "locale": "zh-Hans",
+      "ui_scale": 2,
+      "page_state": "viewer/render.png",
+      "origin": "Native Spirula Studio GLFW framebuffer; UI source fingerprint 514bed6295415df1dedb99a35f873eba34c77949ca5625fce5a755b715d0c581; base 620b24ebf2007db3bd3c312f98246e2990aaa156 plus Blender-referenced UI update; 1600x950, zh-Hans, UI scale 200%; page/state viewer/render.png; Vulkan GUI with SfM/SAM/patented features OFF; Mesa software OpenGL and Lavapipe; synthetic three-camera, 192-point fixture. Captured by repository GUI automation; not generated artwork or a mockup.",
+      "sha256": "be010f7822b92cc3d2827c9a553dede50a2fc20d30afa0a5663f6fde08d5a302"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "cmake/SsApps.cmake",
+      "sha256": "8ff782293d03a04f4d4081103080fcaf440c76ddb108a7e411bb2cb50ac3e949"
+    },
+    {
+      "path": "src/app/gui/CompareView.cpp",
+      "sha256": "e4a999f443e6aa696f5917614bb65ddffc0c903bcd999d2551cff1e4729a161c"
+    },
+    {
+      "path": "src/app/gui/CompareView.h",
+      "sha256": "796ee1f40cce7a1d219b032bfb18d5b57dd3390e6abe9013b589bd0c5b9bc56f"
+    },
+    {
+      "path": "src/app/gui/GuiApp.cpp",
+      "sha256": "483d005f4f1c3a3b809d37971209618fd669b832a616a6b4f38eb7aa8bbe6873"
+    },
+    {
+      "path": "src/app/gui/GuiApp.h",
+      "sha256": "0b71f983db710b33537e7ae6e89c48dfc983f594fdce8209875adf1e71f3194c"
+    },
+    {
+      "path": "src/app/gui/Layout.cpp",
+      "sha256": "f90504421b324819af4dd4a432e3021ec76b92203de78a7bfca61356f8f06bcd"
+    },
+    {
+      "path": "src/app/gui/Layout.h",
+      "sha256": "32a582a06bd0a8dbdd19a359684f32a566128fa99a55c1cb016b6b0f318bfff4"
+    },
+    {
+      "path": "src/app/gui/Screenshot.cpp",
+      "sha256": "89ad1e504b51d5b731534ed66b4f5df1bf03e5c32a728f3bc423513dbecee1c6"
+    },
+    {
+      "path": "src/app/gui/StudioUi.cpp",
+      "sha256": "47a428231c7eb339187fac3d311274ab9648a153050027307bfe7d62c92fa1f8"
+    },
+    {
+      "path": "src/app/gui/StudioUi.h",
+      "sha256": "3d513f45963d904832ba693cd403390de732891388347bf0bd684e8d47be36cb"
+    },
+    {
+      "path": "src/app/gui/TrainingWorkspace.cpp",
+      "sha256": "916d0826b18366d3999f26dca615b1e0a125f78965a4cce9095b39e3d3c7f9cd"
+    },
+    {
+      "path": "src/app/gui/TrainingWorkspace.h",
+      "sha256": "bb2a0bdd5901d8ba047b70af307841e19200a3707bcc25088665f4e24a5ee1c6"
+    },
+    {
+      "path": "src/app/gui/Ui.h",
+      "sha256": "566efcbcd2e67e5bb3f456242842ddfa50377a3d4f378bfce1138b5a66cbaa35"
+    },
+    {
+      "path": "src/app/gui/ViewportPanel.cpp",
+      "sha256": "53d622dbc02a73b993840e22641b758b26d6d796552d9cbd59789e7b77031aef"
+    },
+    {
+      "path": "src/app/gui/ViewportPanel.h",
+      "sha256": "005d215aed18ced0369da48d39028759954a603a1c515a1219b317b8648edacb"
+    },
+    {
+      "path": "src/app/gui/edit/EditPanel.cpp",
+      "sha256": "cdd92afb58d69ee0b9c3de9f3d18aeb6c3b5b4607b72d6250d44ddd48065155e"
+    },
+    {
+      "path": "src/app/gui/render/RenderPanel.cpp",
+      "sha256": "6b1620742ec93cbf3d5b327e0effe5d6e0b9d5e344e4265cfbabe63f3b3cfabf"
+    },
+    {
+      "path": "src/app/gui/render/RenderSession.h",
+      "sha256": "1bbe24413b66471403adc4b921d2c0c47e68655dc7d2d11a4c4625f62284ee90"
+    },
+    {
+      "path": "src/app/gui/render/RenderTimeline.cpp",
+      "sha256": "ffe9ed0f10fc285e177354b1b24d3ad8275f9879c4130e14720e72ce62250858"
+    },
+    {
+      "path": "src/i18n/catalog/Gui.h",
+      "sha256": "788a3848de82e7964bf718ab3ec04cdb58e6084bbe26df9ce0b63557ae73db67"
+    }
+  ],
+  "fingerprint_method": "SHA256 of sorted listed UI/CMake paths plus NUL and binary content-SHA256, concatenated."
+}

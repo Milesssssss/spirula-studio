@@ -281,12 +281,6 @@ if(SS_BUILD_GUI)
         ${CMAKE_BINARY_DIR}/app_generated/app_icon.h
         AppIcon)
 
-    # The home screen's masthead.
-    ss_embed_file(
-        ${SS_ROOT}/assets/banner.png
-        ${CMAKE_BINARY_DIR}/app_generated/app_banner.h
-        AppBanner)
-
     file(GLOB SS_GUI_SOURCES CONFIGURE_DEPENDS
         ${SS_SRC}/app/gui/*.cpp ${SS_SRC}/app/gui/edit/*.cpp
         ${SS_SRC}/app/gui/render/*.cpp ${SS_SRC}/app/gui/mask/*.cpp)

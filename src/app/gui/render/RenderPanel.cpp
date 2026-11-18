@@ -4,6 +4,7 @@
 #include "app/gui/render/RenderSession.h"
 
 #include "app/gui/ProgressView.h"
+#include "app/gui/StudioUi.h"
 
 #include "app/gui/Subprocess.h"
 #include "app/gui/Ui.h"
@@ -246,24 +247,32 @@ void RenderSession::handle_keys(bool over_view, bool over_list) {
 // The panel
 // ===========================================================================
 
-void RenderSession::draw_status() {
+void RenderSession::draw_status(bool compact) {
     if (!_have_project) return;
+    const Msg* active = nullptr;
     if (_flying) {
-        ui::TextDisabled(msg::fly_hint);
+        active = &msg::fly_hint;
+    } else if (_xform.active()) {
+        active = _xform.kind() == XformKind::Scale && single_selected() >= 0
+                     ? &msg::hint_op_fov : &msg::hint_op;
+    } else if (_pick_target || _pick_waiting) {
+        active = &msg::hint_pick;
+    }
+    if (active) {
+        if (compact) {
+            std::string line = active->get();
+            std::replace(line.begin(), line.end(), '\n', ' ');
+            ui::TextDisabledRaw(elide_middle(line, ImGui::GetContentRegionAvail().x));
+            ui::help_on_hover(*active);
+        } else {
+            ui::TextDisabled(*active);
+        }
         return;
     }
-    if (_xform.active()) {
-        ui::TextDisabled(_xform.kind() == XformKind::Scale && single_selected() >= 0
-                             ? msg::hint_op_fov : msg::hint_op);
-        return;
-    }
-    if (_pick_target || _pick_waiting) {
-        ui::TextDisabled(msg::hint_pick);
-        return;
-    }
+    if (compact) return;
     bool any = false;
     for (uint8_t s : _sel) any = any || s;
-    ui::TextDisabled(any ? msg::hint_selected : msg::hint_idle);
+    ui::TextDisabledWrapped(any ? msg::hint_selected : msg::hint_idle);
 }
 
 void RenderSession::draw_overwrite_popup() {
@@ -1578,7 +1587,10 @@ void RenderSession::draw_output_section(float full) {
         const Msg& go = o.kind == OutputKind::Photo ? msg::render_photo
                         : o.kind == OutputKind::Video ? msg::render_video : msg::render_frames;
         ImGui::BeginDisabled(_project.keys.empty());
-        if (ui::Button(go, ImVec2(full, ImGui::GetFrameHeight() * 1.6f))) start_export();
+        {
+            ButtonStyle primary(ButtonRole::Primary);
+            if (ui::Button(go, ImVec2(full, ImGui::GetFrameHeight() * 1.6f))) start_export();
+        }
         ImGui::EndDisabled();
         const double T = _project.duration() - (_project.keys.empty() ? 0.0 : _project.keys.front().time);
         if (o.kind != OutputKind::Photo)
@@ -1590,6 +1602,7 @@ void RenderSession::draw_output_section(float full) {
         ui::ProgressBar(_job_clock.fraction(), ImVec2(full, 0), msg::render_progress,
                         {(long long)_job.frame, (long long)_job.frames});
         progress_time_line(_job_clock);
+        ButtonStyle danger(ButtonRole::Danger);
         if (ui::Button(msg::render_cancel, ImVec2(full, 0))) cancel_export();
     }
 }

@@ -249,8 +249,8 @@ private:
     void open_preset_save(PresetKind kind);
     void start_training();
     // ---- screenshots (defined in Screenshot.cpp) ----
-    // The button and its settings popup, ending `right` px from the row's end.
-    void draw_screenshot_controls(float right);
+    // An inline group: the screenshot button and its settings popup.
+    void draw_screenshot_controls();
     void take_screenshot();
     // The viewer's: every splat pane, each beside its own dataset.
     void draw_viewer_screenshot_controls();
@@ -390,9 +390,7 @@ private:
     // ---- screens ----
     void draw_menu_bar();
     void draw_home();
-    void draw_home_banner(float avail, float indent);
-    // The recent list under its tabs. `scroll`: in a scrolling child of its
-    // own, filling the space left; otherwise inline, as tall as it is.
+    // Recent records share one list; filtering preserves per-item actions.
     void draw_home_recent(bool scroll);
     // One entry as two lines; true when clicked. `badge` names its kind.
     bool draw_recent_row(const RecentItem& item, bool badge);
@@ -402,9 +400,7 @@ private:
     // A reconstruction while something else holds the device -- unless it is
     // the one running, whose screen it already is.
     bool recent_blocked(const RecentItem& item) const;
-    // A dataset run's output folder back on the screen that built it: its
-    // inputs from the folder's record, and its settings once the panel
-    // arrives there (draw_dataset_form).
+    // Restores the input list; update_dataset_workspace restores its settings.
     void open_reconstruction(const std::string& workspace);
     // Drop what is gone from the list, at most every few seconds and never
     // on this thread.
@@ -471,8 +467,10 @@ private:
     void draw_scan_view(float h);
     void draw_sharpness_view(float h);
     void continue_frame_review();
-    // The form and the button that acts on it, `height` tall.
-    void draw_dataset_form(float height, bool running);
+    enum class DatasetAction { None, Start, Continue, Cancel };
+    void update_dataset_workspace(bool running);
+    void draw_dataset_form(bool running);
+    DatasetAction draw_dataset_actions(bool running);
     // The frames / match map / model area, and the poll that feeds it from what
     // the running child writes. `height` of 0 means "as tall as the splitter
     // says", which is what the one-column layout uses.
@@ -607,8 +605,8 @@ private:
     // What is running, as bars: the queue, the task, and how long each has
     // left. Drawn on the batch screen and on whichever work screen the
     // running task belongs to, so neither has to be guessed from the other.
-    void draw_batch_progress();
-    void draw_batch_stop_buttons();
+    void draw_batch_progress(bool show_controls = true);
+    void draw_batch_stop_buttons(FlowRow* row = nullptr);
     // How far through the running task its own runner says it is, -1 when it
     // cannot say, and how long it has been going.
     float batch_task_fraction();
@@ -648,6 +646,7 @@ private:
     void draw_preset_save_modal();
     void draw_preset_delete_modal();
     void draw_basic_options();
+    void resolve_train_macros();
     void draw_train_controls();
     void draw_metrics();
     void draw_status_strip();
@@ -667,7 +666,7 @@ private:
     // The body height to hand BeginChild, given what log_height() returned.
     static float body_height(float log_h);
     // The splitter and then the panel. Call after the body child has ended.
-    void draw_log_panel(float height);
+    void draw_log_panel(float height, float max_height = 0.0f);
     void draw_confirm_modal();
     // A stopped run, continued: its own config.json, as `spirula train --resume` builds it.
     void open_resume(const std::string& path);
@@ -1267,6 +1266,7 @@ private:
 
     // Settings (persisted).
     RecentList _recent;
+    int _home_recent_filter = 0;
     double _recent_probed_at = -1.0;
     // Last frame's phase: a run is recorded, and its --finish-command started,
     // as it ends.
@@ -1318,13 +1318,6 @@ private:
     float _edit_panel_w = kEditPanelW;
     bool _show_settings = true;
     bool _layout_dirty = false;      // a splitter moved -> persist once idle
-    // The New Dataset screen's run/status band, measured last frame: the form
-    // above it is sized against this, and how tall it is depends on what the
-    // run is saying.
-    float _ds_action_h = 0.0f;
-    // ... and what the preview took under it when the window is too narrow for
-    // two columns, measured the same way.
-    float _ds_preview_h_used = 0.0f;
     // Masks sitting beside the photos are adopted automatically; this is the
     // way out for a folder whose masks/ describes something else.
     bool _use_found_masks = true;

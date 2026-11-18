@@ -491,13 +491,9 @@ void GuiApp::draw_screenshot_settings() {
     if (changed) save_settings();
 }
 
-void GuiApp::draw_screenshot_controls(float right) {
+void GuiApp::draw_screenshot_controls() {
     poll_screenshot_jobs();
-    const ImGuiStyle& st = ImGui::GetStyle();
-    const float bw = ImGui::CalcTextSize(msg::screenshot.get()).x + 2.0f * st.FramePadding.x;
-    const float ow = ImGui::CalcTextSize("...").x + 2.0f * st.FramePadding.x;
-    ImGui::SameLine(std::max(0.0f, ImGui::GetContentRegionMax().x - right - bw - ow -
-                                       2.0f * st.ItemSpacing.x));
+    ImGui::BeginGroup();
     spirula::TrainerSession* s = _runner.session();
     const bool ready = s && _viewport.attached() && !_preview_images;
     ImGui::BeginDisabled(!ready || _viewport.capture_pending());
@@ -518,6 +514,7 @@ void GuiApp::draw_screenshot_controls(float right) {
     if (ui::ButtonRaw("...##shotopts")) ImGui::OpenPopup("##shotpopup");
     ui::help_on_hover(msg::screenshot_settings);
     draw_screenshot_settings();
+    ImGui::EndGroup();
 }
 
 void GuiApp::take_screenshot() {
@@ -554,6 +551,7 @@ void GuiApp::take_screenshot() {
 
 void GuiApp::draw_viewer_screenshot_controls() {
     poll_screenshot_jobs();
+    ImGui::BeginGroup();
     const std::vector<CompareView::PaneShot> panes = _compare.splat_panes();
     bool busy = false;
     for (const CompareView::PaneShot& p : panes) busy |= p.panel->capture_pending();
@@ -570,6 +568,7 @@ void GuiApp::draw_viewer_screenshot_controls() {
     if (ui::ButtonRaw("...##shotopts")) ImGui::OpenPopup("##shotpopup");
     ui::help_on_hover(msg::screenshot_settings);
     draw_screenshot_settings();
+    ImGui::EndGroup();
 }
 
 // A file has no live run behind it: the numbers come from the run folder it
