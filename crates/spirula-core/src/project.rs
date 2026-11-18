@@ -9,9 +9,15 @@ pub const ALPHA_THRESHOLD: f32 = 1.0 / 255.0;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ProjectedSplat {
     pub mean2d: [f32; 2],
+    /// Euclidean camera-space distance. Not the sort key.
     pub depth: f32,
+    /// Pinhole and orthographic sort by camera-space z (`get_sorting_depth`).
+    pub sorting_depth: f32,
     pub conic: [f32; 3],
+    /// Activated opacity after the mip compensation.
     pub opacity: f32,
+    /// sigmoid(logit), before mip compensation. The logit derivative uses this.
+    pub sigmoid_opacity: f32,
     pub valid: bool,
 }
 
@@ -20,8 +26,10 @@ impl ProjectedSplat {
         Self {
             mean2d: [0.0; 2],
             depth: 0.0,
+            sorting_depth: 0.0,
             conic: [0.0; 3],
             opacity: 0.0,
+            sigmoid_opacity: 0.0,
             valid: false,
         }
     }
@@ -146,7 +154,8 @@ pub fn project_one(
     a += eps;
     c += eps;
     let det = a * c - b * b;
-    let mut opacity = 1.0 / (1.0 + (-opacity_logit).exp());
+    let sigmoid_opacity = 1.0 / (1.0 + (-opacity_logit).exp());
+    let mut opacity = sigmoid_opacity;
     if !(det > 0.0) {
         return ProjectedSplat::invalid();
     }
@@ -173,8 +182,10 @@ pub fn project_one(
     ProjectedSplat {
         mean2d,
         depth,
+        sorting_depth: pc[2],
         conic,
         opacity,
+        sigmoid_opacity,
         valid: true,
     }
 }
@@ -231,6 +242,37 @@ mod tests {
         assert!(p[0].conic[1].abs() < 1e-4);
         assert!((p[0].conic[2] - a / det).abs() < 1e-4);
         assert!((p[0].depth - 2.0).abs() < 1e-5);
+        assert!((p[0].sorting_depth - 2.0).abs() < 1e-5);
+        assert!((p[0].sigmoid_opacity - 0.5).abs() < 1e-5);
+    }
+
+    #[test]
+    fn off_axis_pinhole_sorts_by_z_not_radius() {
+        let view = identity_view();
+        let mean = [[1.0, 0.0, 2.0]];
+        let quat = [[1.0, 0.0, 0.0, 0.0]];
+        let scale = [[0.0, 0.0, 0.0]];
+        let opac = [0.0];
+        let batch = ProjectionBatch {
+            means: &mean,
+            quats: &quat,
+            log_scales: &scale,
+            opacity_logits: &opac,
+            view: &view,
+            fx: 30.0,
+            fy: 30.0,
+            cx: 32.0,
+            cy: 32.0,
+            width: 64,
+            height: 64,
+            antialiased: false,
+        };
+        let p = project_pinhole(&batch)[0];
+        assert!(p.valid);
+        assert!((p.sorting_depth - 2.0).abs() < 1e-5);
+        let radius = (1.0_f32 + 4.0).sqrt();
+        assert!((p.depth - radius).abs() < 1e-4);
+        assert!((p.sorting_depth - p.depth).abs() > 0.1);
     }
 
     #[test]

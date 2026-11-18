@@ -42,6 +42,7 @@ void main() {
 
     vec4 o0 = vec4(0.0);
     vec4 o1 = vec4(0.0);
+    vec4 o2 = vec4(0.0);
 
     vec3 mean = means[i].xyz;
     vec3 pc = vec3(
@@ -49,8 +50,9 @@ void main() {
         dot(cam.row1.xyz, mean) + cam.row1.w,
         dot(cam.row2.xyz, mean) + cam.row2.w);
     if (!(pc.z > 0.0)) {
-        outs[2u * i] = o0;
-        outs[2u * i + 1u] = o1;
+        outs[3u * i] = o0;
+        outs[3u * i + 1u] = o1;
+        outs[3u * i + 2u] = o2;
         return;
     }
 
@@ -120,10 +122,12 @@ void main() {
     a += eps2d;
     c += eps2d;
     float det = a * c - b * b;
-    float opacity = 1.0 / (1.0 + exp(-opacs[i]));
+    float sigmoid = 1.0 / (1.0 + exp(-opacs[i]));
+    float opacity = sigmoid;
     if (!(det > 0.0)) {
-        outs[2u * i] = o0;
-        outs[2u * i + 1u] = o1;
+        outs[3u * i] = o0;
+        outs[3u * i + 1u] = o1;
+        outs[3u * i + 2u] = o2;
         return;
     }
     if (aa) {
@@ -131,8 +135,9 @@ void main() {
         opacity *= comp;
     }
     if (!(opacity >= ALPHA_THRESHOLD)) {
-        outs[2u * i] = o0;
-        outs[2u * i + 1u] = o1;
+        outs[3u * i] = o0;
+        outs[3u * i + 1u] = o1;
+        outs[3u * i + 2u] = o2;
         return;
     }
 
@@ -146,11 +151,14 @@ void main() {
     float rx = extend * sqrt(max(a, 0.0));
     float ry = extend * sqrt(max(c, 0.0));
     if (mx + rx <= 0.0 || mx - rx >= width || my + ry <= 0.0 || my - ry >= height) {
-        outs[2u * i] = o0;
-        outs[2u * i + 1u] = o1;
+        outs[3u * i] = o0;
+        outs[3u * i + 1u] = o1;
+        outs[3u * i + 2u] = o2;
         return;
     }
 
-    outs[2u * i] = vec4(mx, my, length(pc), opacity);
-    outs[2u * i + 1u] = vec4(c00, c01, c11, 1.0);
+    outs[3u * i] = vec4(mx, my, length(pc), opacity);
+    outs[3u * i + 1u] = vec4(c00, c01, c11, 1.0);
+    // Pinhole sorting depth is camera-space z, not the ray length.
+    outs[3u * i + 2u] = vec4(pc.z, sigmoid, 0.0, 0.0);
 }

@@ -28,8 +28,8 @@ pub fn render(
     let mut order: Vec<usize> = (0..n).filter(|&i| projected[i].valid).collect();
     order.sort_by(|&a, &b| {
         projected[a]
-            .depth
-            .partial_cmp(&projected[b].depth)
+            .sorting_depth
+            .partial_cmp(&projected[b].sorting_depth)
             .unwrap_or(std::cmp::Ordering::Equal)
     });
     let pixels = (width * height) as usize;
@@ -80,6 +80,7 @@ pub fn render(
                     dy,
                     conic: p.conic,
                     opacity: p.opacity,
+                    sigmoid_opacity: p.sigmoid_opacity,
                     clamped: raw_alpha > 0.999,
                 });
                 trans *= 1.0 - alpha;
@@ -119,6 +120,7 @@ struct Hit {
     dy: f32,
     conic: [f32; 3],
     opacity: f32,
+    sigmoid_opacity: f32,
     clamped: bool,
 }
 
@@ -144,8 +146,8 @@ fn backward_pixel(
         let mut d_alpha = 0.0;
         for c in 0..3 {
             d_alpha += (hit.color[c] - accum[c]) * d_pixel[c];
-            let shown = hit.raw_sh[c] + 0.5;
-            if shown > 0.0 && shown < 1.0 {
+            let shown_gate = hit.raw_sh[c] >= -0.5;
+            if shown_gate {
                 grads.dc[hit.index][c] += SH_C0 * hit.alpha * hit.trans * d_pixel[c];
             }
         }
@@ -157,7 +159,8 @@ fn backward_pixel(
             let d_my = d_alpha * (-hit.alpha * dsigma_dy);
             let vis = hit.alpha / hit.opacity;
             let d_opac = d_alpha * vis;
-            grads.opacity_logit[hit.index] += d_opac * hit.opacity * (1.0 - hit.opacity);
+            // p = c * s, d(logit) = p * (1 - s), not p * (1 - p).
+            grads.opacity_logit[hit.index] += d_opac * hit.opacity * (1.0 - hit.sigmoid_opacity);
             chain_mean(view, fx, fy, model.means[hit.index], d_mx, d_my, &mut grads.means[hit.index]);
         }
         last_alpha = hit.alpha;
@@ -281,6 +284,146 @@ mod tests {
             (numerical - analytic).abs() / scale < 0.05,
             "numerical {numerical} analytic {analytic}"
         );
+    }
+
+    #[test]
+    fn overlapping_pinhole_splats_composite_in_camera_z_order() {
+        use spirula_core::color::dc_from_rgb;
+        let view = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0];
+        let logit = (0.9_f32 / 0.1).ln();
+        let model = GaussianModel {
+            means: vec![[1.0, 0.0, 2.0], [0.0, 0.0, 2.1]],
+            quats: vec![[1.0, 0.0, 0.0, 0.0]; 2],
+            log_scales: vec![[0.6_f32.ln(); 3]; 2],
+            opacity_logit: vec![logit; 2],
+            dc: vec![dc_from_rgb([1.0, 0.0, 0.0]), dc_from_rgb([0.0, 0.0, 1.0])],
+            sh_degree: 0,
+            sb_lobes: 0,
+            features_sh: Vec::new(),
+        };
+        let batch = ProjectionBatch {
+            means: &model.means,
+            quats: &model.quats,
+            log_scales: &model.log_scales,
+            opacity_logits: &model.opacity_logit,
+            view: &view,
+            fx: 30.0,
+            fy: 30.0,
+            cx: 32.0,
+            cy: 32.0,
+            width: 64,
+            height: 64,
+            antialiased: false,
+        };
+        let proj = project_pinhole(&batch);
+        assert!(proj[0].sorting_depth < proj[1].sorting_depth);
+        assert!(proj[0].depth > proj[1].depth);
+        let (img, _) = render(&model, &proj, &view, 30.0, 30.0, 64, 64, [0.0; 3], &[]);
+        let i = ((32 * 64 + 40) * 3) as usize;
+        assert!((img[i] - 0.730).abs() < 0.03, "r {}", img[i]);
+        assert!(img[i + 1].abs() < 1e-5);
+        assert!((img[i + 2] - 0.149).abs() < 0.03, "b {}", img[i + 2]);
+    }
+
+    #[test]
+    fn black_and_white_dc_keep_a_gradient() {
+        use spirula_core::color::dc_from_rgb;
+        let black = dc_grad(dc_from_rgb([0.0, 0.0, 0.0]), 1.0);
+        let white = dc_grad(dc_from_rgb([1.0, 1.0, 1.0]), 0.0);
+        assert!(black.iter().all(|g| *g < 0.0), "{black:?}");
+        assert!(white.iter().all(|g| *g > 0.0), "{white:?}");
+        let hot = dc_grad([1.0 / spirula_core::SH_C0, 0.0, 0.0], 0.0);
+        assert!(hot[0] > 0.0, "{hot:?}");
+    }
+
+    #[test]
+    fn mip_opacity_logit_matches_a_finite_difference() {
+        let view = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0];
+        let logit = (0.9_f32 / 0.1).ln();
+        let model = GaussianModel {
+            means: vec![[0.0, 0.0, 2.0]],
+            quats: vec![[1.0, 0.0, 0.0, 0.0]],
+            log_scales: vec![[0.025_f32.sqrt().ln(); 3]],
+            opacity_logit: vec![logit],
+            dc: vec![[0.0; 3]],
+            sh_degree: 0,
+            sb_lobes: 0,
+            features_sh: Vec::new(),
+        };
+        let gt = vec![0.2; 8 * 8 * 3];
+        let render_at = |logit: f32| {
+            let mut m = model.clone();
+            m.opacity_logit[0] = logit;
+            let batch = ProjectionBatch {
+                means: &m.means,
+                quats: &m.quats,
+                log_scales: &m.log_scales,
+                opacity_logits: &m.opacity_logit,
+                view: &view,
+                fx: 2.0,
+                fy: 2.0,
+                cx: 4.0,
+                cy: 4.0,
+                width: 8,
+                height: 8,
+                antialiased: true,
+            };
+            let proj = project_pinhole(&batch);
+            let (img, _) = render(&m, &proj, &view, 2.0, 2.0, 8, 8, [0.0; 3], &[]);
+            (img, proj)
+        };
+        let l2 = |img: &[f32]| -> f32 {
+            img.iter().zip(&gt).map(|(a, b)| (a - b) * (a - b)).sum::<f32>() / img.len() as f32
+        };
+        let eps = 1e-2_f32;
+        let (img_hi, _) = render_at(logit + eps);
+        let (img_lo, _) = render_at(logit - eps);
+        let numerical = (l2(&img_hi) - l2(&img_lo)) / (2.0 * eps);
+        let (img, proj) = render_at(logit);
+        assert!((proj[0].opacity / proj[0].sigmoid_opacity - 0.2).abs() < 1e-3);
+        let n = img.len() as f32;
+        let grad_px: Vec<f32> = img.iter().zip(&gt).map(|(a, b)| 2.0 * (a - b) / n).collect();
+        let (_, g) = render(&model, &proj, &view, 2.0, 2.0, 8, 8, [0.0; 3], &grad_px);
+        let analytic = g.opacity_logit[0];
+        let scale = numerical.abs().max(analytic.abs()).max(1e-6);
+        assert!(
+            (numerical - analytic).abs() / scale < 0.02,
+            "numerical {numerical} analytic {analytic}"
+        );
+    }
+
+    fn dc_grad(dc: [f32; 3], gt: f32) -> [f32; 3] {
+        let view = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0];
+        let model = GaussianModel {
+            means: vec![[0.0, 0.0, 2.0]],
+            quats: vec![[1.0, 0.0, 0.0, 0.0]],
+            log_scales: vec![[0.3_f32.ln(); 3]],
+            opacity_logit: vec![2.0],
+            dc: vec![dc],
+            sh_degree: 0,
+            sb_lobes: 0,
+            features_sh: Vec::new(),
+        };
+        let batch = ProjectionBatch {
+            means: &model.means,
+            quats: &model.quats,
+            log_scales: &model.log_scales,
+            opacity_logits: &model.opacity_logit,
+            view: &view,
+            fx: 16.0,
+            fy: 16.0,
+            cx: 4.0,
+            cy: 4.0,
+            width: 8,
+            height: 8,
+            antialiased: false,
+        };
+        let proj = project_pinhole(&batch);
+        let (img, _) = render(&model, &proj, &view, 16.0, 16.0, 8, 8, [0.0; 3], &[]);
+        let gt_img = vec![gt; img.len()];
+        let grad_px = l1_grad(&img, &gt_img);
+        let (_, g) = render(&model, &proj, &view, 16.0, 16.0, 8, 8, [0.0; 3], &grad_px);
+        g.dc[0]
     }
 
     fn image_l1_loss(pred: &[f32], gt: &[f32]) -> f32 {

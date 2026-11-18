@@ -21,8 +21,9 @@ cargo build --release
 ./target/release/spirula devices
 ```
 
-`cargo build` does not need the Vulkan SDK. `spirula train --backend vulkan`
-and `spirula devices` need a Vulkan loader (`libvulkan.so.1`) and a device.
+The workspace `rust-version` is 1.88, which is what the locked `image` crate requires. CI builds with that toolchain and `cargo test --workspace --locked`.
+
+`cargo build` does not need the Vulkan SDK. `spirula train --backend vulkan` and `spirula devices` need a Vulkan loader (`libvulkan.so.1`) and a device.
 A software device such as lavapipe is enough for the projection test.
 
 The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
@@ -56,13 +57,16 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
   with glslang and committed as SPIR-V. It is not yet the C++ backend's
   Slang pipeline.
 - A training step on pinhole frames with no lens distortion: front-to-back
-  composite, L1 and L2, Adam on means, opacity and DC colour. SH above DC
-  and spherical-beta lobes are evaluated and not updated. `spirula train
-  --synthetic` is a closed scene whose loss falls.
+  composite sorted by camera-space z, L1 and L2, Adam on means, opacity and
+  DC colour. 8-bit images stay code values, matching the C++ default
+  (`image_color_is_linear` false). The run writes `config.json` with
+  `splat_color_is_linear` set the same way, which is what the viewer reads.
+  SH above DC and spherical-beta lobes are evaluated and not updated.
+  `spirula train --synthetic` is a closed scene whose loss falls.
 - l1, PSNR and an 11x11 SSIM metric (the no-mask path of `src/app/EvalMetrics.cpp`).
   SSIM is not in the gradient.
-- `--densify split-prune` prunes faint splats and splits large ones.
-  `--densify mcmc` exits with an error.
+- `--densify split-prune` prunes faint splats and splits large ones, and it
+  stops at `cap_max`. `--densify mcmc` exits before any step is run.
 
 ## What is partial
 

@@ -1,5 +1,5 @@
 use crate::adam::Adam;
-use crate::densify::{densify, DensifyMode};
+use crate::densify::{densify, optimizer_reset, DensifyMode};
 use crate::gaps::{port_gaps, Gap};
 use crate::metrics::{image_l1, image_psnr};
 use crate::model::GaussianModel;
@@ -41,6 +41,7 @@ pub struct TrainOptions {
     pub refine_stop: i32,
     pub min_opacity: f32,
     pub max_split_fraction: f32,
+    pub cap_max: usize,
 }
 
 impl TrainOptions {
@@ -61,6 +62,7 @@ impl TrainOptions {
             refine_stop: cfg.refine_stop_iter,
             min_opacity: cfg.min_opacity,
             max_split_fraction: cfg.max_split_fraction,
+            cap_max: cfg.cap_max.max(0) as usize,
         }
     }
 }
@@ -157,14 +159,14 @@ pub fn train(
             && opts.refine_every > 0
             && step % opts.refine_every == 0
         {
-            let before = model.len();
             let stats = densify(
                 &mut model,
                 opts.densify,
                 opts.min_opacity,
                 opts.max_split_fraction,
+                opts.cap_max,
             )?;
-            if model.len() != before {
+            if optimizer_reset(&stats) {
                 notes.push(format!(
                     "step {step}: pruned {} and split {}, optimizer moments reset",
                     stats.pruned, stats.split
@@ -200,6 +202,11 @@ pub fn train(
 pub fn views_from_dataset(ds: &Dataset, max_edge: u32, linear: bool) -> Result<(Vec<View>, Vec<String>)> {
     let mut views = Vec::new();
     let mut notes = Vec::new();
+    if linear {
+        notes.push(
+            "image_color_is_linear is set; exported config.json marks the splats linear".into(),
+        );
+    }
     let mut skipped_model = 0;
     let mut skipped_dist = 0;
     let mut skipped_image = 0;
@@ -219,7 +226,7 @@ pub fn views_from_dataset(ds: &Dataset, max_edge: u32, linear: bool) -> Result<(
                 continue;
             }
         };
-        let image = decode_rgb(&bytes, linear)?;
+        let image = decode_rgb(&bytes)?;
         let image = resize_max_edge(&image, max_edge);
         let sx = image.width as f32 / frame.width.max(1) as f32;
         let sy = image.height as f32 / frame.height.max(1) as f32;
@@ -387,5 +394,40 @@ mod tests {
         let last = out.steps.last().unwrap().loss;
         assert!(last < first * 0.7, "first {first} last {last}");
         assert!(out.preview.iter().any(|v| *v > 0.0));
+    }
+
+    #[test]
+    fn prune_and_split_with_the_same_count_drops_adam_state() {
+        use crate::adam::Adam;
+        use crate::densify::{densify, optimizer_reset};
+        let mut model = GaussianModel {
+            means: vec![[0.0; 3], [1.0, 0.0, 0.0]],
+            quats: vec![[1.0, 0.0, 0.0, 0.0]; 2],
+            log_scales: vec![[-6.0; 3], [0.0, -4.0, -4.0]],
+            opacity_logit: vec![-8.0, 2.0],
+            dc: vec![[0.0; 3]; 2],
+            sh_degree: 0,
+            sb_lobes: 0,
+            features_sh: Vec::new(),
+        };
+        let mut adam = Adam::new(2);
+        adam.step(&mut model.opacity_logit, &[1.0, -1.0], 0.1);
+        let stats = densify(
+            &mut model,
+            DensifyMode::SplitPrune,
+            0.05,
+            1.0,
+            8,
+        )
+        .unwrap();
+        assert_eq!(stats.pruned, 1);
+        assert_eq!(stats.split, 1);
+        assert_eq!(model.len(), 2);
+        if optimizer_reset(&stats) {
+            adam = Adam::new(model.len());
+        }
+        let snapshot = model.opacity_logit.clone();
+        adam.step(&mut model.opacity_logit, &[0.0, 0.0], 0.1);
+        assert_eq!(model.opacity_logit, snapshot);
     }
 }

@@ -39,7 +39,12 @@ impl VulkanBackend {
             .application_name(app.as_c_str())
             .engine_name(engine.as_c_str())
             .api_version(vk::API_VERSION_1_1);
-        let create = vk::InstanceCreateInfo::default().application_info(&app_info);
+        let (flags, ext_names) = portability_instance(&entry)?;
+        let ext_ptrs: Vec<*const i8> = ext_names.iter().map(|n| n.as_ptr()).collect();
+        let create = vk::InstanceCreateInfo::default()
+            .application_info(&app_info)
+            .flags(flags)
+            .enabled_extension_names(&ext_ptrs);
         let instance = unsafe { entry.create_instance(&create, None) }
             .map_err(|e| Error::new(format!("vkCreateInstance: {e}")))?;
         let mut devices = unsafe { instance.enumerate_physical_devices() }
@@ -63,7 +68,12 @@ pub fn list_devices() -> Result<Vec<VulkanDevice>> {
     let app_info = vk::ApplicationInfo::default()
         .application_name(app.as_c_str())
         .api_version(vk::API_VERSION_1_1);
-    let create = vk::InstanceCreateInfo::default().application_info(&app_info);
+    let (flags, ext_names) = portability_instance(&entry)?;
+    let ext_ptrs: Vec<*const i8> = ext_names.iter().map(|n| n.as_ptr()).collect();
+    let create = vk::InstanceCreateInfo::default()
+        .application_info(&app_info)
+        .flags(flags)
+        .enabled_extension_names(&ext_ptrs);
     let instance = unsafe { entry.create_instance(&create, None) }
         .map_err(|e| Error::new(format!("vkCreateInstance: {e}")))?;
     let devices = unsafe { instance.enumerate_physical_devices() }
@@ -126,7 +136,11 @@ fn build(entry: &Entry, instance: Instance, phys: vk::PhysicalDevice) -> Result<
     let queue_info = vk::DeviceQueueCreateInfo::default()
         .queue_family_index(queue_family)
         .queue_priorities(&priorities);
-    let device_info = vk::DeviceCreateInfo::default().queue_create_infos(std::slice::from_ref(&queue_info));
+    let dev_exts = portability_device(&instance, phys)?;
+    let dev_ptrs: Vec<*const i8> = dev_exts.iter().map(|n| n.as_ptr()).collect();
+    let device_info = vk::DeviceCreateInfo::default()
+        .queue_create_infos(std::slice::from_ref(&queue_info))
+        .enabled_extension_names(&dev_ptrs);
     let device = unsafe { instance.create_device(phys, &device_info, None) }
         .map_err(|e| Error::new(format!("vkCreateDevice: {e}")))?;
     let queue = unsafe { device.get_device_queue(queue_family, 0) };
@@ -206,7 +220,7 @@ fn dispatch(backend: &VulkanBackend, batch: &ProjectionBatch<'_>) -> Result<Vec<
     for v in batch.opacity_logits {
         opacs.extend_from_slice(&v.to_le_bytes());
     }
-    let out_bytes = (n * 32) as u64;
+    let out_bytes = (n * 48) as u64;
 
     let b_cam = GpuBuf::upload(backend, &cam)?;
     let b_means = GpuBuf::upload(backend, &means)?;
@@ -316,7 +330,7 @@ fn dispatch(backend: &VulkanBackend, batch: &ProjectionBatch<'_>) -> Result<Vec<
     }
     let mut out = Vec::with_capacity(n);
     for i in 0..n {
-        let o = i * 32;
+        let o = i * 48;
         let mx = f32_at(&raw, o);
         let my = f32_at(&raw, o + 4);
         let depth = f32_at(&raw, o + 8);
@@ -325,12 +339,16 @@ fn dispatch(backend: &VulkanBackend, batch: &ProjectionBatch<'_>) -> Result<Vec<
         let c01 = f32_at(&raw, o + 20);
         let c11 = f32_at(&raw, o + 24);
         let valid = f32_at(&raw, o + 28);
+        let sorting_depth = f32_at(&raw, o + 32);
+        let sigmoid_opacity = f32_at(&raw, o + 36);
         if valid > 0.5 {
             out.push(ProjectedSplat {
                 mean2d: [mx, my],
                 depth,
+                sorting_depth,
                 conic: [c00, c01, c11],
                 opacity,
+                sigmoid_opacity,
                 valid: true,
             });
         } else {
@@ -418,6 +436,34 @@ impl Drop for GpuBuf {
             self.device.free_memory(self.memory, None);
         }
     }
+}
+
+fn portability_instance(entry: &Entry) -> Result<(vk::InstanceCreateFlags, Vec<CString>)> {
+    let listed = unsafe { entry.enumerate_instance_extension_properties(None) }
+        .map_err(|e| Error::new(format!("instance extensions: {e}")))?;
+    let mut flags = vk::InstanceCreateFlags::empty();
+    let mut names = Vec::new();
+    let port = CStr::from_bytes_with_nul(b"VK_KHR_portability_enumeration\0").unwrap();
+    if listed.iter().any(|e| extension_name(e) == port) {
+        flags |= vk::InstanceCreateFlags::ENUMERATE_PORTABILITY_KHR;
+        names.push(CString::new("VK_KHR_portability_enumeration").unwrap());
+    }
+    Ok((flags, names))
+}
+
+fn portability_device(instance: &Instance, phys: vk::PhysicalDevice) -> Result<Vec<CString>> {
+    let listed = unsafe { instance.enumerate_device_extension_properties(phys) }
+        .map_err(|e| Error::new(format!("device extensions: {e}")))?;
+    let subset = CStr::from_bytes_with_nul(b"VK_KHR_portability_subset\0").unwrap();
+    let mut names = Vec::new();
+    if listed.iter().any(|e| extension_name(e) == subset) {
+        names.push(CString::new("VK_KHR_portability_subset").unwrap());
+    }
+    Ok(names)
+}
+
+fn extension_name(ext: &vk::ExtensionProperties) -> &CStr {
+    unsafe { CStr::from_ptr(ext.extension_name.as_ptr()) }
 }
 
 fn spirv_words() -> Vec<u32> {
@@ -529,6 +575,8 @@ mod tests {
                 assert!((c.mean2d[0] - g.mean2d[0]).abs() < 2e-3, "{c:?} vs {g:?}");
                 assert!((c.mean2d[1] - g.mean2d[1]).abs() < 2e-3);
                 assert!((c.depth - g.depth).abs() < 2e-3);
+                assert!((c.sorting_depth - g.sorting_depth).abs() < 2e-3);
+                assert!((c.sigmoid_opacity - g.sigmoid_opacity).abs() < 2e-4);
                 assert!((c.opacity - g.opacity).abs() < 2e-4);
                 for k in 0..3 {
                     assert!((c.conic[k] - g.conic[k]).abs() < 2e-3, "conic {c:?} vs {g:?}");

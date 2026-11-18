@@ -148,6 +148,11 @@ Full trainer: the C++ spirula binary. See docs/rust.md.
 
 fn run_train(args: TrainArgs) -> Result<(), Error> {
     let densify = DensifyMode::parse(&args.densify)?;
+    if densify == DensifyMode::Mcmc {
+        return Err(Error::new(
+            "MCMC densification is not ported; it remains in the C++ trainer",
+        ));
+    }
     if args.synthetic && args.data.is_some() {
         return Err(Error::new("pass either a dataset or --synthetic"));
     }
@@ -171,6 +176,11 @@ fn run_train(args: TrainArgs) -> Result<(), Error> {
         cfg.means_lr_final = 0.01;
         cfg.features_dc_lr = 0.05;
         cfg.opacities_lr = 0.05;
+        cfg.load_masks = false;
+        cfg.apply_loss_for_mask = None;
+        cfg.depth_supervision_weight = 0.0;
+        cfg.normal_supervision_weight = 0.0;
+        cfg.orientation_method = "none".into();
     }
     let iterations = args
         .num_iterations
@@ -178,6 +188,12 @@ fn run_train(args: TrainArgs) -> Result<(), Error> {
         .unwrap_or(if args.synthetic { 40 } else { 30 });
     if iterations <= 0 {
         return Err(Error::new("num_iterations must be positive"));
+    }
+    if args.require_ported && !unknown.is_empty() {
+        return Err(Error::new(format!(
+            "refusing to train because --require-ported is set and the config has unknown keys: {}",
+            unknown.join(", ")
+        )));
     }
     let gaps = gaps_for(&cfg);
     let blocking: Vec<_> = gaps.iter().filter(|g| g.affects_result).cloned().collect();
@@ -250,7 +266,19 @@ fn run_train(args: TrainArgs) -> Result<(), Error> {
     }
     let ply_path = out_dir.join("splat.ply");
     write_splat_ply(&trained.model.to_cloud(), &ply_path)?;
-    write_ppm(&out_dir.join("preview.ppm"), trained.preview_width, trained.preview_height, &trained.preview)?;
+    let image_linear = cfg.image_color_is_linear.unwrap_or(false);
+    write_ppm(
+        &out_dir.join("preview.ppm"),
+        trained.preview_width,
+        trained.preview_height,
+        &trained.preview,
+        image_linear,
+    )?;
+    let config_body = format!(
+        "{{\n  \"image_color_is_linear\": {image_linear},\n  \"splat_color_is_linear\": {image_linear}\n}}\n"
+    );
+    std::fs::write(out_dir.join("config.json"), config_body)
+        .map_err(|e| Error::new(format!("writing config.json: {e}")))?;
     let report = serde_json::json!({
         "backend": args.backend,
         "steps": trained.steps.iter().map(|s| serde_json::json!({
@@ -260,7 +288,7 @@ fn run_train(args: TrainArgs) -> Result<(), Error> {
         "gaps": trained.gaps.iter().map(|g| serde_json::json!({
             "name": g.name, "detail": g.detail, "affects_result": g.affects_result
         })).collect::<Vec<_>>(),
-        "preview": "preview.ppm is sRGB-encoded linear RGB from the last step",
+        "preview": "preview.ppm is the last render. config.json records whether those values are linear",
     });
     std::fs::write(out_dir.join("rust-port.json"), serde_json::to_string_pretty(&report).unwrap())
         .map_err(|e| Error::new(format!("writing report: {e}")))?;
@@ -410,13 +438,14 @@ fn fmt_psnr(v: f32) -> String {
     }
 }
 
-fn write_ppm(path: &std::path::Path, w: u32, h: u32, rgb: &[f32]) -> Result<(), Error> {
+fn write_ppm(path: &std::path::Path, w: u32, h: u32, rgb: &[f32], encode_srgb: bool) -> Result<(), Error> {
     if w == 0 || h == 0 || rgb.len() < (w * h * 3) as usize {
         return Ok(());
     }
     let mut bytes = format!("P6\n{w} {h}\n255\n").into_bytes();
     for c in rgb.iter().take((w * h * 3) as usize) {
-        let s = linear_to_srgb((*c).clamp(0.0, 1.0));
+        let v = (*c).clamp(0.0, 1.0);
+        let s = if encode_srgb { linear_to_srgb(v) } else { v };
         bytes.push((s * 255.0).round().clamp(0.0, 255.0) as u8);
     }
     std::fs::write(path, bytes).map_err(|e| Error::new(format!("writing {}: {e}", path.display())))

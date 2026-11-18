@@ -9,16 +9,17 @@ pub struct RgbImage {
     pub rgb: Vec<f32>,
 }
 
-pub fn decode_rgb(bytes: &[u8], linear: bool) -> Result<RgbImage> {
+pub fn decode_rgb(bytes: &[u8]) -> Result<RgbImage> {
     let img = image::load_from_memory(bytes)
         .map_err(|e| Error::new(format!("image decode: {e}")))?;
     let rgb = img.to_rgb8();
     let (width, height) = rgb.dimensions();
     let mut out = Vec::with_capacity((width * height * 3) as usize);
+    // 8-bit code values, the C++ trainer's default sRGB targets. Linear light
+    // is a flag on the run (`image_color_is_linear`), not a decode of the file.
     for p in rgb.pixels() {
         for c in p.0 {
-            let u = c as f32 / 255.0;
-            out.push(if linear { u } else { srgb_to_linear(u) });
+            out.push(c as f32 / 255.0);
         }
     }
     Ok(RgbImage { width, height, rgb: out })
@@ -58,14 +59,6 @@ pub fn resize_max_edge(img: &RgbImage, max_edge: u32) -> RgbImage {
     RgbImage { width: nw, height: nh, rgb }
 }
 
-fn srgb_to_linear(c: f32) -> f32 {
-    if c <= 0.04045 {
-        c / 12.92
-    } else {
-        ((c + 0.055) / 1.055).powf(2.4)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -89,10 +82,10 @@ mod tests {
             .unwrap();
             buf.into_inner()
         };
-        let decoded = decode_rgb(&png, false).unwrap();
+        let decoded = decode_rgb(&png).unwrap();
         assert_eq!(decoded.rgb[0], 0.0);
         assert!((decoded.rgb[3] - 1.0).abs() < 1e-6);
-        assert!(decoded.rgb[6] > 0.2 && decoded.rgb[6] < 0.3);
+        assert!((decoded.rgb[6] - 128.0 / 255.0).abs() < 1e-6);
         let small = resize_max_edge(&decoded, 1);
         assert_eq!(small.width.max(small.height), 1);
     }

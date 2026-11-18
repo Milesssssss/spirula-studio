@@ -28,27 +28,53 @@ pub struct DensifyStats {
     pub split: usize,
 }
 
+pub fn optimizer_reset(stats: &DensifyStats) -> bool {
+    stats.pruned > 0 || stats.split > 0
+}
+
 pub fn densify(
     model: &mut GaussianModel,
     mode: DensifyMode,
     min_opacity: f32,
     max_split_fraction: f32,
+    cap_max: usize,
 ) -> Result<DensifyStats> {
     match mode {
         DensifyMode::Off => Ok(DensifyStats { pruned: 0, split: 0 }),
         DensifyMode::Mcmc => Err(Error::new(
             "MCMC densification is not ported; it remains in the C++ trainer. Use --densify split-prune or off",
         )),
-        DensifyMode::SplitPrune => Ok(split_prune(model, min_opacity, max_split_fraction)),
+        DensifyMode::SplitPrune => Ok(split_prune(model, min_opacity, max_split_fraction, cap_max)),
     }
 }
 
-fn split_prune(model: &mut GaussianModel, min_opacity: f32, fraction: f32) -> DensifyStats {
+fn split_prune(
+    model: &mut GaussianModel,
+    min_opacity: f32,
+    fraction: f32,
+    cap: usize,
+) -> DensifyStats {
     let keep: Vec<usize> = (0..model.len())
         .filter(|&i| sigmoid(model.opacity_logit[i]) >= min_opacity)
         .collect();
-    let pruned = model.len() - keep.len();
+    let mut pruned = model.len() - keep.len();
     retain(model, &keep);
+    if model.len() > cap {
+        let mut faint: Vec<usize> = (0..model.len()).collect();
+        faint.sort_by(|&a, &b| {
+            sigmoid(model.opacity_logit[a])
+                .partial_cmp(&sigmoid(model.opacity_logit[b]))
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        let drop_n = model.len() - cap;
+        let mut gone = faint[..drop_n].to_vec();
+        gone.sort_unstable();
+        let stay: Vec<usize> = (0..model.len())
+            .filter(|i| gone.binary_search(i).is_err())
+            .collect();
+        pruned += drop_n;
+        retain(model, &stay);
+    }
     let n = model.len();
     if n == 0 || fraction <= 0.0 {
         return DensifyStats { pruned, split: 0 };
@@ -59,8 +85,8 @@ fn split_prune(model: &mut GaussianModel, min_opacity: f32, fraction: f32) -> De
         let sb = model.log_scales[b].into_iter().fold(f32::MIN, f32::max);
         sb.partial_cmp(&sa).unwrap_or(std::cmp::Ordering::Equal)
     });
-    let n_split = ((n as f32) * fraction).ceil().max(1.0) as usize;
-    let n_split = n_split.min(n);
+    let mut n_split = ((n as f32) * fraction).ceil().max(1.0) as usize;
+    n_split = n_split.min(n).min(cap.saturating_sub(n));
     let chosen = order[..n_split].to_vec();
     let shrink = 1.6_f32.ln();
     for i in chosen {
@@ -119,7 +145,7 @@ mod tests {
 
     #[test]
     fn mcmc_is_an_error_and_split_prune_changes_the_count() {
-        let err = densify(&mut empty(), DensifyMode::Mcmc, 0.005, 0.1).unwrap_err();
+        let err = densify(&mut empty(), DensifyMode::Mcmc, 0.005, 0.1, 8).unwrap_err();
         assert!(err.message.contains("MCMC"));
         let mut model = GaussianModel {
             means: vec![[0.0; 3], [1.0, 0.0, 0.0]],
@@ -131,9 +157,27 @@ mod tests {
             sb_lobes: 0,
             features_sh: Vec::new(),
         };
-        let stats = densify(&mut model, DensifyMode::SplitPrune, 0.05, 1.0).unwrap();
+        let stats = densify(&mut model, DensifyMode::SplitPrune, 0.05, 1.0, 8).unwrap();
         assert_eq!(stats.pruned, 1);
         assert_eq!(stats.split, 1);
+        assert_eq!(model.len(), 2);
+    }
+
+    #[test]
+    fn cap_max_stops_the_split() {
+        let mut model = GaussianModel {
+            means: vec![[0.0; 3], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [3.0, 0.0, 0.0]],
+            quats: vec![[1.0, 0.0, 0.0, 0.0]; 4],
+            log_scales: vec![[0.0; 3]; 4],
+            opacity_logit: vec![2.0; 4],
+            dc: vec![[0.0; 3]; 4],
+            sh_degree: 0,
+            sb_lobes: 0,
+            features_sh: Vec::new(),
+        };
+        let stats = densify(&mut model, DensifyMode::SplitPrune, 0.05, 1.0, 2).unwrap();
+        assert!(stats.pruned >= 2);
+        assert_eq!(stats.split, 0);
         assert_eq!(model.len(), 2);
     }
 

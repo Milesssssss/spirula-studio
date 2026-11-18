@@ -50,7 +50,7 @@ pub fn load_dataset(root: &Path, cfg: &TrainConfig) -> Result<Dataset> {
     }
     let format = detect_format(root, cfg)?;
     match format {
-        "nerfstudio" => load_nerfstudio(root),
+        "nerfstudio" => load_nerfstudio(root, cfg),
         "colmap" => load_colmap(root, cfg),
         "metashape" => Err(Error::new(
             "Metashape datasets are not in the Rust port; use the C++ spirula binary",
@@ -95,7 +95,7 @@ fn has_metashape(root: &Path) -> bool {
     })
 }
 
-fn load_nerfstudio(root: &Path) -> Result<Dataset> {
+fn load_nerfstudio(root: &Path, cfg: &TrainConfig) -> Result<Dataset> {
     let ns = nerfstudio::read_transforms(root)?;
     let frames = ns
         .frames
@@ -115,12 +115,19 @@ fn load_nerfstudio(root: &Path) -> Result<Dataset> {
             c2w_gl: f.c2w_gl,
         })
         .collect();
+    let mut notes = ns.notes;
+    let mut points = ns.points;
+    if !cfg.seed_pointcloud.is_empty() {
+        let path = root.join(&cfg.seed_pointcloud);
+        points = ply::read_point_ply(&path)?;
+        notes.push(format!("seed points replaced from {}", path.display()));
+    }
     Ok(Dataset {
         root: root.to_path_buf(),
         format: "nerfstudio",
         frames,
-        points: ns.points,
-        notes: ns.notes,
+        points,
+        notes,
     })
 }
 
@@ -317,6 +324,34 @@ mod tests {
         std::fs::write(dir.join("images.txt"), "1 1 0 0 0 0 0 0 1 a.png\n\n").unwrap();
         let err = load_dataset(&dir, &TrainConfig::default()).unwrap_err();
         assert!(err.message.contains("no exact distortion tier"), "{}", err.message);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn nerfstudio_seed_pointcloud_replaces_an_empty_cloud() {
+        let dir = std::env::temp_dir().join(format!("spirula-seed-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(
+            dir.join("transforms.json"),
+            r#"{
+                "camera_model": "PINHOLE",
+                "fl_x": 10, "fl_y": 10, "cx": 4, "cy": 3, "w": 8, "h": 6,
+                "frames": [{"file_path": "a.png", "transform_matrix": [
+                    [1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}]
+            }"#,
+        )
+        .unwrap();
+        std::fs::write(
+            dir.join("seed.ply"),
+            b"ply\nformat ascii 1.0\nelement vertex 1\nproperty float x\nproperty float y\nproperty float z\nproperty uchar red\nproperty uchar green\nproperty uchar blue\nend_header\n4 5 6 1 2 3\n",
+        )
+        .unwrap();
+        let mut cfg = TrainConfig::default();
+        cfg.seed_pointcloud = "seed.ply".into();
+        let ds = load_dataset(&dir, &cfg).unwrap();
+        assert_eq!(ds.points.xyz, vec![[4.0, 5.0, 6.0]]);
+        assert!(ds.notes.iter().any(|n| n.contains("seed points")));
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

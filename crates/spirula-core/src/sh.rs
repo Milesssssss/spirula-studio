@@ -92,10 +92,10 @@ fn sh_channel(c: usize, degree: i32, viewdir: [f32; 3], dc: [f32; 3], coeffs: &[
     colors
 }
 
-/// Display colour: clamp(sh + 0.5, 0, 1). `raw` is the pre-offset value,
-/// which the backward uses for the `sh >= -0.5` gate.
+/// Display colour: max(sh + 0.5, 0), the same lower clamp as
+/// `sh_coeffs_to_color` in shaders/harmonics.slang. There is no upper clamp.
 pub fn display_color(raw: [f32; 3]) -> [f32; 3] {
-    raw.map(|v| (v + 0.5).clamp(0.0, 1.0))
+    raw.map(|v| (v + 0.5).max(0.0))
 }
 
 pub fn sh_degree_from_rest_coeffs(n_coeffs: usize) -> Option<i32> {

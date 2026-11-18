@@ -50,6 +50,11 @@ pub struct TrainConfig {
     pub use_bilateral_grid: bool,
     pub use_ppisp: bool,
     pub image_color_is_linear: Option<bool>,
+    pub depth_supervision_weight: f32,
+    pub normal_supervision_weight: f32,
+    pub orientation_method: String,
+    pub load_masks: bool,
+    pub apply_loss_for_mask: Option<bool>,
     pub random_init: String,
 }
 
@@ -98,6 +103,11 @@ impl Default for TrainConfig {
             use_bilateral_grid: true,
             use_ppisp: true,
             image_color_is_linear: None,
+            depth_supervision_weight: 0.0,
+            normal_supervision_weight: 0.01,
+            orientation_method: "up".into(),
+            load_masks: true,
+            apply_loss_for_mask: None,
             random_init: "auto".into(),
         }
     }
@@ -149,6 +159,11 @@ impl TrainConfig {
             "use_ppisp",
             "image_color_is_linear",
             "random_init",
+            "load_masks",
+            "apply_loss_for_mask",
+            "depth_supervision_weight",
+            "normal_supervision_weight",
+            "orientation_method",
         ]
     }
 
@@ -240,6 +255,21 @@ impl TrainConfig {
                 }
             }
             "random_init" => self.random_init = json_string(value).ok_or_else(bad)?,
+            "load_masks" => self.load_masks = json_bool(value).ok_or_else(bad)?,
+            "apply_loss_for_mask" => {
+                self.apply_loss_for_mask = if value.is_null() {
+                    None
+                } else {
+                    Some(json_bool(value).ok_or_else(bad)?)
+                }
+            }
+            "depth_supervision_weight" => {
+                self.depth_supervision_weight = json_f32(value).ok_or_else(bad)?
+            }
+            "normal_supervision_weight" => {
+                self.normal_supervision_weight = json_f32(value).ok_or_else(bad)?
+            }
+            "orientation_method" => self.orientation_method = json_string(value).ok_or_else(bad)?,
             _ => {}
         }
         Ok(())
