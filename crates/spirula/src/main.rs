@@ -65,7 +65,7 @@ struct TrainArgs {
     /// cpu or vulkan. Vulkan projects splats; the composite stays on the CPU.
     #[arg(long, default_value = "cpu")]
     backend: String,
-    /// Longest image edge the reference rasterizer will train at.
+    /// Longest training edge. 0 leaves this cap unset.
     #[arg(long, default_value_t = 64)]
     max_edge: u32,
     /// Seed splats kept from the point cloud.
@@ -315,14 +315,9 @@ fn prepare_dataset(
     } else {
         let ds = load_dataset(data, cfg)?;
         notes.extend(ds.notes.clone());
-        let edge = if cfg.max_resolution > 0 {
-            max_edge.min(cfg.max_resolution as u32)
-        } else {
-            max_edge
-        };
         let (views, view_notes) = views_from_dataset(
             &ds,
-            edge,
+            merged_max_edge(max_edge, cfg.max_resolution),
             cfg.image_color_is_linear.unwrap_or(false),
         )?;
         notes.extend(view_notes);
@@ -358,19 +353,24 @@ fn prepare_dataset(
         return Ok((model, views, notes));
     };
     let ds = load_dataset(data, cfg)?;
-    let edge = if cfg.max_resolution > 0 {
-        max_edge.min(cfg.max_resolution as u32)
-    } else {
-        max_edge
-    };
     let (views, view_notes) = views_from_dataset(
         &ds,
-        edge,
+        merged_max_edge(max_edge, cfg.max_resolution),
         cfg.image_color_is_linear.unwrap_or(false),
     )?;
     notes.extend(ds.notes);
     notes.extend(view_notes);
     Ok((model, views, notes))
+}
+
+// 0 means that cap is unset. `resize_max_edge` leaves the image alone when handed 0.
+fn merged_max_edge(cli: u32, config: i32) -> u32 {
+    let config = if config > 0 { config as u32 } else { 0 };
+    match (cli, config) {
+        (0, 0) => 0,
+        (0, limit) | (limit, 0) => limit,
+        (cli, config) => cli.min(config),
+    }
 }
 
 fn cloud_to_model(cloud: &spirula_data::SplatCloud, cap: usize, notes: &mut Vec<String>) -> GaussianModel {
@@ -537,4 +537,19 @@ fn spawn_status(port: i32, body: std::sync::Arc<std::sync::Mutex<String>>) -> Re
         }
     });
     Ok(flag)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::merged_max_edge;
+
+    #[test]
+    fn zero_edge_cap_stays_unset() {
+        assert_eq!(merged_max_edge(64, 2), 2);
+        assert_eq!(merged_max_edge(0, 2), 2);
+        assert_eq!(merged_max_edge(2, 0), 2);
+        assert_eq!(merged_max_edge(0, 0), 0);
+        assert_eq!(merged_max_edge(8, 3), 3);
+        assert_eq!(merged_max_edge(3, -1), 3);
+    }
 }

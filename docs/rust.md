@@ -89,8 +89,10 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
   an unknown key.
 - The Vulkan backend projects. Compositing and the optimizer stay on the CPU.
 - `--viewer` binds a status URL that returns JSON. It is not `viewer.html`.
-- Images are resized so the long edge is `--max-edge` (default 64). The seed
-  cloud is truncated to `--max-splats` (default 1024).
+- Images are resized to the tighter positive cap of `--max-edge` (default
+  64) and `max_resolution`. Zero on either side leaves that cap unset, so
+  `--max-edge 0` still honors a positive `max_resolution`. The seed cloud is
+  truncated to `--max-splats` (default 1024).
 
 ## Still C++
 
