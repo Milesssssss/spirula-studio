@@ -551,6 +551,7 @@ void GuiApp::take_screenshot() {
 
 void GuiApp::draw_viewer_screenshot_controls() {
     poll_screenshot_jobs();
+    ImGui::BeginGroup();
     const std::vector<CompareView::PaneShot> panes = _compare.splat_panes();
     bool busy = false;
     for (const CompareView::PaneShot& p : panes) busy |= p.panel->capture_pending();
@@ -567,6 +568,7 @@ void GuiApp::draw_viewer_screenshot_controls() {
     if (ui::ButtonRaw("...##shotopts")) ImGui::OpenPopup("##shotpopup");
     ui::help_on_hover(msg::screenshot_settings);
     draw_screenshot_settings();
+    ImGui::EndGroup();
 }
 
 // A file has no live run behind it: the numbers come from the run folder it

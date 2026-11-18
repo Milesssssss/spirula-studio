@@ -18,7 +18,11 @@ void page(const char* id, const std::function<void()>& draw) {
     ImGui::EndChild();
 }
 
-void inspector(const TrainingWorkspacePanels& panels) {
+void inspector(const WorkspacePanels& panels) {
+    if (!panels.metrics) {
+        panels.settings();
+        return;
+    }
     if (!ImGui::BeginTabBar("##inspector_tabs")) return;
     if (ui::BeginTabItem(dmsg::section_settings)) {
         page("##settings", panels.settings);
@@ -33,33 +37,40 @@ void inspector(const TrainingWorkspacePanels& panels) {
 
 }  // namespace
 
-bool draw_training_workspace(float& panel_width, bool& show_settings,
-                             const TrainingWorkspacePanels& panels) {
-    if (ImGui::BeginChild("##training_actions", ImVec2(0, 0),
+void draw_workspace_actions(const char* id, const std::function<void()>& draw) {
+    if (ImGui::BeginChild(id, ImVec2(0, 0),
                          ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY |
                          ImGuiChildFlags_AlwaysAutoResize))
-        panels.controls();
+        draw();
     ImGui::EndChild();
+}
 
+bool draw_workspace_panels(float& panel_width, bool show_settings,
+                           const WorkspacePanels& panels, const WorkspaceLayout& layout) {
     const ImVec2 available = ImGui::GetContentRegionAvail();
     if (!show_settings) {
-        page("##training_preview", panels.preview);
+        page(layout.preview_id, panels.preview);
         return false;
     }
 
-    // A readable inspector and an operable preview must both fit. A tab keeps
-    // either task full width when a small window or larger UI scale prevents it.
+    // Tabs keep the inspector and preview usable when both cannot fit.
     if (available.x < px(960.0f)) {
-        if (ImGui::BeginTabBar("##training_pages")) {
-            if (ui::BeginTabItem(msg::workspace_preview)) {
-                page("##training_preview", panels.preview);
-                ImGui::EndTabItem();
-            }
-            if (ui::BeginTabItem(dmsg::section_settings)) {
-                page("##settings", panels.settings);
-                ImGui::EndTabItem();
-            }
-            if (ui::BeginTabItem(msg::section_metrics)) {
+        if (ImGui::BeginTabBar(layout.pages_id)) {
+            auto settings = [&] {
+                if (ui::BeginTabItem(dmsg::section_settings)) {
+                    page("##settings", panels.settings);
+                    ImGui::EndTabItem();
+                }
+            };
+            auto preview = [&] {
+                if (ui::BeginTabItem(msg::workspace_preview)) {
+                    page(layout.preview_id, panels.preview);
+                    ImGui::EndTabItem();
+                }
+            };
+            if (layout.settings_first) { settings(); preview(); }
+            else { preview(); settings(); }
+            if (panels.metrics && ui::BeginTabItem(msg::section_metrics)) {
                 page("##metrics", panels.metrics);
                 ImGui::EndTabItem();
             }
@@ -72,15 +83,24 @@ bool draw_training_workspace(float& panel_width, bool& show_settings,
     const float max_width = std::max(min_width,
         std::min(available.x * 0.45f, available.x - px(480.0f) - splitter_extent()));
     float width = std::clamp(panel_width * ui_scale(), min_width, max_width);
-    if (ImGui::BeginChild("##training_inspector", ImVec2(width, 0),
+    if (ImGui::BeginChild(layout.inspector_id, ImVec2(width, 0),
                          ImGuiChildFlags_Borders))
         inspector(panels);
     ImGui::EndChild();
-    const bool changed = splitter_v("##panelsplit", &width, min_width,
+    const bool changed = splitter_v(layout.splitter_id, &width, min_width,
                                     max_width, available.y);
     if (changed) panel_width = width / ui_scale();
-    page("##training_preview", panels.preview);
+    page(layout.preview_id, panels.preview);
     return changed;
+}
+
+bool draw_training_workspace(float& panel_width, bool& show_settings,
+                             const TrainingWorkspacePanels& panels) {
+    draw_workspace_actions("##training_actions", panels.controls);
+    const WorkspacePanels content{panels.settings, panels.metrics, panels.preview};
+    const WorkspaceLayout layout{"##training_inspector", "##training_pages",
+                                 "##training_preview", "##panelsplit"};
+    return draw_workspace_panels(panel_width, show_settings, content, layout);
 }
 
 }  // namespace gui

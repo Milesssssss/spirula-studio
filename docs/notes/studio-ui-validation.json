@@ -1,0 +1,1402 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-18T09:55:16.067367+00:00",
+  "base_commit": "0dbec1cd5cea1dfb7e671699023116333b7c47ea",
+  "ui_source_sha256": "1e312734d41e165cb6970eca8e35b729927a5d6dd0c2100f1f963b887107f3f2",
+  "build": {
+    "entry": "build_develop.bash",
+    "backend": "vulkan",
+    "gui": true,
+    "sfm": false,
+    "sam": false,
+    "patented": false,
+    "result": "compiled and linked successfully",
+    "shader_toolchain": "pinned Slang 2026.12.0.1; verified cache from identical shader sources"
+  },
+  "environment": {
+    "platform": "Linux",
+    "opengl": "Mesa software rendering",
+    "vulkan": "Mesa Lavapipe 25.0.7",
+    "inputs": "synthetic 3-camera / 192-point COLMAP dataset and generated images"
+  },
+  "checks_passed": 145,
+  "cases": [
+    {
+      "name": "shell-review-wide-en",
+      "width": 1600,
+      "height": 950,
+      "scale": 1.0,
+      "lang": "en",
+      "pages": [
+        "home",
+        "dataset",
+        "train",
+        "mesh",
+        "batch",
+        "viewer"
+      ],
+      "failures": [],
+      "checks": [
+        {
+          "case": "home",
+          "name": "home: Home module navigation remains visible",
+          "passed": true,
+          "missing": [],
+          "bounds": []
+        },
+        {
+          "case": "home",
+          "name": "Home: current training session can resume",
+          "passed": true
+        },
+        {
+          "case": "home",
+          "name": "Home: dataset recent filter",
+          "passed": true,
+          "rows": 1
+        },
+        {
+          "case": "home",
+          "name": "Home: model filter excludes dataset",
+          "passed": true,
+          "rows": 0
+        },
+        {
+          "case": "home",
+          "name": "home-recent: Home module navigation remains visible",
+          "passed": true,
+          "missing": [],
+          "bounds": []
+        },
+        {
+          "case": "home",
+          "name": "Home: recent row opens actual dataset",
+          "passed": true
+        },
+        {
+          "case": "home",
+          "name": "Home: resume returns to current Ready session",
+          "passed": true
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-empty: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-empty: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-photos: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-photos: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "update_dataset",
+          "before": [
+            24.0,
+            81.0,
+            184.0,
+            115.0
+          ],
+          "after": [
+            24.0,
+            81.0,
+            184.0,
+            115.0
+          ],
+          "content_movement_px": 419.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "train",
+          "name": "train-ready: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-ready: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "train-settings: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-settings: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "train-settings: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "start_training",
+          "before": [
+            24.0,
+            81.0,
+            128.0,
+            107.0
+          ],
+          "after": [
+            24.0,
+            81.0,
+            128.0,
+            107.0
+          ],
+          "content_movement_px": 53.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "train",
+          "name": "train-settings-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-settings-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "Train: actions survive hidden inspector",
+          "passed": true
+        },
+        {
+          "case": "train",
+          "name": "train-preview-only: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-preview-only: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "mesh",
+          "name": "mesh: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "mesh",
+          "name": "mesh: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "mesh_start",
+          "before": [
+            24.0,
+            81.0,
+            204.0,
+            107.0
+          ],
+          "after": [
+            24.0,
+            81.0,
+            204.0,
+            107.0
+          ],
+          "content_movement_px": 0.0,
+          "scroll_content": "fits without scrolling"
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "batch",
+          "name": "batch: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "batch",
+          "name": "batch: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 10
+        },
+        {
+          "case": "batch",
+          "name": "batch-options: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "batch_start",
+          "before": [
+            24.0,
+            113.0,
+            184.0,
+            139.0
+          ],
+          "after": [
+            24.0,
+            113.0,
+            184.0,
+            139.0
+          ],
+          "content_movement_px": 0.0,
+          "scroll_content": "fits without scrolling"
+        },
+        {
+          "case": "batch",
+          "name": "batch-options-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "batch",
+          "name": "batch-options-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 10
+        },
+        {
+          "case": "viewer",
+          "name": "viewer: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "viewer: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 8
+        },
+        {
+          "case": "viewer",
+          "name": "edit: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "edit: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 8
+        },
+        {
+          "case": "viewer",
+          "name": "render: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "render: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 7
+        },
+        {
+          "case": "viewer",
+          "name": "render: timeline transport and track fit",
+          "passed": true,
+          "missing": [],
+          "bounds": [],
+          "overlap": [],
+          "rows": [
+            646.0
+          ],
+          "track": [
+            338.0,
+            678.0,
+            1588.0,
+            744.0
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "render: Render pane 0 has visible fixture canvas",
+          "passed": true,
+          "minimum_height_px": 64,
+          "evidence": "generated fixture pixels in actual native framebuffer; PreviewRenderer clear color and camera frustums",
+          "pane": [
+            338.0,
+            135.0,
+            1588.0,
+            640.0
+          ],
+          "background_rgb": [
+            13,
+            14,
+            17
+          ],
+          "background_pixels": 355466,
+          "visible_canvas_bounds": [
+            350,
+            263,
+            1576,
+            630
+          ],
+          "visible_height_px": 367,
+          "orange_geometry_pixels": 1382
+        },
+        {
+          "case": "viewer",
+          "name": "Render: placement/settings popup opens",
+          "passed": true,
+          "popup_windows": [
+            "##Popup_44b49c11"
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "Render: display settings remain reachable",
+          "passed": true,
+          "settings_location": "inline",
+          "parameter_ids": []
+        },
+        {
+          "case": "viewer",
+          "name": "Render: settings popup closes without leaving Render",
+          "passed": true
+        }
+      ],
+      "software_vulkan": "Mesa Lavapipe 25.0.7"
+    },
+    {
+      "name": "shell-review-compact-en",
+      "width": 800,
+      "height": 600,
+      "scale": 1.0,
+      "lang": "en",
+      "pages": [
+        "home",
+        "dataset",
+        "train",
+        "mesh",
+        "batch",
+        "viewer"
+      ],
+      "failures": [],
+      "checks": [
+        {
+          "case": "home",
+          "name": "home: Home module navigation remains visible",
+          "passed": true,
+          "missing": [],
+          "bounds": []
+        },
+        {
+          "case": "home",
+          "name": "Home: current training session can resume",
+          "passed": true
+        },
+        {
+          "case": "home",
+          "name": "Home: dataset recent filter",
+          "passed": true,
+          "rows": 1
+        },
+        {
+          "case": "home",
+          "name": "Home: model filter excludes dataset",
+          "passed": true,
+          "rows": 0
+        },
+        {
+          "case": "home",
+          "name": "home-recent: Home module navigation remains visible",
+          "passed": true,
+          "missing": [],
+          "bounds": []
+        },
+        {
+          "case": "home",
+          "name": "Home: recent row opens actual dataset",
+          "passed": true
+        },
+        {
+          "case": "home",
+          "name": "Home: resume returns to current Ready session",
+          "passed": true
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-empty: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-empty: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-photos: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-photos: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "update_dataset",
+          "before": [
+            24.0,
+            81.0,
+            184.0,
+            115.0
+          ],
+          "after": [
+            24.0,
+            81.0,
+            184.0,
+            115.0
+          ],
+          "content_movement_px": 690.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-preview: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-preview: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "train",
+          "name": "train-ready: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-ready: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "train-settings: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-settings: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "train-settings: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "start_training",
+          "before": [
+            24.0,
+            81.0,
+            128.0,
+            107.0
+          ],
+          "after": [
+            24.0,
+            81.0,
+            128.0,
+            107.0
+          ],
+          "content_movement_px": 383.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "train",
+          "name": "train-settings-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-settings-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "Train: actions survive hidden inspector",
+          "passed": true
+        },
+        {
+          "case": "train",
+          "name": "train-preview-only: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-preview-only: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "mesh",
+          "name": "mesh: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "mesh",
+          "name": "mesh: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "mesh_start",
+          "before": [
+            24.0,
+            81.0,
+            204.0,
+            107.0
+          ],
+          "after": [
+            24.0,
+            81.0,
+            204.0,
+            107.0
+          ],
+          "content_movement_px": 229.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "batch",
+          "name": "batch: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "batch",
+          "name": "batch: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 10
+        },
+        {
+          "case": "batch",
+          "name": "batch-options: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "batch_start",
+          "before": [
+            24.0,
+            113.0,
+            184.0,
+            139.0
+          ],
+          "after": [
+            24.0,
+            113.0,
+            184.0,
+            139.0
+          ],
+          "content_movement_px": 203.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "batch",
+          "name": "batch-options-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "batch",
+          "name": "batch-options-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 10
+        },
+        {
+          "case": "viewer",
+          "name": "viewer: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "viewer: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 8
+        },
+        {
+          "case": "viewer",
+          "name": "edit: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "edit: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 8
+        },
+        {
+          "case": "viewer",
+          "name": "render: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "render: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 7
+        },
+        {
+          "case": "viewer",
+          "name": "render: timeline transport and track fit",
+          "passed": true,
+          "missing": [],
+          "bounds": [],
+          "overlap": [],
+          "rows": [
+            460.0,
+            492.0
+          ],
+          "track": [
+            338.0,
+            524.0,
+            788.0,
+            590.0
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "render: Render pane 0 has visible fixture canvas",
+          "passed": true,
+          "minimum_height_px": 64,
+          "evidence": "generated fixture pixels in actual native framebuffer; PreviewRenderer clear color and camera frustums",
+          "pane": [
+            338.0,
+            167.0,
+            788.0,
+            454.0
+          ],
+          "background_rgb": [
+            13,
+            14,
+            17
+          ],
+          "background_pixels": 84378,
+          "visible_canvas_bounds": [
+            350,
+            209,
+            776,
+            444
+          ],
+          "visible_height_px": 235,
+          "orange_geometry_pixels": 564
+        },
+        {
+          "case": "viewer",
+          "name": "Render: placement/settings popup opens",
+          "passed": true,
+          "popup_windows": [
+            "##Popup_44b49c11"
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "Render: display settings remain reachable",
+          "passed": true,
+          "settings_location": "popup",
+          "parameter_ids": [
+            "viewport_cameras",
+            "viewport_grid",
+            "viewport_level_cameras"
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "render-display-settings: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "render-display-settings: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 7
+        },
+        {
+          "case": "viewer",
+          "name": "render-display-settings: timeline transport and track fit",
+          "passed": true,
+          "missing": [],
+          "bounds": [],
+          "overlap": [],
+          "rows": [
+            460.0,
+            492.0
+          ],
+          "track": [
+            338.0,
+            524.0,
+            788.0,
+            590.0
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "Render: settings popup closes without leaving Render",
+          "passed": true
+        }
+      ],
+      "software_vulkan": "Mesa Lavapipe 25.0.7"
+    },
+    {
+      "name": "shell-review-large-zh",
+      "width": 1600,
+      "height": 950,
+      "scale": 2.0,
+      "lang": "zh-Hans",
+      "pages": [
+        "home",
+        "dataset",
+        "train",
+        "mesh",
+        "batch",
+        "viewer"
+      ],
+      "failures": [],
+      "checks": [
+        {
+          "case": "home",
+          "name": "home: Home module navigation remains visible",
+          "passed": true,
+          "missing": [],
+          "bounds": []
+        },
+        {
+          "case": "home",
+          "name": "Home: current training session can resume",
+          "passed": true
+        },
+        {
+          "case": "home",
+          "name": "Home: dataset recent filter",
+          "passed": true,
+          "rows": 1
+        },
+        {
+          "case": "home",
+          "name": "Home: model filter excludes dataset",
+          "passed": true,
+          "rows": 0
+        },
+        {
+          "case": "home",
+          "name": "home-recent: Home module navigation remains visible",
+          "passed": true,
+          "missing": [],
+          "bounds": []
+        },
+        {
+          "case": "home",
+          "name": "Home: recent row opens actual dataset",
+          "passed": true
+        },
+        {
+          "case": "home",
+          "name": "Home: resume returns to current Ready session",
+          "passed": true
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-empty: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-empty: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-photos: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-photos: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "update_dataset",
+          "before": [
+            48.0,
+            162.0,
+            368.0,
+            230.0
+          ],
+          "after": [
+            48.0,
+            162.0,
+            368.0,
+            230.0
+          ],
+          "content_movement_px": 1356.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-settings-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-preview: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "dataset",
+          "name": "dataset-preview: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 6
+        },
+        {
+          "case": "train",
+          "name": "train-ready: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-ready: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "train-settings: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-settings: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "train-settings: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "start_training",
+          "before": [
+            48.0,
+            162.0,
+            256.0,
+            214.0
+          ],
+          "after": [
+            48.0,
+            162.0,
+            256.0,
+            214.0
+          ],
+          "content_movement_px": 1016.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "train",
+          "name": "train-settings-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-settings-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "train",
+          "name": "Train: actions survive hidden inspector",
+          "passed": true
+        },
+        {
+          "case": "train",
+          "name": "train-preview-only: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "train",
+          "name": "train-preview-only: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 4
+        },
+        {
+          "case": "mesh",
+          "name": "mesh: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "mesh",
+          "name": "mesh: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "mesh_start",
+          "before": [
+            48.0,
+            162.0,
+            408.0,
+            214.0
+          ],
+          "after": [
+            48.0,
+            162.0,
+            408.0,
+            214.0
+          ],
+          "content_movement_px": 564.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "mesh",
+          "name": "mesh-options-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 2
+        },
+        {
+          "case": "batch",
+          "name": "batch: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "batch",
+          "name": "batch: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 10
+        },
+        {
+          "case": "batch",
+          "name": "batch-options: fixed action while configuration scrolls",
+          "passed": true,
+          "action": "batch_start",
+          "before": [
+            48.0,
+            226.0,
+            368.0,
+            278.0
+          ],
+          "after": [
+            48.0,
+            226.0,
+            368.0,
+            278.0
+          ],
+          "content_movement_px": 326.0,
+          "scroll_content": "moved"
+        },
+        {
+          "case": "batch",
+          "name": "batch-options-scrolled: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "batch",
+          "name": "batch-options-scrolled: action controls fit",
+          "passed": true,
+          "bounds": [],
+          "count": 10
+        },
+        {
+          "case": "viewer",
+          "name": "viewer: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "viewer: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 8
+        },
+        {
+          "case": "viewer",
+          "name": "edit: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "edit: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 8
+        },
+        {
+          "case": "viewer",
+          "name": "render: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "render: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 7
+        },
+        {
+          "case": "viewer",
+          "name": "render: timeline transport and track fit",
+          "passed": true,
+          "missing": [],
+          "bounds": [],
+          "overlap": [],
+          "rows": [
+            670.0,
+            734.0
+          ],
+          "track": [
+            676.0,
+            798.0,
+            1576.0,
+            930.0
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "render: Render pane 0 has visible fixture canvas",
+          "passed": true,
+          "minimum_height_px": 128.0,
+          "evidence": "generated fixture pixels in actual native framebuffer; PreviewRenderer clear color and camera frustums",
+          "pane": [
+            676.0,
+            334.0,
+            1576.0,
+            658.0
+          ],
+          "background_rgb": [
+            13,
+            14,
+            17
+          ],
+          "background_pixels": 141333,
+          "visible_canvas_bounds": [
+            700,
+            418,
+            1552,
+            638
+          ],
+          "visible_height_px": 220,
+          "orange_geometry_pixels": 937
+        },
+        {
+          "case": "viewer",
+          "name": "Render: placement/settings popup opens",
+          "passed": true,
+          "popup_windows": [
+            "##Popup_44b49c11"
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "Render: display settings remain reachable",
+          "passed": true,
+          "settings_location": "popup",
+          "parameter_ids": [
+            "viewport_cameras",
+            "viewport_grid",
+            "viewport_level_cameras"
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "render-display-settings: workspace Home remains visible",
+          "passed": true,
+          "bounds": []
+        },
+        {
+          "case": "viewer",
+          "name": "render-display-settings: viewer toolbars fit",
+          "passed": true,
+          "bounds": [],
+          "count": 7
+        },
+        {
+          "case": "viewer",
+          "name": "render-display-settings: timeline transport and track fit",
+          "passed": true,
+          "missing": [],
+          "bounds": [],
+          "overlap": [],
+          "rows": [
+            670.0,
+            734.0
+          ],
+          "track": [
+            676.0,
+            798.0,
+            1576.0,
+            930.0
+          ]
+        },
+        {
+          "case": "viewer",
+          "name": "Render: settings popup closes without leaving Render",
+          "passed": true
+        }
+      ],
+      "software_vulkan": "Mesa Lavapipe 25.0.7"
+    }
+  ],
+  "scope_limits": [
+    "No hardware GPU training, pause/resume during training, meshing run, batch execution or export job was executed.",
+    "SfM and SAM providers were disabled in the validation build.",
+    "The canvas pixel check is specific to this generated fixture and native framebuffer, not a general image-recognition test."
+  ],
+  "source_files": [
+    {
+      "path": "cmake/SsApps.cmake",
+      "sha256": "8ff782293d03a04f4d4081103080fcaf440c76ddb108a7e411bb2cb50ac3e949"
+    },
+    {
+      "path": "src/app/gui/CompareView.cpp",
+      "sha256": "e4a999f443e6aa696f5917614bb65ddffc0c903bcd999d2551cff1e4729a161c"
+    },
+    {
+      "path": "src/app/gui/CompareView.h",
+      "sha256": "796ee1f40cce7a1d219b032bfb18d5b57dd3390e6abe9013b589bd0c5b9bc56f"
+    },
+    {
+      "path": "src/app/gui/GuiApp.cpp",
+      "sha256": "fea519105de3e4eca35a9c003445c6cc0232f15b069b1cc68ba1099f48e7a561"
+    },
+    {
+      "path": "src/app/gui/GuiApp.h",
+      "sha256": "0b71f983db710b33537e7ae6e89c48dfc983f594fdce8209875adf1e71f3194c"
+    },
+    {
+      "path": "src/app/gui/Layout.cpp",
+      "sha256": "875e5a7e34fb933a3a4fb6c5388a6f78891a2baa65569ed63cb412790d406db3"
+    },
+    {
+      "path": "src/app/gui/Layout.h",
+      "sha256": "32a582a06bd0a8dbdd19a359684f32a566128fa99a55c1cb016b6b0f318bfff4"
+    },
+    {
+      "path": "src/app/gui/Screenshot.cpp",
+      "sha256": "89ad1e504b51d5b731534ed66b4f5df1bf03e5c32a728f3bc423513dbecee1c6"
+    },
+    {
+      "path": "src/app/gui/StudioUi.cpp",
+      "sha256": "e5ac8fc4e0f3c2f871a740c24a9aff6fda90376df613c22121bfac3faf24f889"
+    },
+    {
+      "path": "src/app/gui/StudioUi.h",
+      "sha256": "3d513f45963d904832ba693cd403390de732891388347bf0bd684e8d47be36cb"
+    },
+    {
+      "path": "src/app/gui/TrainingWorkspace.cpp",
+      "sha256": "c731a32a919adbad8b2982fe0d28aa1c992d40a1b0087fac9fd66dd73d69b42c"
+    },
+    {
+      "path": "src/app/gui/TrainingWorkspace.h",
+      "sha256": "bb2a0bdd5901d8ba047b70af307841e19200a3707bcc25088665f4e24a5ee1c6"
+    },
+    {
+      "path": "src/app/gui/Ui.h",
+      "sha256": "566efcbcd2e67e5bb3f456242842ddfa50377a3d4f378bfce1138b5a66cbaa35"
+    },
+    {
+      "path": "src/app/gui/ViewportPanel.cpp",
+      "sha256": "53d622dbc02a73b993840e22641b758b26d6d796552d9cbd59789e7b77031aef"
+    },
+    {
+      "path": "src/app/gui/ViewportPanel.h",
+      "sha256": "005d215aed18ced0369da48d39028759954a603a1c515a1219b317b8648edacb"
+    },
+    {
+      "path": "src/app/gui/edit/EditPanel.cpp",
+      "sha256": "cdd92afb58d69ee0b9c3de9f3d18aeb6c3b5b4607b72d6250d44ddd48065155e"
+    },
+    {
+      "path": "src/app/gui/render/RenderPanel.cpp",
+      "sha256": "6b1620742ec93cbf3d5b327e0effe5d6e0b9d5e344e4265cfbabe63f3b3cfabf"
+    },
+    {
+      "path": "src/app/gui/render/RenderSession.h",
+      "sha256": "1bbe24413b66471403adc4b921d2c0c47e68655dc7d2d11a4c4625f62284ee90"
+    },
+    {
+      "path": "src/app/gui/render/RenderTimeline.cpp",
+      "sha256": "ffe9ed0f10fc285e177354b1b24d3ad8275f9879c4130e14720e72ce62250858"
+    },
+    {
+      "path": "src/i18n/catalog/Gui.h",
+      "sha256": "788a3848de82e7964bf718ab3ec04cdb58e6084bbe26df9ce0b63557ae73db67"
+    }
+  ],
+  "finish_review": {
+    "protocol": "Impeccable finish-reviewer",
+    "execution": "independent generic subagent applying the shipped protocol",
+    "initial_capture_count": 37,
+    "verdict_capture_count": 39,
+    "disposition": "ship",
+    "scope": "Verdict pass on the one listed material fix; initial full-review scope and runtime limits remain.",
+    "material_fixes": [
+      {
+        "finding": "Edit Selection None / Alt+A label collision",
+        "score": "resolved",
+        "evidence": "wide and compact English show separate label and shortcut; Chinese 200% shows the complete action label without a shortcut overprint; tooltip fallback verified in source, not by an additional hover test"
+      }
+    ],
+    "unavailable_inputs": [
+      "External reference catalog / quality boards unavailable",
+      "Concept seed corroborated from the preserved session record; raw roll stdout was not retained"
+    ]
+  }
+}

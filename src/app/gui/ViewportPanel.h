@@ -94,6 +94,10 @@ public:
     void show_nav_controls(bool on) { _nav_controls = on; }
     void draw_nav_controls();
 
+    // Controls can move into an owner popup when the image needs the space.
+    void show_controls(bool on) { _controls_visible = on; }
+    void draw_options();
+
     // How tall the last draw()'s control rows were, and extra height to leave
     // under them. A row of panels whose controls wrap differently would
     // otherwise render at different sizes, which is not a comparison.
@@ -433,6 +437,7 @@ private:
     // pointer coordinates and its overlay are both in.
     float _img_x = 0, _img_y = 0, _img_w = 0, _img_h = 0;
     bool _nav_controls = true;
+    bool _controls_visible = true;
     float _controls_h = 0.0f;
     float _controls_pad = 0.0f;
     float _image_w = 0.0f;

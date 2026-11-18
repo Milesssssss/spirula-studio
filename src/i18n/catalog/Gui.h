@@ -438,6 +438,12 @@ SS_MSG(font_no_fetch,
 // Home screen
 // ===========================================================================
 
+SS_MSG(home_actions,
+    EN("Start a task"), JA("新しい作業"), ZH_HANS("开始新任务"), ZH_HANT("開始新工作"),
+    KO("작업 시작"), DE("Aufgabe starten"), FR("Démarrer une tâche"),
+    ES("Iniciar una tarea"), PT("Iniciar tarefa"), IT("Avvia un'attività"),
+    NL("Taak starten"), RU("Начать задачу"), TR("Görev başlat"));
+
 SS_MSG(home_back_to_training,
     EN("Back to Training"),   JA("学習に戻る"),
     ZH_HANS("返回训练"),       ZH_HANT("返回訓練"),
@@ -1006,6 +1012,12 @@ SS_MSG(workspace_log,
     EN("Log"), JA("ログ"), ZH_HANS("日志"), ZH_HANT("日誌"),
     KO("로그"), DE("Protokoll"), FR("Journal"), ES("Registro"),
     PT("Registo"), IT("Registro"), NL("Logboek"), RU("Журнал"), TR("Günlük"));
+
+SS_MSG(workspace_view_options,
+    EN("View options"), JA("表示設定"), ZH_HANS("视图选项"), ZH_HANT("檢視選項"),
+    KO("보기 옵션"), DE("Ansichtsoptionen"), FR("Options d’affichage"), ES("Opciones de vista"),
+    PT("Opções de vista"), IT("Opzioni vista"), NL("Weergaveopties"), RU("Параметры вида"),
+    TR("Görünüm seçenekleri"));
 
 SS_MSG(workspace_metrics_empty,
     EN("Metrics appear after training starts."),

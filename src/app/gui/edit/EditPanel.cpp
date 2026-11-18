@@ -6,6 +6,7 @@
 
 #include "app/gui/NavCamera.h"
 #include "app/gui/ProgressView.h"
+#include "app/gui/StudioUi.h"
 #include "app/gui/Ui.h"
 #include "i18n/catalog/Edit.h"
 #include "i18n/catalog/EditAttributes.h"
@@ -601,9 +602,12 @@ void EditSession::draw_panel() {
     const SaveTarget& target = targets[(size_t)_save_target];
     const std::string home = d.default_save_path(_save_target);
     ImGui::BeginDisabled(home.empty());
-    if (key_button(msg::save_over, half, "Ctrl+S")) {
-        _ask_overwrite = true;
-        _train_after_save = false;
+    {
+        ButtonStyle primary(ButtonRole::Primary);
+        if (key_button(msg::save_over, half, "Ctrl+S")) {
+            _ask_overwrite = true;
+            _train_after_save = false;
+        }
     }
     ImGui::EndDisabled();
     if (!home.empty()) ui::help_on_hover(msg::save_over_help, {home});

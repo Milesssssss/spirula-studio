@@ -1764,11 +1764,16 @@ void ViewportPanel::draw_nav_controls() {
     }
 }
 
+void ViewportPanel::draw_options() {
+    draw_controls(_mode == Mode::Engine);
+}
+
 void ViewportPanel::draw(bool training, int step) {
     const float y0 = ImGui::GetCursorPosY();
-    draw_controls(_mode == Mode::Engine);
+    if (_controls_visible) draw_options();
     _controls_h = ImGui::GetCursorPosY() - y0;
-    if (_controls_pad > 0.0f) ImGui::Dummy(ImVec2(1.0f, _controls_pad));
+    if (_controls_visible && _controls_pad > 0.0f)
+        ImGui::Dummy(ImVec2(1.0f, _controls_pad));
 
     const double now = ImGui::GetTime();
     note_motion(now);

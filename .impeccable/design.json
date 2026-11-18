@@ -1,0 +1,466 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T10:02:22Z",
+  "title": "Design System: Spirula Studio",
+  "extensions": {
+    "colorMeta": {
+      "text": {
+        "role": "neutral",
+        "displayName": "Text"
+      },
+      "text-disabled": {
+        "role": "neutral",
+        "displayName": "Text Disabled"
+      },
+      "window-bg": {
+        "role": "neutral",
+        "displayName": "Window Bg"
+      },
+      "child-bg": {
+        "role": "neutral",
+        "displayName": "Child Bg"
+      },
+      "popup-bg": {
+        "role": "neutral",
+        "displayName": "Popup Bg"
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border"
+      },
+      "border-shadow": {
+        "role": "neutral",
+        "displayName": "Border Shadow"
+      },
+      "frame-bg": {
+        "role": "neutral",
+        "displayName": "Frame Bg"
+      },
+      "frame-bg-hovered": {
+        "role": "neutral",
+        "displayName": "Frame Bg Hovered"
+      },
+      "frame-bg-active": {
+        "role": "neutral",
+        "displayName": "Frame Bg Active"
+      },
+      "title-bg": {
+        "role": "neutral",
+        "displayName": "Title Bg"
+      },
+      "title-bg-active": {
+        "role": "neutral",
+        "displayName": "Title Bg Active"
+      },
+      "title-bg-collapsed": {
+        "role": "neutral",
+        "displayName": "Title Bg Collapsed"
+      },
+      "menu-bar-bg": {
+        "role": "neutral",
+        "displayName": "Menu Bar Bg"
+      },
+      "scrollbar-bg": {
+        "role": "neutral",
+        "displayName": "Scrollbar Bg"
+      },
+      "scrollbar-grab": {
+        "role": "neutral",
+        "displayName": "Scrollbar Grab"
+      },
+      "scrollbar-grab-hovered": {
+        "role": "neutral",
+        "displayName": "Scrollbar Grab Hovered"
+      },
+      "scrollbar-grab-active": {
+        "role": "neutral",
+        "displayName": "Scrollbar Grab Active"
+      },
+      "check-mark": {
+        "role": "primary",
+        "displayName": "Check Mark"
+      },
+      "checkbox-selected-bg": {
+        "role": "primary",
+        "displayName": "Checkbox Selected Bg"
+      },
+      "slider-grab": {
+        "role": "primary",
+        "displayName": "Slider Grab"
+      },
+      "slider-grab-active": {
+        "role": "primary",
+        "displayName": "Slider Grab Active"
+      },
+      "button": {
+        "role": "neutral",
+        "displayName": "Button"
+      },
+      "button-hovered": {
+        "role": "neutral",
+        "displayName": "Button Hovered"
+      },
+      "button-active": {
+        "role": "neutral",
+        "displayName": "Button Active"
+      },
+      "header": {
+        "role": "neutral",
+        "displayName": "Header"
+      },
+      "header-hovered": {
+        "role": "neutral",
+        "displayName": "Header Hovered"
+      },
+      "header-active": {
+        "role": "neutral",
+        "displayName": "Header Active"
+      },
+      "separator": {
+        "role": "neutral",
+        "displayName": "Separator"
+      },
+      "separator-hovered": {
+        "role": "primary",
+        "displayName": "Separator Hovered"
+      },
+      "separator-active": {
+        "role": "primary",
+        "displayName": "Separator Active"
+      },
+      "resize-grip": {
+        "role": "neutral",
+        "displayName": "Resize Grip"
+      },
+      "resize-grip-hovered": {
+        "role": "primary",
+        "displayName": "Resize Grip Hovered"
+      },
+      "resize-grip-active": {
+        "role": "primary",
+        "displayName": "Resize Grip Active"
+      },
+      "input-text-cursor": {
+        "role": "neutral",
+        "displayName": "Input Text Cursor"
+      },
+      "tab-hovered": {
+        "role": "neutral",
+        "displayName": "Tab Hovered"
+      },
+      "tab": {
+        "role": "neutral",
+        "displayName": "Tab"
+      },
+      "tab-selected": {
+        "role": "primary",
+        "displayName": "Tab Selected"
+      },
+      "tab-selected-overline": {
+        "role": "primary",
+        "displayName": "Tab Selected Overline"
+      },
+      "tab-dimmed": {
+        "role": "neutral",
+        "displayName": "Tab Dimmed"
+      },
+      "tab-dimmed-selected": {
+        "role": "neutral",
+        "displayName": "Tab Dimmed Selected"
+      },
+      "tab-dimmed-selected-overline": {
+        "role": "neutral",
+        "displayName": "Tab Dimmed Selected Overline"
+      },
+      "plot-lines": {
+        "role": "primary",
+        "displayName": "Plot Lines"
+      },
+      "plot-lines-hovered": {
+        "role": "primary",
+        "displayName": "Plot Lines Hovered"
+      },
+      "plot-histogram": {
+        "role": "primary",
+        "displayName": "Plot Histogram"
+      },
+      "plot-histogram-hovered": {
+        "role": "primary",
+        "displayName": "Plot Histogram Hovered"
+      },
+      "table-header-bg": {
+        "role": "neutral",
+        "displayName": "Table Header Bg"
+      },
+      "table-border-strong": {
+        "role": "neutral",
+        "displayName": "Table Border Strong"
+      },
+      "table-border-light": {
+        "role": "neutral",
+        "displayName": "Table Border Light"
+      },
+      "table-row-bg": {
+        "role": "neutral",
+        "displayName": "Table Row Bg"
+      },
+      "table-row-bg-alt": {
+        "role": "neutral",
+        "displayName": "Table Row Bg Alt"
+      },
+      "text-link": {
+        "role": "primary",
+        "displayName": "Text Link"
+      },
+      "text-selected-bg": {
+        "role": "primary",
+        "displayName": "Text Selected Bg"
+      },
+      "tree-lines": {
+        "role": "neutral",
+        "displayName": "Tree Lines"
+      },
+      "drag-drop-target": {
+        "role": "primary",
+        "displayName": "Drag Drop Target"
+      },
+      "drag-drop-target-bg": {
+        "role": "primary",
+        "displayName": "Drag Drop Target Bg"
+      },
+      "unsaved-marker": {
+        "role": "secondary",
+        "displayName": "Unsaved Marker"
+      },
+      "nav-cursor": {
+        "role": "primary",
+        "displayName": "Nav Cursor"
+      },
+      "nav-windowing-highlight": {
+        "role": "neutral",
+        "displayName": "Nav Windowing Highlight"
+      },
+      "nav-windowing-dim-bg": {
+        "role": "neutral",
+        "displayName": "Nav Windowing Dim Bg"
+      },
+      "modal-window-dim-bg": {
+        "role": "neutral",
+        "displayName": "Modal Window Dim Bg"
+      },
+      "action-primary": {
+        "role": "primary",
+        "displayName": "Action Primary"
+      },
+      "action-primary-hovered": {
+        "role": "primary",
+        "displayName": "Action Primary Hovered"
+      },
+      "action-primary-active": {
+        "role": "primary",
+        "displayName": "Action Primary Active"
+      },
+      "action-selected": {
+        "role": "primary",
+        "displayName": "Action Selected"
+      },
+      "action-selected-hovered": {
+        "role": "primary",
+        "displayName": "Action Selected Hovered"
+      },
+      "action-selected-active": {
+        "role": "primary",
+        "displayName": "Action Selected Active"
+      },
+      "action-danger": {
+        "role": "secondary",
+        "displayName": "Action Danger"
+      },
+      "action-danger-hovered": {
+        "role": "secondary",
+        "displayName": "Action Danger Hovered"
+      },
+      "action-danger-active": {
+        "role": "secondary",
+        "displayName": "Action Danger Active"
+      },
+      "command-primary-detail": {
+        "role": "primary",
+        "displayName": "Command Primary Detail"
+      },
+      "status-ok": {
+        "role": "secondary",
+        "displayName": "Status Ok"
+      },
+      "status-error": {
+        "role": "secondary",
+        "displayName": "Status Error"
+      },
+      "status-warning": {
+        "role": "secondary",
+        "displayName": "Status Warning"
+      },
+      "status-dim": {
+        "role": "neutral",
+        "displayName": "Status Dim"
+      },
+      "render-status-error": {
+        "role": "secondary",
+        "displayName": "Render Status Error"
+      },
+      "render-status-dim": {
+        "role": "neutral",
+        "displayName": "Render Status Dim"
+      },
+      "shortcut-hint": {
+        "role": "neutral",
+        "displayName": "Shortcut Hint"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Product Heading",
+        "purpose": "Existing product heading; base Regular face multiplied by 1.6 before UI scale."
+      },
+      "headline": {
+        "displayName": "Workspace Title",
+        "purpose": "workspace_header title; base Regular face multiplied by 1.2 before UI scale."
+      },
+      "title": {
+        "displayName": "Dialog Heading",
+        "purpose": "Existing license/device emphasis; base Regular face multiplied by 1.15 before UI scale."
+      },
+      "body": {
+        "displayName": "Native Body",
+        "purpose": "Embedded base Regular face, merged with the regional CJK chain; use native ImGui text metrics."
+      },
+      "label": {
+        "displayName": "Control Label",
+        "purpose": "Same face and size as body; measure labels in the active language."
+      }
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": [
+      {
+        "name": "native-workspace-split",
+        "value": "960px",
+        "purpose": "Unscaled available content width in draw_workspace_panels. Multiply by ui_scale(); below it use full-width pages. This is not a CSS media query."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ordinary Button",
+      "kind": "button",
+      "refersTo": "button-neutral",
+      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Native interaction remains authoritative.",
+      "html": "<button class=\"ds-button-neutral\">Open</button>",
+      "css": ".ds-button-neutral{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#293745;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-neutral:hover:not(:disabled){background:#304253;}.ds-button-neutral:active:not(:disabled){background:#34485B;}.ds-button-neutral:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-neutral:disabled{opacity:.6;cursor:default;}"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Native interaction remains authoritative.",
+      "html": "<button class=\"ds-button-primary\">Start Training</button>",
+      "css": ".ds-button-primary{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#225B86;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-primary:hover:not(:disabled){background:#2B6A99;}.ds-button-primary:active:not(:disabled){background:#225075;}.ds-button-primary:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-primary:disabled{opacity:.6;cursor:default;}"
+    },
+    {
+      "name": "Selected Filter Button",
+      "kind": "chip",
+      "refersTo": "button-selected",
+      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Selected remains a native button, with no pill shape.",
+      "html": "<button class=\"ds-button-selected\" aria-pressed=\"true\">All</button>",
+      "css": ".ds-button-selected{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#263F55;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-selected:hover:not(:disabled){background:#304E67;}.ds-button-selected:active:not(:disabled){background:#29445A;}.ds-button-selected:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-selected:disabled{opacity:.6;cursor:default;}"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Native interaction remains authoritative.",
+      "html": "<button class=\"ds-button-danger\">Cancel</button>",
+      "css": ".ds-button-danger{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#773F47;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-danger:hover:not(:disabled){background:#8D4C54;}.ds-button-danger:active:not(:disabled){background:#65363E;}.ds-button-danger:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-danger:disabled{opacity:.6;cursor:default;}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Explanatory text-field palette, padding, and radius; native InputText retains the frame fill during hover and editing. Browser editing does not reproduce native interaction.",
+      "html": "<input class=\"ds-input\" aria-label=\"Output path\" value=\"output/model.ply\">",
+      "css": ".ds-input{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#25313D;color:#E8EDF2;border:0;border-radius:4px;padding:5px 8px;caret-color:#CDE2F5;}.ds-input:hover,.ds-input:active{cursor:text;}.ds-input:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-input::selection{background:rgba(53,109,158,.65);}.ds-input:disabled{opacity:.6;}"
+    },
+    {
+      "name": "Workspace Tabs",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "Explanatory native tab states. This static swatch does not implement tab selection or native keyboard handling.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Workspace\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Preview</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Settings</button></div>",
+      "css": ".ds-tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid #263F55;}.ds-tab{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#1B242D;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px 4px 0 0;cursor:pointer;}.ds-tab[aria-selected=\"true\"]{background:#263F55;}.ds-tab:hover,.ds-tab:active{background:#2A3D50;}.ds-tab:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}"
+    },
+    {
+      "name": "Workspace Action Band",
+      "kind": "card",
+      "refersTo": "workspace-actions",
+      "description": "Explanatory bordered native child. The actual child measures its height and remains outside scrolling pages.",
+      "html": "<section class=\"ds-actions\" aria-label=\"Run controls\"><button class=\"ds-actions-start\">Start Training</button><span class=\"ds-actions-status\">Ready</span></section>",
+      "css": ".ds-actions{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:#171E26;color:#E8EDF2;border:1px solid #334352;border-radius:4px;padding:10px 12px;}.ds-actions-start{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#225B86;color:#E8EDF2;border:0;border-radius:4px;padding:5px 8px;cursor:pointer;}.ds-actions-start:hover{background:#2B6A99;}.ds-actions-start:active{background:#225075;}.ds-actions-start:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-actions-status{color:#B0BFCC;}"
+    },
+    {
+      "name": "Command Row",
+      "kind": "custom",
+      "refersTo": "command-row-primary",
+      "description": "Explanatory title-and-description button. Native command_row measures wrapped text and retains a translated button ID.",
+      "html": "<button class=\"ds-command\"><span class=\"ds-command-title\">Open a Dataset...</span><span class=\"ds-command-detail\">A folder containing an already-processed dataset: COLMAP (sparse/0), Nerfstudio (transforms.json), or Metashape exports. The format is detected automatically.</span></button>",
+      "css": ".ds-command{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;white-space:normal;background:#225B86;color:#E8EDF2;border:0;border-radius:4px;padding:10px 12px;cursor:pointer;}.ds-command-detail{color:#D7E8F7;}.ds-command:hover{background:#2B6A99;}.ds-command:active{background:#225075;}.ds-command:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}"
+    },
+    {
+      "name": "Shortcut Button",
+      "kind": "custom",
+      "refersTo": "button-key",
+      "description": "Explanatory inline-hint case with enough room. Native KeyButton measures fit and otherwise centers the label and exposes the key in hover help; this swatch does not implement that measurement.",
+      "html": "<button class=\"ds-key\" title=\"Save (Ctrl+S)\"><span class=\"ds-key-label\">Save</span><span class=\"ds-key-hint\">Ctrl+S</span></button>",
+      "css": ".ds-key{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:inline-flex;align-items:center;justify-content:space-between;gap:6px;background:#293745;color:#E8EDF2;border:0;border-radius:4px;padding:5px 8px;cursor:pointer;}.ds-key-hint{color:rgba(255,255,255,.35294117647058826);}.ds-key:hover{background:#304253;}.ds-key:active{background:#34485B;}.ds-key:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Reconstruction laboratory workbench",
+    "overview": "Spirula Studio is a native Dear ImGui/GLFW workspace. Graphite surfaces, neutral controls, restrained blue state cues, and fine boundaries support dense reconstruction work. The embedded Source Sans-derived face and regional CJK chain provide one continuous typographic voice across the thirteen interface languages.\n\nContext, execution, content, and diagnostics have distinct places. Reusable controls measure translated text and adapt to the available pane; persistent actions stay reachable beside independently scrolling content. Input feedback is immediate, without decorative entrance animation. This contract records the implementation; Home and Render composition remain in the surface brief.",
+    "keyCharacteristics": [
+      "Tonal surface layers and fine boundaries.",
+      "Neutral ordinary controls; explicit primary, selected, and danger roles.",
+      "One embedded Regular font chain with a small size hierarchy.",
+      "Measured wrapping, scaled geometry, and independently scrolling work areas."
+    ],
+    "rules": [
+      {
+        "name": "Meaning Before Accent",
+        "body": "Use the existing action, selection, focus, and status roles; a blue fill does not make every ordinary command primary.",
+        "section": "colors"
+      },
+      {
+        "name": "Measure the Language",
+        "body": "Measure rendered localized text with the current ImGui font and scale before placing controls, paths, or shortcut hints.",
+        "section": "typography"
+      },
+      {
+        "name": "Tonal Boundaries",
+        "body": "Separate shared surfaces with their existing fill and border roles; the shared theme has no cast-shadow layer.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use ButtonStyle for Primary, Selected, and Danger roles and preserve the existing native button behavior.",
+      "Do scale handwritten geometry with px(), keep saved panel sizes unscaled, and rebuild style from its base before scaling.",
+      "Do measure localized labels, wrap complete controls with FlowRow, and retain full context in hover help when paths are elided.",
+      "Do keep execution controls outside scrolling pages and keep job polling and dialogs outside visibility-dependent callbacks.",
+      "Do use the embedded regional font chain and preserve translated message IDs when customizing a control."
+    ],
+    "donts": [
+      "Don't introduce an unimplemented display face, weight hierarchy, letter spacing, shadow, or decorative animation as a system rule.",
+      "Don't reserve shortcut space by guesswork or draw a hint over its label; use KeyButton's measured fit and tooltip fallback.",
+      "Don't treat saved panel width as rendered pixels or overwrite the preference merely because a smaller window clamps it.",
+      "Don't promote a Home, Render, timeline, or gizmo-specific composition or color into a universal rule."
+    ]
+  }
+}

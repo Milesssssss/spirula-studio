@@ -1,5 +1,10 @@
 # Training workspace layout
 
+> Historical record: this document describes the first training-workspace
+> iteration committed as `0dbec1c`. Its screenshots, palette, and GPU-availability
+> statements belong to that validation session. For the current overall Studio
+> design, see [Studio workspace redesign](studio-workspace-redesign.md).
+
 Training controls belonged to the bottom of the settings form. Scrolling
 through advanced options, or hiding Settings, also hid Pause and Stop. Long
 paths competed with header actions, and logs crowded short preview columns.

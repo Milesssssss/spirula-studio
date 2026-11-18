@@ -27,6 +27,8 @@
 
 namespace gui {
 
+class FlowRow;
+
 class CompareView {
 public:
     // Four is where a pane stops being big enough to judge a render in.
@@ -114,7 +116,8 @@ public:
     // Once a frame, before draw().
     void poll();
     // The row above the panes: what is open, the add button, the link.
-    void draw_toolbar();
+    void draw_toolbar(FlowRow* flow = nullptr);
+    std::string context_path() const;
     // Panes showing splats through the engine, for screenshots
     // (defined in Screenshot.cpp).
     struct PaneShot {
@@ -164,7 +167,7 @@ private:
     void ensure_viewer_overlay();
     // `beside` draws to the right of the pane's image, inside the pane.
     void draw_pane(int index, const ImVec2& size, const std::function<void()>& beside = {});
-    void draw_placement_popup(int index);
+    void draw_placement_popup(int index, bool compact_render);
     // The panel driving the link this frame: the one being dragged (sticky
     // for the length of a drag), else whichever moved.
     ViewportPanel* link_master();

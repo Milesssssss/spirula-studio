@@ -827,7 +827,16 @@ void CompareView::finish_edit_load() {
 // Draw
 // ---------------------------------------------------------------------------
 
-void CompareView::draw_toolbar() {
+std::string CompareView::context_path() const {
+    if (_models.empty()) return {};
+    const int index = _render_index >= 0 ? _render_index : _edit_index >= 0 ? _edit_index : 0;
+    return _models[(size_t)std::clamp(index, 0, count() - 1)]->path;
+}
+
+void CompareView::draw_toolbar(FlowRow* flow) {
+    FlowRow local;
+    FlowRow& row = flow ? *flow : local;
+    const ImGuiStyle& style = ImGui::GetStyle();
     if (_ask_discard) {
         ui::OpenPopup(emsg::discard_title);
         _ask_discard = false;
@@ -895,6 +904,7 @@ void CompareView::draw_toolbar() {
         }
         ImGui::EndPopup();
     }
+    row.place(ImGui::CalcTextSize(msg::compare_add_model.get()).x + style.FramePadding.x * 2.0f);
     ImGui::BeginDisabled(full());
     if (ui::Button(msg::compare_add_model)) ImGui::OpenPopup("##addmodel");
     ImGui::EndDisabled();
@@ -914,12 +924,14 @@ void CompareView::draw_toolbar() {
         ImGui::EndPopup();
     }
     if (count() > 1) {
-        ImGui::SameLine();
+        row.place(ImGui::CalcTextSize(msg::compare_link_views.get()).x +
+                  ImGui::GetFrameHeight() + style.ItemInnerSpacing.x);
         ImGui::BeginDisabled(_wipe);
         ui::Checkbox(msg::compare_link_views, &_link);
         ImGui::EndDisabled();
         ui::help_on_hover(msg::compare_link_views_help);
-        ImGui::SameLine();
+        row.place(ImGui::CalcTextSize(msg::compare_wipe.get()).x +
+                  ImGui::GetFrameHeight() + style.ItemInnerSpacing.x);
         if (ui::Checkbox(msg::compare_wipe, &_wipe) && _wipe) _link = true;
         ui::help_on_hover(msg::compare_wipe_help);
     }
@@ -928,9 +940,20 @@ void CompareView::draw_toolbar() {
         _models[0]->panel.draw_nav_controls();
 }
 
-void CompareView::draw_placement_popup(int index) {
+void CompareView::draw_placement_popup(int index, bool compact_render) {
+    if (compact_render) {
+        const float width = std::min(px(460.0f), ImGui::GetIO().DisplaySize.x - px(24.0f));
+        ImGui::SetNextWindowSizeConstraints(ImVec2(width, 0),
+            ImVec2(width, std::max(px(100.0f), ImGui::GetIO().DisplaySize.y - px(40.0f))));
+    }
     if (!ImGui::BeginPopup("##place")) return;
     Model& m = *_models[index];
+    if (compact_render) {
+        ui::SeparatorText(msg::workspace_view_options);
+        m.panel.draw_options();
+        _render.draw_status();
+        ImGui::Separator();
+    }
     const float w = px(240.0f);
     if (index > 0) {
         ui::Checkbox(msg::compare_align_first, &m.align);
@@ -975,21 +998,46 @@ void CompareView::draw_placement_popup(int index) {
 
 void CompareView::draw_pane(int index, const ImVec2& size, const std::function<void()>& beside) {
     Model& m = *_models[index];
+    const bool compact_render = _render_index == index && size.y < px(360.0f);
+    m.panel.show_controls(!compact_render);
+    // Linked panes share the toolbar's navigation controls.
+    m.panel.show_nav_controls(!_link);
     ImGui::PushID(index);
     ImGui::BeginChild("##pane", size, ImGuiChildFlags_Borders);
 
     if (ui::ButtonRaw("...##place")) ImGui::OpenPopup("##place");
-    ui::help_on_hover(msg::compare_placement_help);
-    draw_placement_popup(index);
+    ui::help_on_hover(compact_render ? msg::workspace_view_options : msg::compare_placement_help);
+    draw_placement_popup(index, compact_render);
     ImGui::SameLine();
-    if (m.title) {
-        ui::Text(*m.title);
-    } else {
-        const std::string f = m.src.file().empty() ? m.src.path() : m.src.file();
-        ui::TextRaw(elide_middle(display_name(f),
-                                 ImGui::GetContentRegionAvail().x * 0.6f));
-        ui::help_on_hover_raw(f.c_str());
+    std::string counts;
+    float reserved = 0.0f;
+    if (m.src.ready()) {
+        using spirula::i18n::format;
+        if (m.src.kind() == SplatViewer::Kind::Points)
+            counts = format(msg::viewer_point_count, {(long long)m.src.num_splats()});
+        else if (m.src.kind() == SplatViewer::Kind::Mesh)
+            counts = format(msg::viewer_mesh_count,
+                {(long long)m.src.num_splats(), (long long)m.src.num_faces()});
+        else if (m.src.sb_lobes() > 0)
+            counts = format(msg::viewer_splat_count_sb,
+                {(long long)m.src.num_splats(), (long long)m.src.sh_degree(),
+                 (long long)m.src.sb_lobes()});
+        else
+            counts = format(msg::viewer_splat_count,
+                {(long long)m.src.num_splats(), (long long)m.src.sh_degree()});
+        const ImGuiStyle& style = ImGui::GetStyle();
+        auto button_width = [&](const spirula::i18n::Msg& label) {
+            return ImGui::CalcTextSize(label.get()).x + 2.0f * style.FramePadding.x + style.ItemSpacing.x;
+        };
+        reserved = button_width(_edit_index == index ? emsg::leave_edit : emsg::enter_edit);
+        if (_render_allowed)
+            reserved += button_width(_render_index == index ? rmsg::leave_render : rmsg::enter_render);
+        reserved += ImGui::CalcTextSize(counts.c_str()).x + style.ItemSpacing.x;
     }
+    const std::string file = m.src.file().empty() ? m.src.path() : m.src.file();
+    const std::string title = m.title ? m.title->get() : display_name(file);
+    ui::TextRaw(elide_middle(title, std::max(1.0f, ImGui::GetContentRegionAvail().x - reserved)));
+    ui::help_on_hover_raw(m.title ? title.c_str() : file.c_str());
     if (m.src.ready()) {
         // The way in and out of editing lives on the pane it edits: with two
         // models open, which one a toolbar button meant would be a guess.
@@ -1026,26 +1074,9 @@ void CompareView::draw_pane(int index, const ImVec2& size, const std::function<v
     }
     if (m.src.ready()) {
         ImGui::SameLine();
-        if (m.src.kind() == SplatViewer::Kind::Points)
-            ui::TextDisabled(msg::viewer_point_count,
-                             {(long long)m.src.num_splats()});
-        else if (m.src.kind() == SplatViewer::Kind::Mesh)
-            ui::TextDisabled(msg::viewer_mesh_count,
-                             {(long long)m.src.num_splats(),
-                              (long long)m.src.num_faces()});
-        else if (m.src.sb_lobes() > 0)
-            ui::TextDisabled(msg::viewer_splat_count_sb,
-                             {(long long)m.src.num_splats(),
-                              (long long)m.src.sh_degree(),
-                              (long long)m.src.sb_lobes()});
-        else
-            ui::TextDisabled(msg::viewer_splat_count,
-                             {(long long)m.src.num_splats(),
-                              (long long)m.src.sh_degree()});
+        ui::TextDisabledRaw(counts);
     }
 
-    // Navigation is the view's, not a pane's: linked, it lives on the toolbar.
-    m.panel.show_nav_controls(!_link);
     m.panel.set_controls_pad(std::max(0.0f, _controls_h - m.panel.controls_height()));
     switch (m.src.state()) {
         case SplatViewer::State::Loading:
@@ -1056,7 +1087,7 @@ void CompareView::draw_pane(int index, const ImVec2& size, const std::function<v
             ui::TextDisabledRaw(m.src.error());
             break;
         case SplatViewer::State::Ready:
-            if (_render_index == index) _render.draw_status();
+            if (_render_index == index) _render.draw_status(compact_render);
             else if (_edit_index == index && _edit.active()) _edit.draw_status();
             else if (_edit_index == index && _edit_loading.load())
                 ui::TextDisabled(emsg::edit_preparing);

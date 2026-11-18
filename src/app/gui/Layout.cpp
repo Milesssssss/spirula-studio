@@ -19,33 +19,104 @@ constexpr float kRefH = 950.0f;
 constexpr float kAutoMin = 0.80f;
 constexpr float kAutoMax = 1.25f;
 
+ImVec4 color(unsigned rgb, float alpha = 1.0f) {
+    return ImVec4((float)((rgb >> 16) & 255) / 255.0f,
+                  (float)((rgb >> 8) & 255) / 255.0f,
+                  (float)(rgb & 255) / 255.0f, alpha);
+}
+
 }  // namespace
 
 void apply_style(float scale) {
     ImGuiStyle& style = ImGui::GetStyle();
     style = ImGuiStyle();
-    ImGui::StyleColorsDark(&style);
-    style.WindowRounding = 4.0f;
-    style.FrameRounding = 3.0f;
-    style.GrabRounding = 3.0f;
-    style.TabRounding = 3.0f;
-    style.ScrollbarRounding = 3.0f;
-    style.FramePadding = ImVec2(6, 4);
+    style.WindowPadding = ImVec2(12, 10);
+    style.WindowRounding = 6.0f;
+    style.WindowBorderSize = 1.0f;
+    style.ChildRounding = 4.0f;
+    style.ChildBorderSize = 1.0f;
+    style.PopupRounding = 6.0f;
+    style.PopupBorderSize = 1.0f;
+    style.FramePadding = ImVec2(8, 5);
+    style.FrameRounding = 4.0f;
+    style.FrameBorderSize = 0.0f;
     style.ItemSpacing = ImVec2(8, 6);
+    style.ItemInnerSpacing = ImVec2(6, 4);
+    style.CellPadding = ImVec2(8, 5);
+    style.IndentSpacing = 20.0f;
+    style.ScrollbarSize = 12.0f;
+    style.ScrollbarRounding = 4.0f;
+    style.GrabMinSize = 12.0f;
+    style.GrabRounding = 3.0f;
+    style.TabRounding = 4.0f;
+    style.TabBorderSize = 0.0f;
+    style.TabBarBorderSize = 1.0f;
+    style.TabBarOverlineSize = 2.0f;
+    style.SeparatorTextBorderSize = 1.0f;
+    style.SeparatorTextPadding = ImVec2(8, 6);
+
     ImVec4* c = style.Colors;
-    c[ImGuiCol_WindowBg]         = ImVec4(0.10f, 0.105f, 0.12f, 1.0f);
-    c[ImGuiCol_ChildBg]          = ImVec4(0.115f, 0.12f, 0.135f, 1.0f);
-    c[ImGuiCol_FrameBg]          = ImVec4(0.19f, 0.20f, 0.23f, 1.0f);
-    c[ImGuiCol_FrameBgHovered]   = ImVec4(0.24f, 0.25f, 0.29f, 1.0f);
-    c[ImGuiCol_FrameBgActive]    = ImVec4(0.28f, 0.30f, 0.34f, 1.0f);
-    c[ImGuiCol_Button]           = ImVec4(0.22f, 0.32f, 0.44f, 1.0f);
-    c[ImGuiCol_ButtonHovered]    = ImVec4(0.28f, 0.40f, 0.55f, 1.0f);
-    c[ImGuiCol_ButtonActive]     = ImVec4(0.33f, 0.47f, 0.64f, 1.0f);
-    c[ImGuiCol_Header]           = ImVec4(0.20f, 0.25f, 0.32f, 1.0f);
-    c[ImGuiCol_HeaderHovered]    = ImVec4(0.26f, 0.32f, 0.41f, 1.0f);
-    c[ImGuiCol_HeaderActive]     = ImVec4(0.30f, 0.37f, 0.48f, 1.0f);
-    c[ImGuiCol_PlotLines]        = ImVec4(0.45f, 0.75f, 1.0f, 1.0f);
-    c[ImGuiCol_PlotHistogram]    = ImVec4(0.30f, 0.55f, 0.85f, 1.0f);  // also the ProgressBar fill
+    c[ImGuiCol_Text]                      = color(0xE8EDF2);
+    c[ImGuiCol_TextDisabled]              = color(0xB0BFCC);
+    c[ImGuiCol_WindowBg]                  = color(0x11161C);
+    c[ImGuiCol_ChildBg]                   = color(0x171E26);
+    c[ImGuiCol_PopupBg]                   = color(0x1D2731);
+    c[ImGuiCol_Border]                    = color(0x334352);
+    c[ImGuiCol_BorderShadow]              = color(0x000000, 0.0f);
+    c[ImGuiCol_FrameBg]                   = color(0x25313D);
+    c[ImGuiCol_FrameBgHovered]            = color(0x304253);
+    c[ImGuiCol_FrameBgActive]             = color(0x2D4358);
+    c[ImGuiCol_TitleBg]                   = color(0x151C23);
+    c[ImGuiCol_TitleBgActive]             = color(0x1D2832);
+    c[ImGuiCol_TitleBgCollapsed]          = color(0x151C23);
+    c[ImGuiCol_MenuBarBg]                 = color(0x151C23);
+    c[ImGuiCol_ScrollbarBg]               = color(0x11161C);
+    c[ImGuiCol_ScrollbarGrab]             = color(0x3A4B5C);
+    c[ImGuiCol_ScrollbarGrabHovered]      = color(0x50677D);
+    c[ImGuiCol_ScrollbarGrabActive]       = color(0x65829D);
+    c[ImGuiCol_CheckMark]                 = color(0x87BDEC);
+    c[ImGuiCol_CheckboxSelectedBg]        = color(0x264C6B);
+    c[ImGuiCol_SliderGrab]                = color(0x35638A);
+    c[ImGuiCol_SliderGrabActive]          = color(0x2E6D9D);
+    c[ImGuiCol_Button]                    = color(0x293745);
+    c[ImGuiCol_ButtonHovered]             = color(0x304253);
+    c[ImGuiCol_ButtonActive]              = color(0x34485B);
+    c[ImGuiCol_Header]                    = color(0x222D38);
+    c[ImGuiCol_HeaderHovered]             = color(0x2D4154);
+    c[ImGuiCol_HeaderActive]              = color(0x2C4357);
+    c[ImGuiCol_Separator]                 = color(0x2A3947);
+    c[ImGuiCol_SeparatorHovered]          = color(0x659FD0);
+    c[ImGuiCol_SeparatorActive]           = color(0x8CC4F3);
+    c[ImGuiCol_ResizeGrip]                = color(0x50677D, 0.25f);
+    c[ImGuiCol_ResizeGripHovered]         = color(0x659FD0, 0.65f);
+    c[ImGuiCol_ResizeGripActive]          = color(0x8CC4F3);
+    c[ImGuiCol_InputTextCursor]           = color(0xCDE2F5);
+    c[ImGuiCol_TabHovered]                = color(0x2A3D50);
+    c[ImGuiCol_Tab]                       = color(0x1B242D);
+    c[ImGuiCol_TabSelected]               = color(0x263F55);
+    c[ImGuiCol_TabSelectedOverline]       = color(0x77B9EC);
+    c[ImGuiCol_TabDimmed]                 = color(0x171E26);
+    c[ImGuiCol_TabDimmedSelected]         = color(0x22313F);
+    c[ImGuiCol_TabDimmedSelectedOverline] = color(0x47657D);
+    c[ImGuiCol_PlotLines]                 = color(0x88BCE6);
+    c[ImGuiCol_PlotLinesHovered]          = color(0xC1DDF5);
+    c[ImGuiCol_PlotHistogram]             = color(0x2E6D9D);
+    c[ImGuiCol_PlotHistogramHovered]      = color(0x66A7D8);
+    c[ImGuiCol_TableHeaderBg]             = color(0x202C37);
+    c[ImGuiCol_TableBorderStrong]         = color(0x334352);
+    c[ImGuiCol_TableBorderLight]          = color(0x26333F);
+    c[ImGuiCol_TableRowBg]                = color(0x171E26, 0.0f);
+    c[ImGuiCol_TableRowBgAlt]             = color(0x304253, 0.18f);
+    c[ImGuiCol_TextLink]                  = color(0x8DC7F4);
+    c[ImGuiCol_TextSelectedBg]            = color(0x356D9E, 0.65f);
+    c[ImGuiCol_TreeLines]                 = color(0x405367);
+    c[ImGuiCol_DragDropTarget]            = color(0x89C9F8);
+    c[ImGuiCol_DragDropTargetBg]          = color(0x356D9E, 0.24f);
+    c[ImGuiCol_UnsavedMarker]             = color(0xE6B765);
+    c[ImGuiCol_NavCursor]                 = color(0x8CC4F3);
+    c[ImGuiCol_NavWindowingHighlight]     = color(0xDCE9F5, 0.75f);
+    c[ImGuiCol_NavWindowingDimBg]         = color(0x0C1219, 0.68f);
+    c[ImGuiCol_ModalWindowDimBg]          = color(0x080D13, 0.72f);
     style.ScaleAllSizes(scale);
     style.FontScaleMain = scale;
 }
@@ -95,6 +166,26 @@ void draw_grab(ImVec2 p, ImVec2 size, bool hot) {
 
 float splitter_extent() {
     return grab_thickness() + ImGui::GetStyle().ItemSpacing.y;
+}
+
+float splitter_width() {
+    return grab_thickness();
+}
+
+SidebarWidthLimits viewer_sidebar_limits(float available) {
+    const float minimum = std::min(px(320.0f), available * 0.45f);
+    const float maximum = std::max(minimum,
+        std::min(available * 0.45f, available - px(320.0f) - splitter_extent()));
+    return {minimum, maximum};
+}
+
+float workspace_log_limit(float available) {
+    const ImGuiStyle& style = ImGui::GetStyle();
+    const float limit = std::max(0.0f, std::min(available * 0.30f,
+        available - px(240.0f) - splitter_extent() - style.ItemSpacing.y));
+    const float minimum = ImGui::GetTextLineHeightWithSpacing() +
+                          2.0f * style.WindowPadding.y + style.ScrollbarSize;
+    return limit < minimum ? 0.0f : limit;
 }
 
 void FlowRow::place(float width) {
