@@ -33,6 +33,7 @@
 #include "mesh/MeshImport.h"
 #include "app/gui/Ui.h"
 #include "app/gui/ProgressView.h"
+#include "app/gui/TrainingWorkspace.h"
 #include "app/gui/SfmInProcess.h"
 #include "app/gui/VramForecastView.h"
 #include "i18n/TimeFormat.h"
@@ -1434,7 +1435,14 @@ void GuiApp::launch_training(const TrainConfig& cfg, const std::string& preset) 
 }
 
 void GuiApp::start_training() {
+    resolve_train_macros();
     launch_training(_cfg, _preset);
+}
+
+void GuiApp::resolve_train_macros() {
+    TrainConfig base;
+    train_apply_preset(base, _preset);
+    train_resolve_macros(_cfg, _cfg_ui.touched, nullptr, &base);
 }
 
 void GuiApp::detach_session_views() {
@@ -9478,21 +9486,28 @@ void GuiApp::draw_license_modal() {
 // ===========================================================================
 
 void GuiApp::draw_train() {
+    FlowRow header;
+    const float button_padding = ImGui::GetStyle().FramePadding.x * 2.0f;
+    header.place(ImGui::CalcTextSize(msg::back_home.get()).x + button_padding);
     bool preparing = _runner.phase() == TrainRunner::Phase::Preparing;
     ImGui::BeginDisabled(preparing);   // no clean interruption point
     if (ui::Button(msg::back_home)) request_go_home();
     ImGui::EndDisabled();
     if (training_busy()) ui::help_on_hover(msg::leaving_stops_training);
-    ImGui::SameLine();
     if (_batch_active) {
+        header.place(ImGui::CalcTextSize(msg::batch_show_list.get()).x + button_padding);
         if (ui::Button(msg::batch_show_list)) _screen = Screen::Batch;
-        ImGui::SameLine();
-        const BatchRow* row = batch_running_row();
-        ui::TextDisabledRaw(row ? row->dataset : std::string());
-    } else {
-        ui::TextDisabledRaw(_cfg.data);
-        // Offered when the dataset's mask folder exists; probed at most once
-        // a second, as workspace_state() does.
+    }
+    ImGui::SameLine();
+    if (ImGui::GetContentRegionAvail().x < px(120.0f)) ImGui::NewLine();
+    const BatchRow* batch_row = _batch_active ? batch_running_row() : nullptr;
+    const std::string& dataset = batch_row ? batch_row->dataset : _cfg.data;
+    ImGui::AlignTextToFramePadding();
+    ui::TextDisabledRaw(elide_middle(dataset,
+        std::max(1.0f, ImGui::GetContentRegionAvail().x)));
+    ui::help_on_hover_raw(dataset.c_str());
+
+    if (!_batch_active) {
         const std::string key = _cfg.data + "\n" + _cfg.mask_dir;
         const double now = ImGui::GetTime();
         if (key != _train_masks_key || now - _train_masks_at > 1.0) {
@@ -9503,8 +9518,37 @@ void GuiApp::draw_train() {
             _train_masks_at = now;
             _train_has_masks = !_cfg.data.empty() && fs::is_directory(md, ec) && !fs::is_empty(md, ec);
         }
-        if (_train_has_masks) {
-            ImGui::SameLine();
+    }
+    draw_device_issue_banner();
+    TrainingWorkspacePanels panels;
+    panels.controls = [this] {
+        draw_train_controls();
+        draw_status_strip();
+    };
+    panels.settings = [this] { draw_train_settings(); };
+    panels.metrics = [this] { draw_metrics(); };
+    panels.preview = [this] {
+        const ImGuiStyle& style = ImGui::GetStyle();
+        FlowRow tools;
+        const float mode_w = std::max(px(160.0f),
+            std::max(ImGui::CalcTextSize(msg::preview_mode_3d.get()).x,
+                     ImGui::CalcTextSize(msg::preview_mode_images.get()).x) +
+            ImGui::GetFrameHeight() + style.FramePadding.x * 2.0f);
+        tools.place(mode_w);
+        ImGui::SetNextItemWidth(mode_w);
+        int mode = _preview_images ? 1 : 0;
+        if (ui::ComboRaw("##previewmode", &mode,
+                         {&msg::preview_mode_3d, &msg::preview_mode_images}))
+            _preview_images = mode == 1;
+        ui::help_on_hover(msg::preview_mode_help);
+        const float shot_w = ImGui::CalcTextSize(msg::screenshot.get()).x +
+            ImGui::CalcTextSize("...").x + style.FramePadding.x * 4.0f +
+            style.ItemSpacing.x;
+        tools.place(shot_w);
+        draw_screenshot_controls();
+        if (_train_has_masks && !_batch_active) {
+            tools.place(ImGui::CalcTextSize(mmsg::correct_masks.get()).x +
+                        style.FramePadding.x * 2.0f);
             ImGui::BeginDisabled(training_busy() || native_work_busy());
             if (ui::Button(mmsg::correct_masks)) {
                 fs::path id(_cfg.image_dir), md(_cfg.mask_dir);
@@ -9515,60 +9559,19 @@ void GuiApp::draw_train() {
             ImGui::EndDisabled();
             ui::help_on_hover(mmsg::correct_masks_help);
         }
-    }
-    // Two ways to watch a run: the scene in 3D, or one training photograph
-    // beside the render of the same camera. Right-aligned on the header row so
-    // it costs the preview below no height.
-    {
-        const float w = px(160.0f);
-        draw_screenshot_controls(w);
-        ImGui::SameLine(std::max(0.0f, ImGui::GetContentRegionMax().x - w));
-        ImGui::SetNextItemWidth(w);
-        int mode = _preview_images ? 1 : 0;
-        if (ui::ComboRaw("##previewmode", &mode,
-                         {&msg::preview_mode_3d, &msg::preview_mode_images}))
-            _preview_images = mode == 1;
-        ui::help_on_hover(msg::preview_mode_help);
-    }
-
-    draw_device_issue_banner();
-
-    const float body_avail = ImGui::GetContentRegionAvail().y;
-    if (_show_settings) {
-        // Never more than 45% of the window: the viewport is the point of the
-        // screen, and a settings column sized for a 1600 px window swallows a
-        // 1100 px one.
-        const float w = std::clamp(_panel_w * ui_scale(), px(220.0f),
-                                   std::max(px(220.0f),
-                                            ImGui::GetContentRegionAvail().x * 0.45f));
-        ImGui::BeginChild("##settings", ImVec2(w, 0), ImGuiChildFlags_Borders);
-        draw_train_settings();
+        const float available = ImGui::GetContentRegionAvail().y;
+        const float max_log = std::max(0.0f, std::min(available * 0.30f,
+            available - px(240.0f) - splitter_extent() - style.ItemSpacing.y));
+        const float log_h = std::min(log_height(available), max_log);
+        ImGui::BeginChild("##viewport", ImVec2(0, body_height(log_h)), ImGuiChildFlags_Borders);
+        const bool stepping = _runner.phase() == TrainRunner::Phase::Training;
+        const int step = stepping ? _runner.latest_progress().step : -1;
+        if (_preview_images) _images.draw(stepping, step);
+        else { _images.destroy_gl(); _viewport.draw(stepping, step); }
         ImGui::EndChild();
-        float dragged = w;
-        if (splitter_v("##panelsplit", &dragged, px(220.0f),
-                       ImGui::GetWindowWidth() * 0.7f, body_avail)) {
-            _panel_w = dragged / ui_scale();
-            _layout_dirty = true;
-        }
-    }
-
-    ImGui::BeginGroup();
-    float status_h = ImGui::GetFrameHeightWithSpacing() +
-                     ImGui::GetTextLineHeightWithSpacing() + px(10.0f);
-    float spacing = ImGui::GetStyle().ItemSpacing.y;
-    float log_h = log_height(body_avail - status_h - spacing);
-    float vp_h = -(log_h + (log_h > 0 ? splitter_extent() : 0) + status_h + spacing);
-    ImGui::BeginChild("##viewport", ImVec2(0, vp_h), ImGuiChildFlags_Borders);
-    const bool stepping = _runner.phase() == TrainRunner::Phase::Training;
-    // The step both previews pace their refresh by while nobody is steering.
-    const int step = stepping ? _runner.latest_progress().step : -1;
-    // The images view's textures are ~0.7 GB at 60 MP; hidden, training can have them.
-    if (_preview_images) _images.draw(stepping, step);
-    else                 { _images.destroy_gl(); _viewport.draw(stepping, step); }
-    ImGui::EndChild();
-    draw_status_strip();
-    draw_log_panel(log_h);
-    ImGui::EndGroup();
+        draw_log_panel(log_h, max_log);
+    };
+    if (draw_training_workspace(_panel_w, _show_settings, panels)) _layout_dirty = true;
 }
 
 
@@ -11311,13 +11314,20 @@ const BatchRow* GuiApp::batch_running_row() const {
     return &_batch[(size_t)row];
 }
 
-void GuiApp::draw_batch_stop_buttons() {
+void GuiApp::draw_batch_stop_buttons(FlowRow* row) {
+    auto size = [&](const Msg& label) {
+        if (!row) return ImVec2(-8, 0);
+        const float width = ImGui::CalcTextSize(label.get()).x +
+                            ImGui::GetStyle().FramePadding.x * 2.0f;
+        row->place(width);
+        return ImVec2(width, 0);
+    };
     ImGui::BeginDisabled(_batch_stop_after);
-    if (ui::Button(msg::batch_stop_after, ImVec2(-8, 0)))
+    if (ui::Button(msg::batch_stop_after, size(msg::batch_stop_after)))
         _batch_stop_after = true;
     ui::help_on_hover(msg::batch_stop_after_help);
     ImGui::EndDisabled();
-    if (ui::Button(msg::batch_stop_now, ImVec2(-8, 0))) {
+    if (ui::Button(msg::batch_stop_now, size(msg::batch_stop_now))) {
         _batch_stop_after = true;
         _batch_stop_now = true;
         if (_batch_current >= 0 && _batch_current < (int)_batch_tasks.size()) {
@@ -11332,10 +11342,8 @@ void GuiApp::draw_batch_stop_buttons() {
     ui::help_on_hover(msg::batch_stop_now_help);
 }
 
-// What is running, on the batch screen and on the work screen that owns the
-// running task: two bars, what each has left, and the ways to stop. The work
-// screen shows the job; this says where in the QUEUE it is.
-void GuiApp::draw_batch_progress() {
+// Queue and task progress; training keeps its stop controls in the action bar.
+void GuiApp::draw_batch_progress(bool show_controls) {
     ui::SeparatorText(msg::batch_title);
     const float frac = batch_task_fraction();
     const double elapsed = batch_task_elapsed();
@@ -11386,7 +11394,7 @@ void GuiApp::draw_batch_progress() {
     } else if (ui::Button(msg::batch_show_list, ImVec2(-8, 0))) {
         _screen = Screen::Batch;
     }
-    draw_batch_stop_buttons();
+    if (show_controls) draw_batch_stop_buttons();
 }
 
 
@@ -11516,7 +11524,7 @@ void GuiApp::draw_train_settings() {
     // preset -- so the editor would be showing something that is not what is
     // training. What the row IS training goes here instead.
     if (_batch_active) {
-        draw_batch_progress();
+        draw_batch_progress(false);
     } else {
         // Snapshot: any change to a dataset-parsing option below triggers an
         // automatic reload (deferred until the edited widget loses focus).
@@ -11548,14 +11556,8 @@ void GuiApp::draw_train_settings() {
         }
         ImGui::EndDisabled();
 
-        // The macro options (quality, floater_suppression, ...) fill in the
-        // flags they stand for, skipping any the user has edited by hand -- so
-        // the two panels above always show the values the run will actually
-        // use. None of what they write is a dataset-parsing field, so this
-        // cannot make the snapshot below think the dataset went stale.
-        TrainConfig macro_base;   // not _defaults: a saved preset bakes in macros
-        train_apply_preset(macro_base, _preset);
-        train_resolve_macros(_cfg, _cfg_ui.touched, nullptr, &macro_base);
+        // Resolve macros without replacing manual edits.
+        resolve_train_macros();
 
         if (_cfg.save_full_checkpoint != parse_before.save_full_checkpoint) {
             _keep_full_ckpt = _cfg.save_full_checkpoint;
@@ -11564,10 +11566,6 @@ void GuiApp::draw_train_settings() {
         if (!parse_settings_equal(parse_before, _cfg)) _parse_dirty = true;
     }
 
-    // ---- controls + metrics ----
-    ui::SeparatorText(msg::section_training);
-    draw_train_controls();
-    draw_metrics();
 }
 
 // Seed the shared save dialog from what is on screen: a saved preset being
@@ -12257,18 +12255,19 @@ void GuiApp::draw_dataset_aux(float width) {
 }
 
 void GuiApp::draw_basic_options() {
-    // Wide enough for the longest value any of these dropdowns offers, and
-    // scaled: at 200% the labels are twice the size and the box is not.
     const float w = px(170.0f);
+    auto field = [](const Msg& label, const Msg& help) {
+        ui::Text(label);
+        ui::help_on_hover(help);
+        ImGui::SetNextItemWidth(-FLT_MIN);
+        // Keep the original widget ID when its label moves above the field.
+        return ui::detail::label("", label.id);
+    };
 
-    // A macro option: one dropdown standing for the several flags
-    // train_resolve_macros() fills in behind it. The value written is the
-    // token the flag takes; what the user picks is the word for it.
     auto macro_option = [&](const char* key, std::string& value,
                             const Msg& label, const Msg& help,
                             std::initializer_list<const char*> values) {
-        ImGui::SetNextItemWidth(w);
-        const bool open = ui::BeginComboRaw(ui::detail::label(label),
+        const bool open = ui::BeginComboRaw(field(label, help),
                                             gui::choice_display(key, value).c_str());
         if (!open) { ui::help_on_hover(help); return; }
         for (const char* v : values) {
@@ -12282,29 +12281,34 @@ void GuiApp::draw_basic_options() {
         ImGui::EndCombo();
     };
 
-    // Output location first -- the thing every new user looks for.
-    ImGui::SetNextItemWidth(w);
+    ui::Text(msg::opt_output_folder);
+    ui::help_on_hover(msg::opt_output_folder_help);
+    const ImGuiStyle& st = ImGui::GetStyle();
+    const float browse_w = ImGui::CalcTextSize("...").x + 2.0f * st.FramePadding.x;
+    ImGui::SetNextItemWidth(std::max(1.0f, ImGui::GetContentRegionAvail().x -
+                                           browse_w - st.ItemSpacing.x));
     if (ui::InputTextRaw("##outdir", &_cfg.output_dir_prefix))
         _cfg_ui.touched.insert("output_dir_prefix");
+    ui::help_on_hover(msg::opt_output_folder_help);
     ImGui::SameLine();
-    if (ui::ButtonRaw("...##outdir")) {
+    if (ui::ButtonRaw("...##outdir", ImVec2(browse_w, 0))) {
         open_pick(PickAction::OutputPrefix, msg::pick_output_folder.get(),
                   FileDialog::Mode::Folder, {}, _cfg.output_dir_prefix);
     }
-    ImGui::SameLine();
-    ui::Text(msg::opt_output_folder);
     ui::help_on_hover(msg::opt_output_folder_help);
-    ImGui::SetNextItemWidth(w);
-    if (ui::InputTextWithHint(msg::opt_run_name, msg::opt_run_name_hint,
-                              &_cfg.output_dir_name))
+    if (ui::InputTextWithHintRaw(field(msg::opt_run_name, msg::opt_run_name_help),
+                                 msg::opt_run_name_hint, &_cfg.output_dir_name))
         _cfg_ui.touched.insert("output_dir_name");
     ui::help_on_hover(msg::opt_run_name_help);
     {
         std::string run = _cfg.output_dir_name.empty()
             ? fs::path(_cfg.data).stem().string() + "_<time>"
             : _cfg.output_dir_name;
-        ui::TextColoredWrappedRaw(
-            kDim, "-> " + (fs::path(_cfg.output_dir_prefix) / run).string());
+        const std::string path = (fs::path(_cfg.output_dir_prefix) / run).string();
+        const std::string shown = elide_middle("-> " + path,
+            std::max(1.0f, ImGui::GetContentRegionAvail().x));
+        ui::TextColoredRaw(kDim, shown);
+        ui::help_on_hover_raw(path.c_str());
     }
     ImGui::Spacing();
 
@@ -12315,13 +12319,11 @@ void GuiApp::draw_basic_options() {
                  {"low", "medium", "high", "ultra"});
 #endif
 
-    ImGui::SetNextItemWidth(w);
-    if (ui::InputInt(msg::opt_steps, &_cfg.num_iterations))
+    if (ui::InputIntRaw(field(msg::opt_steps, msg::opt_steps_help), &_cfg.num_iterations))
         _cfg_ui.touched.insert("num_iterations");
     ui::help_on_hover(msg::opt_steps_help);
 
-    ImGui::SetNextItemWidth(w);
-    if (ui::InputInt(msg::opt_max_splats, &_cfg.cap_max))
+    if (ui::InputIntRaw(field(msg::opt_max_splats, msg::opt_max_splats_help), &_cfg.cap_max))
         _cfg_ui.touched.insert("cap_max");
     ui::help_on_hover(msg::opt_max_splats_help);
 
@@ -12330,8 +12332,7 @@ void GuiApp::draw_basic_options() {
         // config.json and accepted by `--primitive`; they are not translated.
         static const char* prims[] = {"3dgs", "mip", "3dgut"};
         int pi = _cfg.primitive == "mip" ? 1 : _cfg.primitive == "3dgut" ? 2 : 0;
-        ImGui::SetNextItemWidth(w);
-        if (ui::ComboRaw(ui::detail::label(msg::opt_primitive), &pi, prims, 3)) {
+        if (ui::ComboRaw(field(msg::opt_primitive, msg::opt_primitive_help), &pi, prims, 3)) {
             _cfg.primitive = prims[pi];
             _cfg_ui.touched.insert("primitive");
         }
@@ -12346,16 +12347,16 @@ void GuiApp::draw_basic_options() {
     {
         // "1/2" is a fraction, not a word; only "native" is translated.
         const char* items[] = {msg::opt_resolution_native.get(), "1/2", "1/4", "1/8"};
-        ImGui::SetNextItemWidth(w);
-        if (ui::ComboRaw(ui::detail::label(msg::opt_resolution), &ds_idx, items, 4)) {
+        if (ui::ComboRaw(field(msg::opt_resolution, msg::opt_resolution_help),
+                         &ds_idx, items, 4)) {
             const float vals[] = {0.0f, 2.0f, 4.0f, 8.0f};
             _cfg.train_resolution_divisor = vals[ds_idx];
             _cfg_ui.touched.insert("train_resolution_divisor");
         }
     }
     ui::help_on_hover(msg::opt_resolution_help);
-    ImGui::SetNextItemWidth(w);
-    if (ui::InputInt(fld::max_resolution, &_cfg.max_resolution)) {
+    if (ui::InputIntRaw(field(fld::max_resolution, fld::max_resolution_help),
+                       &_cfg.max_resolution)) {
         _cfg.max_resolution = std::clamp(_cfg.max_resolution, 0, 32768);
         _cfg_ui.touched.insert("max_resolution");
     }
@@ -12395,8 +12396,8 @@ void GuiApp::draw_basic_options() {
     }
 #endif
 
-    ImGui::SetNextItemWidth(w);
-    if (ui::SliderInt(msg::opt_sh_degree, &_cfg.sh_degree, 0, 4))
+    if (ui::SliderIntRaw(field(msg::opt_sh_degree, msg::opt_sh_degree_help),
+                        &_cfg.sh_degree, 0, 4, "%d"))
         _cfg_ui.touched.insert("sh_degree");
     ui::help_on_hover(msg::opt_sh_degree_help);
 
@@ -12427,9 +12428,6 @@ void GuiApp::draw_basic_options() {
 
     ImGui::Spacing();
 
-    // The two "if the capture went wrong" dials, last because a first run
-    // should leave them alone and come back to them only if the result has
-    // the problem they name.
     macro_option("floater_suppression", _cfg.floater_suppression,
                  fld::floater_suppression, fld::floater_suppression_help,
                  {"off", "mild", "moderate", "strong"});
@@ -12445,52 +12443,60 @@ void GuiApp::draw_basic_options() {
 }
 
 void GuiApp::draw_train_controls() {
-    TrainRunner::Phase ph = _runner.phase();
+    const TrainRunner::Phase ph = _runner.phase();
+    const ImGuiStyle& style = ImGui::GetStyle();
+    FlowRow row;
+    auto width = [&](const Msg& label) {
+        return ImGui::CalcTextSize(label.get()).x + style.FramePadding.x * 2.0f;
+    };
+    auto button = [&](const Msg& label, bool primary = false) {
+        const float w = std::max(px(104.0f), width(label));
+        row.place(w);
+        if (!primary) {
+            ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_FrameBg]);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_FrameBgHovered]);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_FrameBgActive]);
+        }
+        const bool clicked = ui::Button(label, ImVec2(w, 0));
+        if (!primary) ImGui::PopStyleColor(3);
+        return clicked;
+    };
+    auto stop = [&] {
+        const bool stopping = _runner.session() &&
+                              _runner.session()->stop_requested.load();
+        ImGui::BeginDisabled(stopping);
+        if (button(stopping ? msg::stopping : msg::stop)) {
+            _pending = Pending::StopHere;
+            _open_confirm = true;
+        }
+        ImGui::EndDisabled();
+        ui::help_on_hover(msg::stop_help);
+    };
     switch (ph) {
         case TrainRunner::Phase::Idle:
         case TrainRunner::Phase::Ready:
         case TrainRunner::Phase::LoadError:
         case TrainRunner::Phase::Done:
         case TrainRunner::Phase::TrainError: {
-            if (ph == TrainRunner::Phase::TrainError)
-                ui::TextColoredWrappedRaw(kErr, _runner.error());
-            if (ph == TrainRunner::Phase::Done) {
-                const bool saved = _runner.saved_on_stop();
-                ui::TextColored(saved ? kOk : kWarn,
-                                saved ? msg::training_complete
-                                      : msg::training_stopped_unsaved);
-                if (auto* s = _runner.session()) {
-                    ImGui::PushTextWrapPos();
-                    ui::TextDisabled(saved ? msg::saved_to : msg::unsaved_note,
-                                     {s->out_dir.string()});
-                    ImGui::PopTextWrapPos();
-                }
+            const bool can_start = !_batch_active && !native_work_busy() &&
+                (ph == TrainRunner::Phase::Ready || ph == TrainRunner::Phase::Done ||
+                 ph == TrainRunner::Phase::TrainError);
+            if (!_batch_active) {
+                ImGui::BeginDisabled(!can_start);
+                if (button(ph == TrainRunner::Phase::Done ? msg::train_again
+                                                          : msg::start_training, true))
+                    start_training();
+                ImGui::EndDisabled();
             }
-            // A batch owns the runner between its tasks, so the queue's own
-            // next row is what starts -- never a click here.
-            bool can_start = !_batch_active && !native_work_busy() &&
-                             (ph == TrainRunner::Phase::Ready ||
-                              ph == TrainRunner::Phase::Done ||
-                              ph == TrainRunner::Phase::TrainError);
-            ImGui::BeginDisabled(!can_start);
-            if (ui::Button(ph == TrainRunner::Phase::Done ? msg::train_again
-                                                          : msg::start_training,
-                           ImVec2(-8, 36)))
-                start_training();
-            ImGui::EndDisabled();
-            // What a finished run is for: a picture of it, or a cleaned copy.
             if (ph == TrainRunner::Phase::Done && _runner.saved_on_stop() &&
                 _runner.session() && !_batch_active) {
                 const std::string out = _runner.session()->out_dir.string();
-                const float half = (ImGui::GetContentRegionAvail().x - 8.0f -
-                                    ImGui::GetStyle().ItemSpacing.x) * 0.5f;
-                if (ui::Button(rmsg::train_render, ImVec2(half, 30))) {
+                if (button(rmsg::train_render)) {
                     _render_after_open = true;
                     request_open_splat(out);
                 }
                 ui::help_on_hover(rmsg::train_render_help);
-                ImGui::SameLine();
-                if (ui::Button(rmsg::train_edit, ImVec2(half, 30))) {
+                if (button(rmsg::train_edit)) {
                     _edit_after_open = true;
                     request_open_splat(out);
                 }
@@ -12498,61 +12504,64 @@ void GuiApp::draw_train_controls() {
             }
             break;
         }
-        case TrainRunner::Phase::Loading:
-            ui::TextColored(kDim, msg::parsing_dataset);
-            break;
-        case TrainRunner::Phase::Preparing: {
-            const std::string fetching = _runner.fetch_line();
-            if (fetching.empty()) ui::TextColored(kDim, msg::preparing_engine);
-            else ui::TextColoredWrappedRaw(kDim, fetching);
-            break;
-        }
-        case TrainRunner::Phase::Evaluating: {
-            ui::TextColored(kDim, msg::status_evaluating);
-            const bool stopping = _runner.session() &&
-                                  _runner.session()->stop_requested.load();
-            ImGui::BeginDisabled(stopping);
-            if (ui::Button(stopping ? msg::stopping : msg::stop, ImVec2(-8, 32))) {
-                _pending = Pending::StopHere;
-                _open_confirm = true;
-            }
-            ImGui::EndDisabled();
-            ui::help_on_hover(msg::stop_help);
-            break;
-        }
         case TrainRunner::Phase::Training: {
-            bool paused = _runner.paused();
-            // While a batch runs, stopping is the batch panel's business --
-            // "stop and save" here would end one job and silently start the
-            // next, which is not what anybody pressing it means.
-            float half = _batch_active
-                             ? -8.0f
-                             : (ImGui::GetContentRegionAvail().x - 12) * 0.5f;
-            if (ui::Button(paused ? msg::resume : msg::pause, ImVec2(half, 32)))
+            const bool paused = _runner.paused();
+            if (button(paused ? msg::resume : msg::pause, true))
                 _runner.set_paused(!paused);
-            if (_batch_active) break;
-            ImGui::SameLine();
-            bool stopping = _runner.session() &&
-                            _runner.session()->stop_requested.load();
-            ImGui::BeginDisabled(stopping);
-            // Asks first: whether the run's last minutes reach the disk is
-            // the one thing about stopping that cannot be undone afterwards.
-            if (ui::Button(stopping ? msg::stopping : msg::stop,
-                           ImVec2(half, 32))) {
-                _pending = Pending::StopHere;
-                _open_confirm = true;
-            }
-            ImGui::EndDisabled();
-            ui::help_on_hover(msg::stop_help);
+            if (!_batch_active) stop();
             break;
         }
+        case TrainRunner::Phase::Evaluating:
+            if (!_batch_active) stop();
+            break;
+        default: break;
+    }
+    if (_batch_active) draw_batch_stop_buttons(&row);
+
+    row.place(width(dmsg::section_settings));
+    if (ui::ToggleButton(dmsg::section_settings, &_show_settings)) _layout_dirty = true;
+    row.place(width(msg::workspace_log));
+    if (ui::ToggleButton(msg::workspace_log, &_show_log)) _layout_dirty = true;
+
+    auto feedback = [&](const ImVec4& color, std::string text) {
+        std::string line = text;
+        std::replace(line.begin(), line.end(), '\n', ' ');
+        ui::TextColoredRaw(color, elide_middle(line,
+            std::max(1.0f, ImGui::GetContentRegionAvail().x)));
+        ui::help_on_hover_raw(text.c_str());
+    };
+    if (ph == TrainRunner::Phase::TrainError || ph == TrainRunner::Phase::LoadError) {
+        feedback(kErr, _runner.error());
+    } else if (ph == TrainRunner::Phase::Done) {
+        const bool saved = _runner.saved_on_stop();
+        ui::TextColored(saved ? kOk : kWarn,
+                        saved ? msg::training_complete : msg::training_stopped_unsaved);
+        if (auto* session = _runner.session()) {
+            const Msg& label = saved ? msg::saved_to : msg::unsaved_note;
+            const std::string path = session->out_dir.string();
+            const float label_width = ImGui::CalcTextSize(ui::format(label, {""}).c_str()).x;
+            ui::TextDisabled(label, {elide_middle(path,
+                std::max(1.0f, ImGui::GetContentRegionAvail().x - label_width))});
+            ui::help_on_hover_raw(ui::format(label, {path}).c_str());
+        }
+    } else if (ph == TrainRunner::Phase::Loading) {
+        ui::TextColored(kDim, msg::parsing_dataset);
+    } else if (ph == TrainRunner::Phase::Preparing) {
+        const std::string fetching = _runner.fetch_line();
+        if (fetching.empty()) ui::TextColored(kDim, msg::preparing_engine);
+        else feedback(kDim, fetching);
+    } else if (ph == TrainRunner::Phase::Evaluating) {
+        ui::TextColored(kDim, msg::status_evaluating);
     }
 }
 
 void GuiApp::draw_metrics() {
     static std::vector<TrainRunner::MetricPoint> pts;
     _runner.get_metrics(pts);
-    if (pts.empty()) return;
+    if (pts.empty()) {
+        ui::TextWrapped(msg::workspace_metrics_empty);
+        return;
+    }
 
     ui::SeparatorText(msg::section_metrics);
     int stride = std::max<size_t>(1, pts.size() / 240);
@@ -12652,7 +12661,7 @@ void GuiApp::draw_status_strip() {
         char ms[32];
         std::snprintf(ms, sizeof ms, "%.0f",
                       (avg >= 0.0 ? avg : p.step_latency) * 1000.0);
-        ui::Text(_runner.paused() ? msg::status_rate_paused : msg::status_rate,
+        ui::TextWrapped(_runner.paused() ? msg::status_rate_paused : msg::status_rate,
                  {ms, format_duration_coarse(_train_clock.elapsed(now)),
                   format_duration_coarse(_train_clock.remaining(now)),
                   format_count((double)p.num_splats)});
@@ -12660,7 +12669,7 @@ void GuiApp::draw_status_strip() {
     } else if (ph == TrainRunner::Phase::Done && p.total_steps > 0) {
         ui::ProgressBar(1.0f, ImVec2(-8, 0), msg::status_done_steps,
                         {p.step + 1, format_duration_coarse(_runner.elapsed_seconds())});
-        ui::TextDisabled(msg::status_explore);
+        ui::TextColoredWrapped(kDim, msg::status_explore);
         draw_timing_link();
     } else if (ph == TrainRunner::Phase::Preparing) {
         const std::string fetching = _runner.fetch_line();
@@ -12685,7 +12694,7 @@ void GuiApp::draw_status_strip() {
         progress_time_line(_eval_clock);
     } else if (ph == TrainRunner::Phase::Ready) {
         ui::ProgressBar(0.0f, ImVec2(-8, 0), msg::status_ready);
-        ui::TextDisabled(msg::status_ready_hint);
+        ui::TextColoredWrapped(kDim, msg::status_ready_hint);
     } else {
         ui::ProgressBar(0.0f, ImVec2(-8, 0), msg::status_idle);
         ui::TextDisabledRaw(" ");
@@ -12713,8 +12722,9 @@ void GuiApp::draw_timing_link() {
     if (!session) return;
     _timing_view.follow(session, session->cur_step.load());
     ImGui::SameLine();
-    // A link rather than a third bar: the row is already the one that gives
-    // way first, and the breakdown needs words to read anyway.
+    // Keep the link reachable when the translated rate occupies a full row.
+    if (ImGui::GetContentRegionAvail().x < ImGui::CalcTextSize(msg::timing_details.get()).x)
+        ImGui::NewLine();
     if (ui::TextLink(msg::timing_details)) ImGui::OpenPopup("##step_timing");
     const bool pinned = ImGui::IsPopupOpen("##step_timing");
     if (!pinned &&
@@ -12817,6 +12827,7 @@ void GuiApp::draw_vram_readout(float x0, float avail) {
         bar_w = gap = 0.0f;
         target = x0 + avail - text_w - px(8.0f);
     }
+    if (target < ImGui::GetCursorPosX()) ImGui::NewLine();
     if (target > ImGui::GetCursorPosX()) ImGui::SetCursorPosX(target);
 
     if (risk) {
@@ -12872,14 +12883,15 @@ float GuiApp::body_height(float log_h) {
     return -(log_h + splitter_extent() + ImGui::GetStyle().ItemSpacing.y);
 }
 
-void GuiApp::draw_log_panel(float height) {
+void GuiApp::draw_log_panel(float height, float max_height) {
     if (height <= 0.0f) return;
 
     {
         const float line = ImGui::GetTextLineHeightWithSpacing();
         float h = height;
-        if (splitter_h("##logsplit", &h, 3.0f * line,
-                       std::max(3.0f * line, ImGui::GetWindowHeight() * 0.8f),
+        const float maximum = max_height > 0.0f ? max_height
+            : std::max(3.0f * line, ImGui::GetWindowHeight() * 0.8f);
+        if (splitter_h("##logsplit", &h, std::min(3.0f * line, maximum), maximum,
                        ImGui::GetContentRegionAvail().x)) {
             _log_h = h / ui_scale();
             _layout_dirty = true;

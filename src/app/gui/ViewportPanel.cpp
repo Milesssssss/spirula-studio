@@ -1481,15 +1481,8 @@ void ViewportPanel::draw_overlays() {
 // ---------------------------------------------------------------------------
 
 void ViewportPanel::draw_controls(bool engine) {
-    // The controls pack greedily onto as many rows as they need: an item goes
-    // on the current row when what is left of it can hold the item, and starts
-    // a new row otherwise. A fixed width threshold cannot do this -- WHICH
-    // controls are present depends on what is being shown (a viewer has render
-    // options a training session has not; a mesh has display switches a splat
-    // has not) and the panel is half-width when two are side by side, so a
-    // threshold calibrated for one combination overflows another.
+    // Measure translated controls before placing them; related controls wrap together.
     const ImGuiStyle& st = ImGui::GetStyle();
-    const float row_w = ImGui::GetContentRegionAvail().x;
     auto text_w = [](const char* s) { return ImGui::CalcTextSize(s).x; };
     auto check_w = [&](const spirula::i18n::Msg& m) {
         return ImGui::GetFrameHeight() + st.ItemInnerSpacing.x +
@@ -1498,24 +1491,9 @@ void ViewportPanel::draw_controls(bool engine) {
     auto button_w = [&](const spirula::i18n::Msg& m) {
         return text_w(m.get()) + 2.0f * st.FramePadding.x;
     };
-    // How much of the current row is used. TRACKED rather than read back from
-    // ImGui's last-item rectangle, which would pick up the tooltip's contents
-    // whenever one of these controls is hovered -- the row would then reflow
-    // under the cursor.
-    float used = 0.0f;
-    auto place = [&](float w) {
-        if (used > 0.0f && used + st.ItemSpacing.x + w <= row_w) {
-            ImGui::SameLine();
-            used += st.ItemSpacing.x + w;
-        } else {
-            used = w;    // first item, or a new row: no SameLine
-        }
-    };
-    // Keep a group of related controls together: if the whole of it will not
-    // fit on what is left of this row, start it on a fresh one.
-    auto place_group = [&](float w) {
-        if (used > 0.0f && used + st.ItemSpacing.x + w > row_w) used = 0.0f;
-    };
+    FlowRow row;
+    auto place = [&](float w) { row.place(w); };
+    auto place_group = [&](float w) { row.group(w); };
 
     // The SH slider's width. Short enough to sit in a row of controls, wide
     // enough for "SH 3" plus the grab.
@@ -1725,23 +1703,13 @@ void ViewportPanel::draw_controls(bool engine) {
 // words the combo just showed.
 void ViewportPanel::draw_nav_controls() {
     const ImGuiStyle& st = ImGui::GetStyle();
-    const float row_w = ImGui::GetContentRegionAvail().x;
     auto text_w = [](const char* s) { return ImGui::CalcTextSize(s).x; };
     auto button_w = [&](const spirula::i18n::Msg& m) {
         return text_w(m.get()) + 2.0f * st.FramePadding.x;
     };
-    float used = 0.0f;
-    auto place = [&](float w) {
-        if (used > 0.0f && used + st.ItemSpacing.x + w <= row_w) {
-            ImGui::SameLine();
-            used += st.ItemSpacing.x + w;
-        } else {
-            used = w;
-        }
-    };
-    auto place_group = [&](float w) {
-        if (used > 0.0f && used + st.ItemSpacing.x + w > row_w) used = 0.0f;
-    };
+    FlowRow row;
+    auto place = [&](float w) { row.place(w); };
+    auto place_group = [&](float w) { row.group(w); };
 
     place(button_w(msg::viewport_reset_view));
     if (ui::Button(msg::viewport_reset_view)) reset_view();

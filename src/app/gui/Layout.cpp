@@ -97,6 +97,21 @@ float splitter_extent() {
     return grab_thickness() + ImGui::GetStyle().ItemSpacing.y;
 }
 
+void FlowRow::place(float width) {
+    const float gap = ImGui::GetStyle().ItemSpacing.x;
+    if (_used > 0.0f && _used + gap + width <= _width) {
+        ImGui::SameLine();
+        _used += gap + width;
+    } else {
+        _used = width;
+    }
+}
+
+void FlowRow::group(float width) {
+    if (_used > 0.0f && _used + ImGui::GetStyle().ItemSpacing.x + width > _width)
+        _used = 0.0f;
+}
+
 bool splitter_v(const char* id, float* extent, float lo, float hi, float span) {
     hi = std::max(hi, lo);   // a window too narrow for the minimum: pin it
     const float t = grab_thickness();

@@ -50,6 +50,18 @@ private:
 // puts after it.
 float splitter_extent();
 
+// Places measured controls on a row, wrapping before a control or group.
+// Width is tracked explicitly so a tooltip cannot change the next placement.
+class FlowRow {
+public:
+    FlowRow() : _width(ImGui::GetContentRegionAvail().x) {}
+    void place(float width);
+    void group(float width);
+private:
+    float _width;
+    float _used = 0.0f;
+};
+
 // Drag handles. `*extent` is the pane size being edited in PIXELS (callers
 // hold unscaled units and convert), clamped to [lo, hi]; `span` is the length
 // of the handle across the other axis. True when it moved this frame.

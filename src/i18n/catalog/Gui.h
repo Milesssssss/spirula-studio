@@ -996,6 +996,31 @@ SS_MSG(section_metrics,
     PT("Métricas"),      IT("Metriche"),     NL("Meetwaarden"),  RU("Метрики"),
     TR("Ölçümler"));
 
+SS_MSG(workspace_preview,
+    EN("Preview"), JA("プレビュー"), ZH_HANS("预览"), ZH_HANT("預覽"),
+    KO("미리보기"), DE("Vorschau"), FR("Aperçu"), ES("Vista previa"),
+    PT("Pré-visualização"), IT("Anteprima"), NL("Voorbeeld"), RU("Просмотр"),
+    TR("Önizleme"));
+
+SS_MSG(workspace_log,
+    EN("Log"), JA("ログ"), ZH_HANS("日志"), ZH_HANT("日誌"),
+    KO("로그"), DE("Protokoll"), FR("Journal"), ES("Registro"),
+    PT("Registo"), IT("Registro"), NL("Logboek"), RU("Журнал"), TR("Günlük"));
+
+SS_MSG(workspace_metrics_empty,
+    EN("Metrics appear after training starts."),
+    JA("学習開始後に指標が表示されます。"),
+    ZH_HANS("开始训练后显示指标。"), ZH_HANT("開始訓練後顯示指標。"),
+    KO("학습이 시작되면 지표가 표시됩니다."),
+    DE("Kennzahlen erscheinen nach dem Trainingsstart."),
+    FR("Les mesures apparaissent après le début de l’entraînement."),
+    ES("Las métricas aparecen cuando comienza el entrenamiento."),
+    PT("As métricas aparecem após o início do treinamento."),
+    IT("Le metriche appaiono dopo l’avvio dell’addestramento."),
+    NL("Meetwaarden verschijnen zodra de training begint."),
+    RU("Метрики появятся после начала обучения."),
+    TR("Ölçümler eğitim başladıktan sonra görünür."));
+
 SS_MSG(parsing_dataset,
     EN("Parsing dataset ..."),
     JA("データセットを読み込んでいます…"),

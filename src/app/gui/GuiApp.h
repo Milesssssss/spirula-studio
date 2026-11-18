@@ -249,8 +249,8 @@ private:
     void open_preset_save(PresetKind kind);
     void start_training();
     // ---- screenshots (defined in Screenshot.cpp) ----
-    // The button and its settings popup, ending `right` px from the row's end.
-    void draw_screenshot_controls(float right);
+    // An inline group: the screenshot button and its settings popup.
+    void draw_screenshot_controls();
     void take_screenshot();
     // The viewer's: every splat pane, each beside its own dataset.
     void draw_viewer_screenshot_controls();
@@ -607,8 +607,8 @@ private:
     // What is running, as bars: the queue, the task, and how long each has
     // left. Drawn on the batch screen and on whichever work screen the
     // running task belongs to, so neither has to be guessed from the other.
-    void draw_batch_progress();
-    void draw_batch_stop_buttons();
+    void draw_batch_progress(bool show_controls = true);
+    void draw_batch_stop_buttons(FlowRow* row = nullptr);
     // How far through the running task its own runner says it is, -1 when it
     // cannot say, and how long it has been going.
     float batch_task_fraction();
@@ -648,6 +648,7 @@ private:
     void draw_preset_save_modal();
     void draw_preset_delete_modal();
     void draw_basic_options();
+    void resolve_train_macros();
     void draw_train_controls();
     void draw_metrics();
     void draw_status_strip();
@@ -667,7 +668,7 @@ private:
     // The body height to hand BeginChild, given what log_height() returned.
     static float body_height(float log_h);
     // The splitter and then the panel. Call after the body child has ended.
-    void draw_log_panel(float height);
+    void draw_log_panel(float height, float max_height = 0.0f);
     void draw_confirm_modal();
     // A stopped run, continued: its own config.json, as `spirula train --resume` builds it.
     void open_resume(const std::string& path);
