@@ -345,13 +345,21 @@ end_header
         let dir = root.join(format!("{kind}-{cli_edge}-{config_edge}"));
         std::fs::create_dir_all(&dir).unwrap();
         std::fs::write(dir.join("a.png"), PNG).unwrap();
-        let init = if kind == "init-ply" {
-            let ply = dir.join("init.ply");
+        // A quote and a backslash here are what an unescaped Windows temp path does to JSON.
+        let ply = if kind == "init-ply" {
+            let ply_dir = if cfg!(windows) {
+                dir.clone()
+            } else {
+                let awkward = dir.join("q\"ote\\slash");
+                std::fs::create_dir_all(&awkward).unwrap();
+                awkward
+            };
+            let ply = ply_dir.join("init.ply");
             std::fs::write(&ply, SPLAT).unwrap();
-            format!(r#","init_ply":"{}""#, ply.display())
+            Some(ply)
         } else {
             std::fs::write(dir.join("seed.ply"), POINT).unwrap();
-            String::new()
+            None
         };
         let ply_key = if kind == "points" {
             "\"ply_file_path\": \"seed.ply\","
@@ -366,15 +374,39 @@ end_header
             ),
         )
         .unwrap();
+        let mut cfg_json = serde_json::json!({
+            "use_bilateral_grid": false,
+            "use_ppisp": false,
+            "ssim_lambda": 0,
+            "sh_degree": 0,
+            "load_masks": false,
+            "normal_supervision_weight": 0,
+            "orientation_method": "none",
+            "background_mode": "color",
+            "max_resolution": config_edge,
+            "num_iterations": 1
+        });
+        if let Some(ply) = &ply {
+            let path = ply.to_str().expect("ply path is utf-8");
+            cfg_json["init_ply"] = serde_json::Value::String(path.to_string());
+            if !cfg!(windows) {
+                assert!(path.contains('\\') && path.contains('"'), "{label}: {path}");
+            }
+        }
         let cfg = dir.join("cfg.json");
-        std::fs::write(
-            &cfg,
-            format!(
-                r#"{{{base},"max_resolution":{config_edge},"num_iterations":1{init}}}"#,
-                base = strict_base()
-            ),
-        )
-        .unwrap();
+        let cfg_body = serde_json::to_string(&cfg_json).unwrap();
+        if let Some(ply) = &ply {
+            let path = ply.to_str().unwrap();
+            let parsed: serde_json::Value = serde_json::from_str(&cfg_body).unwrap();
+            assert_eq!(parsed["init_ply"], path, "{label}");
+            if path.contains('\\') {
+                assert!(cfg_body.contains(r"\\"), "{label}: {cfg_body}");
+            }
+            if path.contains('"') {
+                assert!(cfg_body.contains(r#"\""#), "{label}: {cfg_body}");
+            }
+        }
+        std::fs::write(&cfg, cfg_body).unwrap();
         let out_dir = dir.join("out");
         let out = bin()
             .arg("train")
