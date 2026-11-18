@@ -10,11 +10,12 @@ mod dataset;
 mod image;
 mod nerfstudio;
 mod ply;
+mod y_up;
 
 pub use dataset::{load_dataset, Dataset, Frame};
 pub use ply::PointCloud;
 pub use image::{decode_rgb, resize_max_edge, RgbImage};
-pub use ply::{read_point_ply, read_splat_ply, write_splat_ply, SplatCloud};
+pub use ply::{read_point_ply, read_splat_ply, write_splat_ply, write_splat_ply_oriented, SplatCloud};
 pub use spirula_core::Error;
 
 pub fn find_splat_ply(path: &std::path::Path) -> Result<(std::path::PathBuf, std::path::PathBuf), Error> {

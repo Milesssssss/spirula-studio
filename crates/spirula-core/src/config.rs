@@ -14,6 +14,8 @@ pub struct TrainConfig {
     pub output_dir_name: String,
     pub num_iterations: i32,
     pub steps_per_save: i32,
+    pub save_only_latest_checkpoint: bool,
+    pub export_y_up: bool,
     pub viewer_port: i32,
     pub disable_viewer: bool,
     pub data_format: String,
@@ -67,6 +69,8 @@ impl Default for TrainConfig {
             output_dir_name: String::new(),
             num_iterations: 30_000,
             steps_per_save: 2_000,
+            save_only_latest_checkpoint: true,
+            export_y_up: false,
             viewer_port: 7007,
             disable_viewer: false,
             data_format: String::new(),
@@ -122,6 +126,8 @@ impl TrainConfig {
             "output_dir_name",
             "num_iterations",
             "steps_per_save",
+            "save_only_latest_checkpoint",
+            "export_y_up",
             "viewer_port",
             "disable_viewer",
             "data_format",
@@ -206,6 +212,10 @@ impl TrainConfig {
             "output_dir_name" => self.output_dir_name = json_string(value).ok_or_else(bad)?,
             "num_iterations" => self.num_iterations = json_i32(value).ok_or_else(bad)?,
             "steps_per_save" => self.steps_per_save = json_i32(value).ok_or_else(bad)?,
+            "save_only_latest_checkpoint" => {
+                self.save_only_latest_checkpoint = json_bool(value).ok_or_else(bad)?
+            }
+            "export_y_up" => self.export_y_up = json_bool(value).ok_or_else(bad)?,
             "viewer_port" => self.viewer_port = json_i32(value).ok_or_else(bad)?,
             "disable_viewer" => self.disable_viewer = json_bool(value).ok_or_else(bad)?,
             "data_format" => self.data_format = json_string(value).ok_or_else(bad)?,
@@ -326,6 +336,8 @@ mod tests {
         assert!((c.ssim_lambda - 0.2).abs() < 1e-6);
         assert!(c.use_bilateral_grid && c.use_ppisp);
         assert_eq!(c.viewer_port, 7007);
+        assert!(c.save_only_latest_checkpoint);
+        assert!(!c.export_y_up);
     }
 
     #[test]

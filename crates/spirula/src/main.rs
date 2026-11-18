@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 use spirula_backend::{Backend, CpuBackend, VulkanBackend};
 use spirula_core::config::TrainConfig;
 use spirula_core::Error;
-use spirula_data::{find_splat_ply, load_dataset, read_splat_ply, write_splat_ply};
+use spirula_data::{find_splat_ply, load_dataset, read_splat_ply, write_splat_ply_oriented};
 use spirula_engine::{
     gaps_for, seed_from_points, synthetic_scene, train, views_from_dataset, DensifyMode,
     GaussianModel, TrainOptions,
@@ -220,6 +220,11 @@ fn run_train(args: TrainArgs) -> Result<(), Error> {
     for g in &gaps {
         notes.push(format!("{}: {}", g.name, g.detail));
     }
+    if cfg.export_y_up {
+        notes.push(
+            "export_y_up writes the PLY in supersplat Y-up; reading it restores native axes".into(),
+        );
+    }
 
     let run_name = if cfg.output_dir_name.is_empty() {
         "rust-train"
@@ -264,8 +269,8 @@ fn run_train(args: TrainArgs) -> Result<(), Error> {
             last.splats
         );
     }
-    let ply_path = out_dir.join("splat.ply");
-    write_splat_ply(&trained.model.to_cloud(), &ply_path)?;
+    let ply_path = out_dir.join(delivery_ply_name(&out_dir, iterations, cfg.save_only_latest_checkpoint));
+    write_splat_ply_oriented(&trained.model.to_cloud(), &ply_path, cfg.export_y_up)?;
     let image_linear = cfg.image_color_is_linear.unwrap_or(false);
     write_ppm(
         &out_dir.join("preview.ppm"),
@@ -364,6 +369,19 @@ fn prepare_dataset(
 }
 
 // 0 means that cap is unset. `resize_max_edge` leaves the image alone when handed 0.
+fn delivery_ply_name(out_dir: &std::path::Path, step: i32, latest_only: bool) -> String {
+    let run = out_dir
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| "rust-train".into());
+    if latest_only {
+        format!("{run}.ply")
+    } else {
+        format!("{run}_step-{step:09}.ply")
+    }
+}
+
 fn merged_max_edge(cli: u32, config: i32) -> u32 {
     let config = if config > 0 { config as u32 } else { 0 };
     match (cli, config) {

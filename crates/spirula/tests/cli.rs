@@ -4,6 +4,24 @@ fn bin() -> Command {
     Command::new(env!("CARGO_BIN_EXE_spirula"))
 }
 
+fn delivery_ply(dir: &std::path::Path) -> std::path::PathBuf {
+    let name = dir.file_name().unwrap().to_string_lossy();
+    dir.join(format!("{name}.ply"))
+}
+
+fn assert_no_ply(dir: &std::path::Path) {
+    if let Ok(rd) = std::fs::read_dir(dir) {
+        for ent in rd.flatten() {
+            let name = ent.file_name().to_string_lossy().into_owned();
+            assert!(
+                !name.ends_with(".ply"),
+                "unexpected {}",
+                ent.path().display()
+            );
+        }
+    }
+}
+
 #[test]
 fn help_lists_train_and_names_the_cpp_trainer() {
     let out = bin().arg("--help").output().unwrap();
@@ -44,8 +62,16 @@ fn synthetic_train_writes_a_ply() {
         String::from_utf8_lossy(&out.stdout),
         String::from_utf8_lossy(&out.stderr)
     );
-    assert!(dir.join("splat.ply").is_file());
+    assert!(
+        delivery_ply(&dir).is_file(),
+        "missing {}",
+        delivery_ply(&dir).display()
+    );
+    assert!(!dir.join("splat.ply").exists());
     assert!(dir.join("config.json").is_file());
+    let header = std::fs::read(delivery_ply(&dir)).unwrap();
+    let header = String::from_utf8_lossy(&header);
+    assert!(!header.contains("supersplat_y_up"));
     let cfg = std::fs::read_to_string(dir.join("config.json")).unwrap();
     assert!(cfg.contains("\"splat_color_is_linear\": false"));
     let _ = std::fs::remove_dir_all(&dir);
@@ -71,7 +97,7 @@ fn mcmc_exits_before_writing_a_run() {
     assert_ne!(out.status.code(), Some(0));
     let err = String::from_utf8(out.stderr).unwrap();
     assert!(err.contains("MCMC"));
-    assert!(!dir.join("splat.ply").exists());
+    assert_no_ply(&dir);
 }
 
 #[test]
@@ -97,7 +123,7 @@ fn require_ported_rejects_an_unknown_key() {
         .output()
         .unwrap();
     assert_ne!(out.status.code(), Some(0));
-    assert!(!out_dir.join("splat.ply").exists());
+    assert_no_ply(&out_dir);
     let _ = std::fs::remove_dir_all(&dir);
 }
 
@@ -128,7 +154,7 @@ fn require_ported_rejects_random_background_and_resume() {
             .output()
             .unwrap();
         assert_ne!(out.status.code(), Some(0), "{name}");
-        assert!(!out_dir.join("splat.ply").exists(), "{name}");
+        assert_no_ply(&out_dir);
         let _ = std::fs::remove_dir_all(&dir);
     }
 }
@@ -251,7 +277,7 @@ fn random_init_never_refuses_an_empty_cloud() {
     assert_ne!(out.status.code(), Some(0));
     let err = String::from_utf8_lossy(&out.stderr);
     assert!(err.contains("random_init is never"), "{err}");
-    assert!(!out_dir.join("splat.ply").exists());
+    assert_no_ply(&out_dir);
     let _ = std::fs::remove_dir_all(&dir);
 }
 
@@ -452,4 +478,134 @@ end_header
         assert_eq!(report["steps"][0]["splats"], 1, "{label}");
     }
     let _ = std::fs::remove_dir_all(&root);
+}
+
+#[test]
+fn export_y_up_marks_the_run_ply_and_a_kept_step_uses_the_suffix() {
+    let root = std::env::temp_dir().join(format!("spirula-layout-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let yup = root.join("example");
+    let cfg = root.join("yup.json");
+    std::fs::create_dir_all(&root).unwrap();
+    std::fs::write(&cfg, b"{\"export_y_up\": true}\n").unwrap();
+    let out = bin()
+        .args([
+            "train",
+            "--synthetic",
+            "--num-iterations",
+            "1",
+            "--backend",
+            "cpu",
+            "--config",
+        ])
+        .arg(&cfg)
+        .arg("--output")
+        .arg(&yup)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let ply = delivery_ply(&yup);
+    assert!(ply.is_file());
+    assert!(!yup.join("splat.ply").exists());
+    assert!(!yup.join("example.tar").exists());
+    let bytes = std::fs::read(&ply).unwrap();
+    assert!(String::from_utf8_lossy(&bytes)
+        .contains("comment spirula_coordinate_system supersplat_y_up"));
+
+    let kept = root.join("kept");
+    let cfg = root.join("kept.json");
+    std::fs::write(&cfg, b"{\"save_only_latest_checkpoint\": false}\n").unwrap();
+    let out = bin()
+        .args([
+            "train",
+            "--synthetic",
+            "--num-iterations",
+            "3",
+            "--backend",
+            "cpu",
+            "--config",
+        ])
+        .arg(&cfg)
+        .arg("--output")
+        .arg(&kept)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert!(kept.join("kept_step-000000003.ply").is_file());
+    assert!(!kept.join("kept.ply").exists());
+    assert!(!kept.join("splat.ply").exists());
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+#[test]
+fn init_ply_accepts_a_run_folder_named_ply() {
+    let dir = std::env::temp_dir().join(format!("spirula-initdir-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    const PNG: &[u8] = &[
+        137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2,
+        0, 0, 0, 144, 119, 83, 222, 0, 0, 0, 12, 73, 68, 65, 84, 120, 156, 99, 248, 207, 192, 0, 0,
+        3, 1, 1, 0, 201, 254, 146, 239, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130,
+    ];
+    std::fs::write(dir.join("a.png"), PNG).unwrap();
+    std::fs::write(
+        dir.join("transforms.json"),
+        r#"{"camera_model":"PINHOLE","fl_x":8,"fl_y":8,"cx":0,"cy":0,"w":1,"h":1,
+            "frames":[{"file_path":"a.png","transform_matrix":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}]}"#,
+    )
+    .unwrap();
+    let seed = dir.join("seedrun");
+    std::fs::create_dir_all(&seed).unwrap();
+    std::fs::write(
+        seed.join("seedrun.ply"),
+        b"ply\nformat ascii 1.0\ncomment spirula_coordinate_system supersplat_y_up\nelement vertex 1\nproperty float x\nproperty float y\nproperty float z\nproperty float opacity\nproperty float scale_0\nproperty float scale_1\nproperty float scale_2\nproperty float rot_0\nproperty float rot_1\nproperty float rot_2\nproperty float rot_3\nproperty float f_dc_0\nproperty float f_dc_1\nproperty float f_dc_2\nend_header\n-1 -3 -2 0 -3 -3 -3 1 0 0 0 0 0 0\n",
+    )
+    .unwrap();
+    let cfg = dir.join("cfg.json");
+    let body = serde_json::json!({
+        "use_bilateral_grid": false,
+        "use_ppisp": false,
+        "ssim_lambda": 0,
+        "sh_degree": 0,
+        "load_masks": false,
+        "normal_supervision_weight": 0,
+        "orientation_method": "none",
+        "background_mode": "color",
+        "num_iterations": 1,
+        "init_ply": seed.to_str().unwrap()
+    });
+    std::fs::write(&cfg, serde_json::to_string(&body).unwrap()).unwrap();
+    let out_dir = dir.join("out");
+    let out = bin()
+        .arg("train")
+        .arg(&dir)
+        .arg("--config")
+        .arg(&cfg)
+        .arg("--require-ported")
+        .arg("--num-iterations")
+        .arg("1")
+        .arg("--output")
+        .arg(&out_dir)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{} {}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert!(out_dir.join("out.ply").is_file());
+    let report: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(out_dir.join("rust-port.json")).unwrap())
+            .unwrap();
+    assert_eq!(report["steps"][0]["splats"], 1);
+    let _ = std::fs::remove_dir_all(&dir);
 }
