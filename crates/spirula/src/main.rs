@@ -315,31 +315,57 @@ fn prepare_dataset(
     } else {
         let ds = load_dataset(data, cfg)?;
         notes.extend(ds.notes.clone());
+        let edge = if cfg.max_resolution > 0 {
+            max_edge.min(cfg.max_resolution as u32)
+        } else {
+            max_edge
+        };
         let (views, view_notes) = views_from_dataset(
             &ds,
-            max_edge,
+            edge,
             cfg.image_color_is_linear.unwrap_or(false),
         )?;
         notes.extend(view_notes);
-        if ds.points.xyz.is_empty() {
-            notes.push("dataset has no points; seeding 32 splats inside the camera bbox".into());
-            let model = seed_random(&views, 32.min(max_splats));
-            return Ok((model, views, notes));
-        }
-        let n = ds.points.xyz.len().min(max_splats);
-        if ds.points.xyz.len() > n {
-            notes.push(format!(
-                "seed cloud truncated from {} points to {n}",
-                ds.points.xyz.len()
-            ));
-        }
-        let model = seed_from_points(&ds.points, cfg.scale_init, cfg.opacity_init, n);
+        let model = match cfg.random_init.as_str() {
+            "never" => {
+                if ds.points.xyz.is_empty() {
+                    return Err(Error::new(
+                        "random_init is never and the dataset has no points",
+                    ));
+                }
+                seed_from_cloud(&ds, cfg, max_splats, &mut notes)
+            }
+            "always" => {
+                notes.push("random_init always replaced the seed cloud".into());
+                seed_random(&views, random_count(max_splats))
+            }
+            "auto" => {
+                if ds.points.xyz.is_empty() {
+                    notes.push(
+                        "dataset has no points; seeding splats inside the camera bbox".into(),
+                    );
+                    seed_random(&views, random_count(max_splats))
+                } else {
+                    seed_from_cloud(&ds, cfg, max_splats, &mut notes)
+                }
+            }
+            other => {
+                return Err(Error::new(format!(
+                    "unknown random_init '{other}' (never, auto, always)"
+                )))
+            }
+        };
         return Ok((model, views, notes));
     };
     let ds = load_dataset(data, cfg)?;
+    let edge = if cfg.max_resolution > 0 {
+        max_edge.min(cfg.max_resolution as u32)
+    } else {
+        max_edge
+    };
     let (views, view_notes) = views_from_dataset(
         &ds,
-        max_edge,
+        edge,
         cfg.image_color_is_linear.unwrap_or(false),
     )?;
     notes.extend(ds.notes);
@@ -369,6 +395,26 @@ fn cloud_to_model(cloud: &spirula_data::SplatCloud, cap: usize, notes: &mut Vec<
         sb_lobes: cloud.sb_lobes,
         features_sh,
     }
+}
+
+fn random_count(max_splats: usize) -> usize {
+    32.min(max_splats).max(1)
+}
+
+fn seed_from_cloud(
+    ds: &spirula_data::Dataset,
+    cfg: &TrainConfig,
+    max_splats: usize,
+    notes: &mut Vec<String>,
+) -> GaussianModel {
+    let n = ds.points.xyz.len().min(max_splats);
+    if ds.points.xyz.len() > n {
+        notes.push(format!(
+            "seed cloud truncated from {} points to {n}",
+            ds.points.xyz.len()
+        ));
+    }
+    seed_from_points(&ds.points, cfg.scale_init, cfg.opacity_init, n)
 }
 
 fn seed_random(views: &[spirula_engine::View], n: usize) -> GaussianModel {

@@ -99,6 +99,52 @@ pub fn port_gaps(cfg: &TrainConfig) -> Vec<Gap> {
             true,
         ));
     }
+    if cfg.random_init != "auto" && cfg.random_init != "never" && cfg.random_init != "always" {
+        gaps.push(gap(
+            "random_init",
+            &format!(
+                "random_init '{}' is not never, auto, or always",
+                cfg.random_init
+            ),
+            true,
+        ));
+    }
+    if !cfg.init_ply.is_empty() && cfg.random_init == "always" {
+        gaps.push(gap(
+            "random_init",
+            "random_init always does not replace an init ply",
+            true,
+        ));
+    }
+    if cfg.scales_lr != TrainConfig::default().scales_lr || cfg.quats_lr != TrainConfig::default().quats_lr
+    {
+        gaps.push(gap(
+            "scale_quat_lr",
+            "scales_lr and quats_lr are not applied; those parameters are not stepped",
+            true,
+        ));
+    }
+    if cfg.steps_per_save != TrainConfig::default().steps_per_save {
+        gaps.push(gap(
+            "steps_per_save",
+            "intermediate checkpoints are not written",
+            false,
+        ));
+    }
+    if cfg.disable_viewer {
+        gaps.push(gap(
+            "disable_viewer",
+            "disable_viewer is not read; omit --viewer to keep the status server off",
+            false,
+        ));
+    }
+    if cfg.features_sh_lr != TrainConfig::default().features_sh_lr && cfg.sh_degree == 0 {
+        gaps.push(gap(
+            "features_sh_lr",
+            "features_sh_lr has no effect at sh_degree 0",
+            false,
+        ));
+    }
     gaps.push(gap("scale_quat_grad", "scale and quaternion gradients are not ported", false));
     gaps.push(gap("mcmc_densify", "MCMC / IGS+ / MRNF densification is the C++ trainer", false));
     gaps
@@ -159,5 +205,33 @@ mod tests {
             .collect();
         assert!(names.contains(&"background_mode"));
         assert!(names.contains(&"resume"));
+    }
+
+    #[test]
+    fn random_init_modes_are_not_a_gap_and_max_steps_is_consumed() {
+        let mut cfg = quiet();
+        cfg.random_init = "never".into();
+        cfg.max_steps = Some(100);
+        let names: Vec<_> = port_gaps(&cfg)
+            .into_iter()
+            .filter(|g| g.affects_result)
+            .map(|g| g.name)
+            .collect();
+        assert!(!names.contains(&"random_init"), "{names:?}");
+        assert!(!names.contains(&"max_steps"), "{names:?}");
+        cfg.random_init = "sideways".into();
+        assert!(port_gaps(&cfg).iter().any(|g| g.name == "random_init" && g.affects_result));
+    }
+
+    fn quiet() -> TrainConfig {
+        let mut cfg = TrainConfig::default();
+        cfg.use_bilateral_grid = false;
+        cfg.use_ppisp = false;
+        cfg.ssim_lambda = 0.0;
+        cfg.sh_degree = 0;
+        cfg.normal_supervision_weight = 0.0;
+        cfg.load_masks = false;
+        cfg.orientation_method = "none".into();
+        cfg
     }
 }

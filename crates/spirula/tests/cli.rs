@@ -193,3 +193,106 @@ fn cap_max_applies_before_the_first_logged_step() {
     assert_eq!(counts, vec![2, 2, 2], "{counts:?}");
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+fn pinhole_dataset(dir: &std::path::Path, points: &str) {
+    const PNG: &[u8] = &[
+        137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2,
+        0, 0, 0, 144, 119, 83, 222, 0, 0, 0, 12, 73, 68, 65, 84, 120, 156, 99, 248, 207, 192, 0, 0,
+        3, 1, 1, 0, 201, 254, 146, 239, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130,
+    ];
+    std::fs::create_dir_all(dir).unwrap();
+    std::fs::write(dir.join("a.png"), PNG).unwrap();
+    if !points.is_empty() {
+        std::fs::write(dir.join("seed.ply"), points).unwrap();
+    }
+    let ply = if points.is_empty() {
+        ""
+    } else {
+        "\"ply_file_path\": \"seed.ply\","
+    };
+    std::fs::write(
+        dir.join("transforms.json"),
+        format!(
+            r#"{{"camera_model":"PINHOLE","fl_x":8,"fl_y":8,"cx":0,"cy":0,"w":1,"h":1,{ply}
+            "frames":[{{"file_path":"a.png","transform_matrix":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}}]}}"#
+        ),
+    )
+    .unwrap();
+}
+
+fn strict_base() -> &'static str {
+    r#""use_bilateral_grid":false,"use_ppisp":false,"ssim_lambda":0,"sh_degree":0,"load_masks":false,"normal_supervision_weight":0,"orientation_method":"none","background_mode":"color""#
+}
+
+#[test]
+fn random_init_never_refuses_an_empty_cloud() {
+    let dir = std::env::temp_dir().join(format!("spirula-never-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    pinhole_dataset(&dir, "");
+    let cfg = dir.join("cfg.json");
+    std::fs::write(
+        &cfg,
+        format!(r#"{{{base},"random_init":"never"}}"#, base = strict_base()),
+    )
+    .unwrap();
+    let out_dir = dir.join("out");
+    let out = bin()
+        .arg("train")
+        .arg(&dir)
+        .arg("--config")
+        .arg(&cfg)
+        .arg("--require-ported")
+        .arg("--num-iterations")
+        .arg("1")
+        .arg("--output")
+        .arg(&out_dir)
+        .output()
+        .unwrap();
+    assert_ne!(out.status.code(), Some(0));
+    let err = String::from_utf8_lossy(&out.stderr);
+    assert!(err.contains("random_init is never"), "{err}");
+    assert!(!out_dir.join("splat.ply").exists());
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
+fn random_init_always_replaces_a_seed_point() {
+    let dir = std::env::temp_dir().join(format!("spirula-always-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    pinhole_dataset(
+        &dir,
+        "ply\nformat ascii 1.0\nelement vertex 1\nproperty float x\nproperty float y\nproperty float z\nproperty uchar red\nproperty uchar green\nproperty uchar blue\nend_header\n0 0 2 9 9 9\n",
+    );
+    let cfg = dir.join("cfg.json");
+    std::fs::write(
+        &cfg,
+        format!(r#"{{{base},"random_init":"always"}}"#, base = strict_base()),
+    )
+    .unwrap();
+    let out_dir = dir.join("out");
+    let out = bin()
+        .arg("train")
+        .arg(&dir)
+        .arg("--config")
+        .arg(&cfg)
+        .arg("--require-ported")
+        .arg("--num-iterations")
+        .arg("1")
+        .arg("--output")
+        .arg(&out_dir)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{} {}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let text = String::from_utf8_lossy(&out.stdout);
+    assert!(text.contains("random_init always"));
+    let report: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(out_dir.join("rust-port.json")).unwrap())
+            .unwrap();
+    assert_eq!(report["steps"][0]["splats"], 32);
+    let _ = std::fs::remove_dir_all(&dir);
+}

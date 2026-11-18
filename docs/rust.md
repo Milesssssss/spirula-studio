@@ -67,7 +67,10 @@ The C++ build is unchanged: `bash build_develop.bash -DSS_BACKEND=vulkan`.
   SSIM is not in the gradient.
 - `--densify split-prune` prunes faint splats and splits large ones, and it
   stops at `cap_max`. The same cap is applied to the initial model before
-  the first step. `--densify mcmc` exits before any step is run.
+  the first step. `random_init` is `auto` (random only when the cloud is
+  empty), `always` (replace the cloud), or `never` (an empty cloud is an
+  error). `max_steps`, when set, is the learning-rate horizon. `--densify
+  mcmc` exits before any step is run.
 
 ## What is partial
 

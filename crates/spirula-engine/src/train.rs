@@ -36,6 +36,8 @@ pub struct TrainOptions {
     pub means_lr_final: f32,
     pub opacities_lr: f32,
     pub features_dc_lr: f32,
+    /// Learning-rate horizon. `max_steps` when set, otherwise the run length.
+    pub schedule_steps: i32,
     pub refine_every: i32,
     pub refine_start: i32,
     pub refine_stop: i32,
@@ -57,6 +59,7 @@ impl TrainOptions {
             means_lr_final: cfg.means_lr_final,
             opacities_lr: cfg.opacities_lr,
             features_dc_lr: cfg.features_dc_lr,
+            schedule_steps: cfg.max_steps.filter(|n| *n > 0).unwrap_or(iterations),
             refine_every: cfg.refine_every.max(1),
             refine_start: cfg.refine_start_iter,
             refine_stop: cfg.refine_stop_iter,
@@ -159,7 +162,7 @@ pub fn train(
             opts.background,
             &grad,
         );
-        let lr = scheduled_lr(step, opts.iterations, opts.means_lr, opts.means_lr_final);
+        let lr = scheduled_lr(step, opts.schedule_steps, opts.means_lr, opts.means_lr_final);
         step_means(&mut model, &g.means, &mut adam_m, lr);
         step_vec(&mut model.opacity_logit, &g.opacity_logit, &mut adam_o, opts.opacities_lr);
         step_dc(&mut model, &g.dc, &mut adam_c, opts.features_dc_lr);
@@ -456,5 +459,27 @@ mod tests {
         let out = train(model, &views, &opts, &mut CpuBackend, Vec::new(), Vec::new()).unwrap();
         assert!(out.steps.iter().all(|s| s.splats == 2));
         assert!(out.notes.iter().any(|n| n.contains("capped")));
+    }
+
+    #[test]
+    fn max_steps_is_the_learning_rate_horizon() {
+        let (model, views, mut opts) = synthetic_scene();
+        opts.iterations = 3;
+        opts.means_lr = 0.05;
+        opts.means_lr_final = 0.00001;
+        opts.schedule_steps = 3;
+        opts.densify = DensifyMode::Off;
+        let short = train(
+            model.clone(),
+            &views,
+            &opts,
+            &mut CpuBackend,
+            Vec::new(),
+            Vec::new(),
+        )
+        .unwrap();
+        opts.schedule_steps = 100;
+        let long = train(model, &views, &opts, &mut CpuBackend, Vec::new(), Vec::new()).unwrap();
+        assert_ne!(short.model.means, long.model.means);
     }
 }
