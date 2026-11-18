@@ -39,8 +39,11 @@ uses the same cap as the layout, so dragging cannot bypass the preview budget.
 
 ## Fields and long content
 
-Basic option labels sit above full-width editors. The output-directory editor
-reserves the measured width of its browse button. Existing message-based field
+Numeric and choice fields share an aligned label column when the longest
+visible translation and a 170-pixel scaled editor fit. Otherwise the group
+stacks labels above full-width editors. Paths and the run name always keep
+their full-width rows. The output-directory editor reserves the measured
+width of its browse button. Existing message-based field
 IDs, configuration assignments, and manually touched fields are preserved;
 dataset auxiliary controls keep their existing behavior.
 
@@ -48,6 +51,8 @@ Dataset and output paths use middle elision with the complete text on hover.
 Run errors and download feedback use a bounded one-line summary with the full
 message on hover. Progress text can wrap, and timing/VRAM details move to a new
 row when necessary. Long content therefore does not push actions off the page.
+Ready shows its existing start hint without an empty progress bar; active
+training, preparation, evaluation, and completion retain their progress bars.
 
 ## Implementation and behavior
 
@@ -75,11 +80,66 @@ the existing layout model.
 
 ## Validation
 
+- Built and linked the complete Vulkan GUI executable through `build_develop.bash`,
+  with GUI enabled and SfM, SAM, and patented features disabled. The build used
+  the pinned Slang compiler and a verified shader cache from the same base tree.
 - Compiled the five affected GUI translation units: `GuiApp`, `TrainingWorkspace`,
   `Layout`, `Screenshot`, and `ViewportPanel`.
 - Exercised the real ImGui workspace component with pointer interactions in
-  12 size/language cases.
-- Full application build and screenshots are pending; GPU training/export is unverified.
+  12 size/language cases, including English, Chinese, and German. Checks covered
+  independent scrolling, tab changes, splitter constraints, and same-frame toggles.
+- Ran the complete GLFW/OpenGL application using Mesa software rendering and a
+  synthetic dataset with 3 cameras and 192 points. Native interaction checks
+  passed at 1600 x 950 / 100% English, 800 x 600 / 100% English, and
+  1600 x 950 / 200% Simplified Chinese: switching Settings/Metrics, scrolling
+  Settings, hiding the inspector, and hiding Log kept the run actions in place.
+- Passed translation completeness, font coverage, UI text, comment length,
+  Windows macro, SS prefix, private-path, and diff whitespace checks.
+
+The native screenshots and interactions cover the Ready state. No compute GPU
+was available, so active GPU training, pause/resume during training, batch
+execution, and export were not run. Their existing state branches received
+code review; they still need hardware validation.
+
+## Visual review
+
+These are captures of the real application, using the same synthetic dataset
+and build feature flags for the before/after pair. The baseline is `df67d67`.
+The generic dataset path belongs to the screenshot fixture.
+
+### Compact window: 800 x 600, 100% UI scale
+
+Before: Start Training is below the visible settings area, and the two narrow
+columns leave little room for the preview.
+
+![Compact workspace before](images/training-workspace-before-compact.png)
+
+After: run actions stay above the full-width workspace tabs. The preview and
+its tools use the available width; Log remains bounded below them.
+
+![Compact workspace after](images/training-workspace-after-compact.png)
+
+Switching to Settings gives the form the full width while retaining run access.
+
+![Compact settings after](images/training-workspace-after-compact-settings.png)
+
+### Wide window: 1600 x 950, 100% UI scale
+
+Before: run actions follow all settings, and status sits below the preview.
+
+![Wide workspace before](images/training-workspace-before-wide.png)
+
+After: run actions and status share the fixed top area; the inspector holds
+Settings/Metrics, and ordinary fields use aligned compact rows.
+
+![Wide workspace after](images/training-workspace-after-wide.png)
+
+### Simplified Chinese: 1600 x 950, 200% UI scale
+
+The scaled breakpoint selects the compact structure. Translated controls wrap
+by their measured widths, and the preview keeps space ahead of the log.
+
+![Large Simplified Chinese workspace after](images/training-workspace-after-large-zh.png)
 
 ## Manual review
 

@@ -12256,11 +12256,26 @@ void GuiApp::draw_dataset_aux(float width) {
 
 void GuiApp::draw_basic_options() {
     const float w = px(170.0f);
-    auto field = [](const Msg& label, const Msg& help) {
+    float label_width = 0.0f;
+    for (const Msg* label : {&msg::opt_steps, &msg::opt_max_splats,
+                            &msg::opt_primitive, &msg::opt_resolution,
+                            &fld::max_resolution, &msg::opt_sh_degree,
+                            &fld::calib_correction, &fld::floater_suppression})
+        label_width = std::max(label_width, ImGui::CalcTextSize(label->get()).x);
+    const float gap = ImGui::GetStyle().ItemSpacing.x;
+    const bool inline_fields = ImGui::GetContentRegionAvail().x >= label_width + gap + w;
+    auto field = [&](const Msg& label, const Msg& help, bool force_stacked = false) {
+        const bool inline_label = inline_fields && !force_stacked;
+        const float left = ImGui::GetCursorPosX();
+        const float right = left + ImGui::GetContentRegionAvail().x;
+        const float control_left = inline_label ? left + label_width + gap : left;
+        const float control_width = std::max(1.0f, right - control_left);
+        if (inline_label) ImGui::AlignTextToFramePadding();
         ui::Text(label);
         ui::help_on_hover(help);
-        ImGui::SetNextItemWidth(-FLT_MIN);
-        // Keep the original widget ID when its label moves above the field.
+        if (inline_label) ImGui::SameLine(control_left);
+        ImGui::SetNextItemWidth(control_width);
+        // Keep the original widget ID when its label is drawn separately.
         return ui::detail::label("", label.id);
     };
 
@@ -12296,7 +12311,7 @@ void GuiApp::draw_basic_options() {
                   FileDialog::Mode::Folder, {}, _cfg.output_dir_prefix);
     }
     ui::help_on_hover(msg::opt_output_folder_help);
-    if (ui::InputTextWithHintRaw(field(msg::opt_run_name, msg::opt_run_name_help),
+    if (ui::InputTextWithHintRaw(field(msg::opt_run_name, msg::opt_run_name_help, true),
                                  msg::opt_run_name_hint, &_cfg.output_dir_name))
         _cfg_ui.touched.insert("output_dir_name");
     ui::help_on_hover(msg::opt_run_name_help);
@@ -12693,7 +12708,6 @@ void GuiApp::draw_status_strip() {
         }
         progress_time_line(_eval_clock);
     } else if (ph == TrainRunner::Phase::Ready) {
-        ui::ProgressBar(0.0f, ImVec2(-8, 0), msg::status_ready);
         ui::TextColoredWrapped(kDim, msg::status_ready_hint);
     } else {
         ui::ProgressBar(0.0f, ImVec2(-8, 0), msg::status_idle);
