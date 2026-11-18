@@ -17,30 +17,33 @@ and interaction evidence; it sets no permanent workflow preference.
 
 ## Direction contract
 
-THESIS: A reconstruction workbench with a readable job record. The user can
-resume work, identify the current object, configure it, and inspect results
-without navigating a stack of equally weighted launch buttons.
+THESIS: A Blender-referenced reconstruction editor. The scene owns the main
+region; compact headers identify the current document and controls configure
+it without competing with the content.
 
-OWN-WORLD: Graphite surfaces, neutral controls, restrained blue primary and
-selection states, fine boundaries, Source Sans with the embedded CJK chain.
-Headings and paths have distinct roles; dense fields stay aligned.
+OWN-WORLD: Achromatic #303030 editor surfaces, #3D3D3D panel headers,
+#545454 ordinary controls, dark input wells, blue value/action states and
+orange selection/focus cues. Small corners, narrow boundaries, compact rows;
+Source Sans with the embedded CJK chain stays readable at every UI scale.
 
-STORY: Home puts recent work and the current session first. Each workspace
-keeps context and execution visible around a calm scene or result area.
+STORY: Resume a recent capture, adjust properties, inspect the reconstruction,
+then edit or render it. Execution state remains visible outside scrolling
+properties; navigation retains existing worker and unsaved-document guards.
 
-FIRST VIEWPORT: A compact product heading above the recent-work ledger; a
-narrow command column on wide windows becomes wrapped actions above the list
-on small windows. Workspaces share Home, title, and an elided object path,
-followed by run controls and settings/preview regions.
+FIRST VIEWPORT: A compact product strip over recent files and a command list.
+Each workspace starts with a narrow context header. Wide dataset/training
+and model editors put the scene on the left and properties on the right;
+render transport and timeline stay beneath the scene. Compact preparation
+and training use existing tabs, retaining full-size controls and run access.
 
-FORM: Candidate 7, reconstruction laboratory workbench; seed 96a6b1d5.
-The reference catalog was unavailable, so no catalog challengers or boards
-were used. The seven considered systems were DCC workstation, optical
-metrology bench, photographic contact sheet, CAD drafting room, source-editor
-workspace, mission console, and reconstruction laboratory workbench.
+FORM: User-pinned Blender interface, superseding candidate 7 from the prior
+seed 96a6b1d5. No new direction choice or generated comp is required by the
+user's explicit reference and authorization to update the existing PR.
+Authority: Blender's official window-system manual and v4.5.0 default theme.
+The native implementation and captured screenshots are the review surface.
 
-Signature interaction: the current record opens into a stable contextual
-workspace; resized or scaled panels change structure while run access remains.
-Motion: immediate native input feedback; no decorative entrance animations.
+Signature interaction: property edits immediately affect the adjacent scene;
+the right-hand divider resizes the inspector while the scene and timeline
+retain their usable area. Motion is immediate native input feedback.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

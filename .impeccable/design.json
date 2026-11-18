@@ -1,342 +1,1114 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-18T10:02:22Z",
+  "generatedAt": "2026-11-18T11:00:24Z",
   "title": "Design System: Spirula Studio",
   "extensions": {
     "colorMeta": {
       "text": {
         "role": "neutral",
-        "displayName": "Text"
+        "displayName": "Text",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "text-disabled": {
         "role": "neutral",
-        "displayName": "Text Disabled"
+        "displayName": "Text Disabled",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "window-bg": {
         "role": "neutral",
-        "displayName": "Window Bg"
+        "displayName": "Window Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "child-bg": {
         "role": "neutral",
-        "displayName": "Child Bg"
+        "displayName": "Child Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "popup-bg": {
         "role": "neutral",
-        "displayName": "Popup Bg"
+        "displayName": "Popup Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "border": {
         "role": "neutral",
-        "displayName": "Border"
+        "displayName": "Border",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "border-shadow": {
         "role": "neutral",
-        "displayName": "Border Shadow"
+        "displayName": "Border Shadow",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0)",
+          "oklch(26.43% 0.00000 0.00 / 0)",
+          "oklch(37.86% 0.00000 0.00 / 0)",
+          "oklch(49.29% 0.00000 0.00 / 0)",
+          "oklch(60.71% 0.00000 0.00 / 0)",
+          "oklch(72.14% 0.00000 0.00 / 0)",
+          "oklch(83.57% 0.00000 0.00 / 0)",
+          "oklch(95.00% 0.00000 0.00 / 0)"
+        ]
       },
       "frame-bg": {
         "role": "neutral",
-        "displayName": "Frame Bg"
+        "displayName": "Frame Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "frame-bg-hovered": {
         "role": "neutral",
-        "displayName": "Frame Bg Hovered"
+        "displayName": "Frame Bg Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "frame-bg-active": {
         "role": "neutral",
-        "displayName": "Frame Bg Active"
+        "displayName": "Frame Bg Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "title-bg": {
         "role": "neutral",
-        "displayName": "Title Bg"
+        "displayName": "Title Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "title-bg-active": {
         "role": "neutral",
-        "displayName": "Title Bg Active"
+        "displayName": "Title Bg Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "title-bg-collapsed": {
         "role": "neutral",
-        "displayName": "Title Bg Collapsed"
+        "displayName": "Title Bg Collapsed",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "menu-bar-bg": {
         "role": "neutral",
-        "displayName": "Menu Bar Bg"
+        "displayName": "Menu Bar Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "scrollbar-bg": {
         "role": "neutral",
-        "displayName": "Scrollbar Bg"
+        "displayName": "Scrollbar Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "scrollbar-grab": {
         "role": "neutral",
-        "displayName": "Scrollbar Grab"
+        "displayName": "Scrollbar Grab",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "scrollbar-grab-hovered": {
         "role": "neutral",
-        "displayName": "Scrollbar Grab Hovered"
+        "displayName": "Scrollbar Grab Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "scrollbar-grab-active": {
         "role": "neutral",
-        "displayName": "Scrollbar Grab Active"
+        "displayName": "Scrollbar Grab Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "check-mark": {
-        "role": "primary",
-        "displayName": "Check Mark"
+        "role": "neutral",
+        "displayName": "Check Mark",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "checkbox-selected-bg": {
         "role": "primary",
-        "displayName": "Checkbox Selected Bg"
+        "displayName": "Checkbox Selected Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.11266 258.43)",
+          "oklch(26.43% 0.11266 258.43)",
+          "oklch(37.86% 0.11266 258.43)",
+          "oklch(49.29% 0.11266 258.43)",
+          "oklch(60.71% 0.11266 258.43)",
+          "oklch(72.14% 0.11266 258.43)",
+          "oklch(83.57% 0.11266 258.43)",
+          "oklch(95.00% 0.11266 258.43)"
+        ]
       },
       "slider-grab": {
         "role": "primary",
-        "displayName": "Slider Grab"
+        "displayName": "Slider Grab",
+        "tonalRamp": [
+          "oklch(15.00% 0.10144 258.29)",
+          "oklch(26.43% 0.10144 258.29)",
+          "oklch(37.86% 0.10144 258.29)",
+          "oklch(49.29% 0.10144 258.29)",
+          "oklch(60.71% 0.10144 258.29)",
+          "oklch(72.14% 0.10144 258.29)",
+          "oklch(83.57% 0.10144 258.29)",
+          "oklch(95.00% 0.10144 258.29)"
+        ]
       },
       "slider-grab-active": {
         "role": "primary",
-        "displayName": "Slider Grab Active"
+        "displayName": "Slider Grab Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.09282 258.29)",
+          "oklch(26.43% 0.09282 258.29)",
+          "oklch(37.86% 0.09282 258.29)",
+          "oklch(49.29% 0.09282 258.29)",
+          "oklch(60.71% 0.09282 258.29)",
+          "oklch(72.14% 0.09282 258.29)",
+          "oklch(83.57% 0.09282 258.29)",
+          "oklch(95.00% 0.09282 258.29)"
+        ]
       },
       "button": {
         "role": "neutral",
-        "displayName": "Button"
+        "displayName": "Button",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "button-hovered": {
         "role": "neutral",
-        "displayName": "Button Hovered"
+        "displayName": "Button Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "button-active": {
-        "role": "neutral",
-        "displayName": "Button Active"
+        "role": "primary",
+        "displayName": "Button Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.10144 258.29)",
+          "oklch(26.43% 0.10144 258.29)",
+          "oklch(37.86% 0.10144 258.29)",
+          "oklch(49.29% 0.10144 258.29)",
+          "oklch(60.71% 0.10144 258.29)",
+          "oklch(72.14% 0.10144 258.29)",
+          "oklch(83.57% 0.10144 258.29)",
+          "oklch(95.00% 0.10144 258.29)"
+        ]
       },
       "header": {
         "role": "neutral",
-        "displayName": "Header"
+        "displayName": "Header",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "header-hovered": {
         "role": "neutral",
-        "displayName": "Header Hovered"
+        "displayName": "Header Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "header-active": {
-        "role": "neutral",
-        "displayName": "Header Active"
+        "role": "primary",
+        "displayName": "Header Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.10144 258.29)",
+          "oklch(26.43% 0.10144 258.29)",
+          "oklch(37.86% 0.10144 258.29)",
+          "oklch(49.29% 0.10144 258.29)",
+          "oklch(60.71% 0.10144 258.29)",
+          "oklch(72.14% 0.10144 258.29)",
+          "oklch(83.57% 0.10144 258.29)",
+          "oklch(95.00% 0.10144 258.29)"
+        ]
       },
       "separator": {
         "role": "neutral",
-        "displayName": "Separator"
+        "displayName": "Separator",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "separator-hovered": {
-        "role": "primary",
-        "displayName": "Separator Hovered"
+        "role": "neutral",
+        "displayName": "Separator Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "separator-active": {
-        "role": "primary",
-        "displayName": "Separator Active"
+        "role": "secondary",
+        "displayName": "Separator Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58)",
+          "oklch(26.43% 0.16450 65.58)",
+          "oklch(37.86% 0.16450 65.58)",
+          "oklch(49.29% 0.16450 65.58)",
+          "oklch(60.71% 0.16450 65.58)",
+          "oklch(72.14% 0.16450 65.58)",
+          "oklch(83.57% 0.16450 65.58)",
+          "oklch(95.00% 0.16450 65.58)"
+        ]
       },
       "resize-grip": {
         "role": "neutral",
-        "displayName": "Resize Grip"
+        "displayName": "Resize Grip",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.25)",
+          "oklch(26.43% 0.00000 0.00 / 0.25)",
+          "oklch(37.86% 0.00000 0.00 / 0.25)",
+          "oklch(49.29% 0.00000 0.00 / 0.25)",
+          "oklch(60.71% 0.00000 0.00 / 0.25)",
+          "oklch(72.14% 0.00000 0.00 / 0.25)",
+          "oklch(83.57% 0.00000 0.00 / 0.25)",
+          "oklch(95.00% 0.00000 0.00 / 0.25)"
+        ]
       },
       "resize-grip-hovered": {
-        "role": "primary",
-        "displayName": "Resize Grip Hovered"
+        "role": "neutral",
+        "displayName": "Resize Grip Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.65)",
+          "oklch(26.43% 0.00000 0.00 / 0.65)",
+          "oklch(37.86% 0.00000 0.00 / 0.65)",
+          "oklch(49.29% 0.00000 0.00 / 0.65)",
+          "oklch(60.71% 0.00000 0.00 / 0.65)",
+          "oklch(72.14% 0.00000 0.00 / 0.65)",
+          "oklch(83.57% 0.00000 0.00 / 0.65)",
+          "oklch(95.00% 0.00000 0.00 / 0.65)"
+        ]
       },
       "resize-grip-active": {
-        "role": "primary",
-        "displayName": "Resize Grip Active"
+        "role": "secondary",
+        "displayName": "Resize Grip Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58)",
+          "oklch(26.43% 0.16450 65.58)",
+          "oklch(37.86% 0.16450 65.58)",
+          "oklch(49.29% 0.16450 65.58)",
+          "oklch(60.71% 0.16450 65.58)",
+          "oklch(72.14% 0.16450 65.58)",
+          "oklch(83.57% 0.16450 65.58)",
+          "oklch(95.00% 0.16450 65.58)"
+        ]
       },
       "input-text-cursor": {
-        "role": "neutral",
-        "displayName": "Input Text Cursor"
+        "role": "primary",
+        "displayName": "Input Text Cursor",
+        "tonalRamp": [
+          "oklch(15.00% 0.13987 259.24)",
+          "oklch(26.43% 0.13987 259.24)",
+          "oklch(37.86% 0.13987 259.24)",
+          "oklch(49.29% 0.13987 259.24)",
+          "oklch(60.71% 0.13987 259.24)",
+          "oklch(72.14% 0.13987 259.24)",
+          "oklch(83.57% 0.13987 259.24)",
+          "oklch(95.00% 0.13987 259.24)"
+        ]
       },
       "tab-hovered": {
         "role": "neutral",
-        "displayName": "Tab Hovered"
+        "displayName": "Tab Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "tab": {
         "role": "neutral",
-        "displayName": "Tab"
+        "displayName": "Tab",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "tab-selected": {
-        "role": "primary",
-        "displayName": "Tab Selected"
+        "role": "neutral",
+        "displayName": "Tab Selected",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "tab-selected-overline": {
-        "role": "primary",
-        "displayName": "Tab Selected Overline"
+        "role": "secondary",
+        "displayName": "Tab Selected Overline",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58)",
+          "oklch(26.43% 0.16450 65.58)",
+          "oklch(37.86% 0.16450 65.58)",
+          "oklch(49.29% 0.16450 65.58)",
+          "oklch(60.71% 0.16450 65.58)",
+          "oklch(72.14% 0.16450 65.58)",
+          "oklch(83.57% 0.16450 65.58)",
+          "oklch(95.00% 0.16450 65.58)"
+        ]
       },
       "tab-dimmed": {
         "role": "neutral",
-        "displayName": "Tab Dimmed"
+        "displayName": "Tab Dimmed",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "tab-dimmed-selected": {
         "role": "neutral",
-        "displayName": "Tab Dimmed Selected"
+        "displayName": "Tab Dimmed Selected",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "tab-dimmed-selected-overline": {
         "role": "neutral",
-        "displayName": "Tab Dimmed Selected Overline"
+        "displayName": "Tab Dimmed Selected Overline",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "plot-lines": {
         "role": "primary",
-        "displayName": "Plot Lines"
+        "displayName": "Plot Lines",
+        "tonalRamp": [
+          "oklch(15.00% 0.13987 259.24)",
+          "oklch(26.43% 0.13987 259.24)",
+          "oklch(37.86% 0.13987 259.24)",
+          "oklch(49.29% 0.13987 259.24)",
+          "oklch(60.71% 0.13987 259.24)",
+          "oklch(72.14% 0.13987 259.24)",
+          "oklch(83.57% 0.13987 259.24)",
+          "oklch(95.00% 0.13987 259.24)"
+        ]
       },
       "plot-lines-hovered": {
         "role": "primary",
-        "displayName": "Plot Lines Hovered"
+        "displayName": "Plot Lines Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.08347 263.64)",
+          "oklch(26.43% 0.08347 263.64)",
+          "oklch(37.86% 0.08347 263.64)",
+          "oklch(49.29% 0.08347 263.64)",
+          "oklch(60.71% 0.08347 263.64)",
+          "oklch(72.14% 0.08347 263.64)",
+          "oklch(83.57% 0.08347 263.64)",
+          "oklch(95.00% 0.08347 263.64)"
+        ]
       },
       "plot-histogram": {
         "role": "primary",
-        "displayName": "Plot Histogram"
+        "displayName": "Plot Histogram",
+        "tonalRamp": [
+          "oklch(15.00% 0.11266 258.43)",
+          "oklch(26.43% 0.11266 258.43)",
+          "oklch(37.86% 0.11266 258.43)",
+          "oklch(49.29% 0.11266 258.43)",
+          "oklch(60.71% 0.11266 258.43)",
+          "oklch(72.14% 0.11266 258.43)",
+          "oklch(83.57% 0.11266 258.43)",
+          "oklch(95.00% 0.11266 258.43)"
+        ]
       },
       "plot-histogram-hovered": {
         "role": "primary",
-        "displayName": "Plot Histogram Hovered"
+        "displayName": "Plot Histogram Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.13987 259.24)",
+          "oklch(26.43% 0.13987 259.24)",
+          "oklch(37.86% 0.13987 259.24)",
+          "oklch(49.29% 0.13987 259.24)",
+          "oklch(60.71% 0.13987 259.24)",
+          "oklch(72.14% 0.13987 259.24)",
+          "oklch(83.57% 0.13987 259.24)",
+          "oklch(95.00% 0.13987 259.24)"
+        ]
       },
       "table-header-bg": {
         "role": "neutral",
-        "displayName": "Table Header Bg"
+        "displayName": "Table Header Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "table-border-strong": {
         "role": "neutral",
-        "displayName": "Table Border Strong"
+        "displayName": "Table Border Strong",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "table-border-light": {
         "role": "neutral",
-        "displayName": "Table Border Light"
+        "displayName": "Table Border Light",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "table-row-bg": {
         "role": "neutral",
-        "displayName": "Table Row Bg"
+        "displayName": "Table Row Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0)",
+          "oklch(26.43% 0.00000 0.00 / 0)",
+          "oklch(37.86% 0.00000 0.00 / 0)",
+          "oklch(49.29% 0.00000 0.00 / 0)",
+          "oklch(60.71% 0.00000 0.00 / 0)",
+          "oklch(72.14% 0.00000 0.00 / 0)",
+          "oklch(83.57% 0.00000 0.00 / 0)",
+          "oklch(95.00% 0.00000 0.00 / 0)"
+        ]
       },
       "table-row-bg-alt": {
         "role": "neutral",
-        "displayName": "Table Row Bg Alt"
+        "displayName": "Table Row Bg Alt",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.025)",
+          "oklch(26.43% 0.00000 0.00 / 0.025)",
+          "oklch(37.86% 0.00000 0.00 / 0.025)",
+          "oklch(49.29% 0.00000 0.00 / 0.025)",
+          "oklch(60.71% 0.00000 0.00 / 0.025)",
+          "oklch(72.14% 0.00000 0.00 / 0.025)",
+          "oklch(83.57% 0.00000 0.00 / 0.025)",
+          "oklch(95.00% 0.00000 0.00 / 0.025)"
+        ]
       },
       "text-link": {
         "role": "primary",
-        "displayName": "Text Link"
+        "displayName": "Text Link",
+        "tonalRamp": [
+          "oklch(15.00% 0.13987 259.24)",
+          "oklch(26.43% 0.13987 259.24)",
+          "oklch(37.86% 0.13987 259.24)",
+          "oklch(49.29% 0.13987 259.24)",
+          "oklch(60.71% 0.13987 259.24)",
+          "oklch(72.14% 0.13987 259.24)",
+          "oklch(83.57% 0.13987 259.24)",
+          "oklch(95.00% 0.13987 259.24)"
+        ]
       },
       "text-selected-bg": {
         "role": "primary",
-        "displayName": "Text Selected Bg"
+        "displayName": "Text Selected Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.10144 258.29)",
+          "oklch(26.43% 0.10144 258.29)",
+          "oklch(37.86% 0.10144 258.29)",
+          "oklch(49.29% 0.10144 258.29)",
+          "oklch(60.71% 0.10144 258.29)",
+          "oklch(72.14% 0.10144 258.29)",
+          "oklch(83.57% 0.10144 258.29)",
+          "oklch(95.00% 0.10144 258.29)"
+        ]
       },
       "tree-lines": {
         "role": "neutral",
-        "displayName": "Tree Lines"
+        "displayName": "Tree Lines",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "drag-drop-target": {
-        "role": "primary",
-        "displayName": "Drag Drop Target"
+        "role": "secondary",
+        "displayName": "Drag Drop Target",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58)",
+          "oklch(26.43% 0.16450 65.58)",
+          "oklch(37.86% 0.16450 65.58)",
+          "oklch(49.29% 0.16450 65.58)",
+          "oklch(60.71% 0.16450 65.58)",
+          "oklch(72.14% 0.16450 65.58)",
+          "oklch(83.57% 0.16450 65.58)",
+          "oklch(95.00% 0.16450 65.58)"
+        ]
       },
       "drag-drop-target-bg": {
-        "role": "primary",
-        "displayName": "Drag Drop Target Bg"
+        "role": "secondary",
+        "displayName": "Drag Drop Target Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58 / 0.12)",
+          "oklch(26.43% 0.16450 65.58 / 0.12)",
+          "oklch(37.86% 0.16450 65.58 / 0.12)",
+          "oklch(49.29% 0.16450 65.58 / 0.12)",
+          "oklch(60.71% 0.16450 65.58 / 0.12)",
+          "oklch(72.14% 0.16450 65.58 / 0.12)",
+          "oklch(83.57% 0.16450 65.58 / 0.12)",
+          "oklch(95.00% 0.16450 65.58 / 0.12)"
+        ]
       },
       "unsaved-marker": {
         "role": "secondary",
-        "displayName": "Unsaved Marker"
+        "displayName": "Unsaved Marker",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58)",
+          "oklch(26.43% 0.16450 65.58)",
+          "oklch(37.86% 0.16450 65.58)",
+          "oklch(49.29% 0.16450 65.58)",
+          "oklch(60.71% 0.16450 65.58)",
+          "oklch(72.14% 0.16450 65.58)",
+          "oklch(83.57% 0.16450 65.58)",
+          "oklch(95.00% 0.16450 65.58)"
+        ]
       },
       "nav-cursor": {
-        "role": "primary",
-        "displayName": "Nav Cursor"
+        "role": "secondary",
+        "displayName": "Nav Cursor",
+        "tonalRamp": [
+          "oklch(15.00% 0.16450 65.58)",
+          "oklch(26.43% 0.16450 65.58)",
+          "oklch(37.86% 0.16450 65.58)",
+          "oklch(49.29% 0.16450 65.58)",
+          "oklch(60.71% 0.16450 65.58)",
+          "oklch(72.14% 0.16450 65.58)",
+          "oklch(83.57% 0.16450 65.58)",
+          "oklch(95.00% 0.16450 65.58)"
+        ]
       },
       "nav-windowing-highlight": {
         "role": "neutral",
-        "displayName": "Nav Windowing Highlight"
+        "displayName": "Nav Windowing Highlight",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.75)",
+          "oklch(26.43% 0.00000 0.00 / 0.75)",
+          "oklch(37.86% 0.00000 0.00 / 0.75)",
+          "oklch(49.29% 0.00000 0.00 / 0.75)",
+          "oklch(60.71% 0.00000 0.00 / 0.75)",
+          "oklch(72.14% 0.00000 0.00 / 0.75)",
+          "oklch(83.57% 0.00000 0.00 / 0.75)",
+          "oklch(95.00% 0.00000 0.00 / 0.75)"
+        ]
       },
       "nav-windowing-dim-bg": {
         "role": "neutral",
-        "displayName": "Nav Windowing Dim Bg"
+        "displayName": "Nav Windowing Dim Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.65)",
+          "oklch(26.43% 0.00000 0.00 / 0.65)",
+          "oklch(37.86% 0.00000 0.00 / 0.65)",
+          "oklch(49.29% 0.00000 0.00 / 0.65)",
+          "oklch(60.71% 0.00000 0.00 / 0.65)",
+          "oklch(72.14% 0.00000 0.00 / 0.65)",
+          "oklch(83.57% 0.00000 0.00 / 0.65)",
+          "oklch(95.00% 0.00000 0.00 / 0.65)"
+        ]
       },
       "modal-window-dim-bg": {
         "role": "neutral",
-        "displayName": "Modal Window Dim Bg"
+        "displayName": "Modal Window Dim Bg",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.72)",
+          "oklch(26.43% 0.00000 0.00 / 0.72)",
+          "oklch(37.86% 0.00000 0.00 / 0.72)",
+          "oklch(49.29% 0.00000 0.00 / 0.72)",
+          "oklch(60.71% 0.00000 0.00 / 0.72)",
+          "oklch(72.14% 0.00000 0.00 / 0.72)",
+          "oklch(83.57% 0.00000 0.00 / 0.72)",
+          "oklch(95.00% 0.00000 0.00 / 0.72)"
+        ]
       },
       "action-primary": {
         "role": "primary",
-        "displayName": "Action Primary"
+        "displayName": "Action Primary",
+        "tonalRamp": [
+          "oklch(15.00% 0.11266 258.43)",
+          "oklch(26.43% 0.11266 258.43)",
+          "oklch(37.86% 0.11266 258.43)",
+          "oklch(49.29% 0.11266 258.43)",
+          "oklch(60.71% 0.11266 258.43)",
+          "oklch(72.14% 0.11266 258.43)",
+          "oklch(83.57% 0.11266 258.43)",
+          "oklch(95.00% 0.11266 258.43)"
+        ]
       },
       "action-primary-hovered": {
         "role": "primary",
-        "displayName": "Action Primary Hovered"
+        "displayName": "Action Primary Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.10133 257.81)",
+          "oklch(26.43% 0.10133 257.81)",
+          "oklch(37.86% 0.10133 257.81)",
+          "oklch(49.29% 0.10133 257.81)",
+          "oklch(60.71% 0.10133 257.81)",
+          "oklch(72.14% 0.10133 257.81)",
+          "oklch(83.57% 0.10133 257.81)",
+          "oklch(95.00% 0.10133 257.81)"
+        ]
       },
       "action-primary-active": {
         "role": "primary",
-        "displayName": "Action Primary Active"
+        "displayName": "Action Primary Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.08256 256.04)",
+          "oklch(26.43% 0.08256 256.04)",
+          "oklch(37.86% 0.08256 256.04)",
+          "oklch(49.29% 0.08256 256.04)",
+          "oklch(60.71% 0.08256 256.04)",
+          "oklch(72.14% 0.08256 256.04)",
+          "oklch(83.57% 0.08256 256.04)",
+          "oklch(95.00% 0.08256 256.04)"
+        ]
       },
       "action-selected": {
         "role": "primary",
-        "displayName": "Action Selected"
+        "displayName": "Action Selected",
+        "tonalRamp": [
+          "oklch(15.00% 0.10144 258.29)",
+          "oklch(26.43% 0.10144 258.29)",
+          "oklch(37.86% 0.10144 258.29)",
+          "oklch(49.29% 0.10144 258.29)",
+          "oklch(60.71% 0.10144 258.29)",
+          "oklch(72.14% 0.10144 258.29)",
+          "oklch(83.57% 0.10144 258.29)",
+          "oklch(95.00% 0.10144 258.29)"
+        ]
       },
       "action-selected-hovered": {
         "role": "primary",
-        "displayName": "Action Selected Hovered"
+        "displayName": "Action Selected Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.11266 258.43)",
+          "oklch(26.43% 0.11266 258.43)",
+          "oklch(37.86% 0.11266 258.43)",
+          "oklch(49.29% 0.11266 258.43)",
+          "oklch(60.71% 0.11266 258.43)",
+          "oklch(72.14% 0.11266 258.43)",
+          "oklch(83.57% 0.11266 258.43)",
+          "oklch(95.00% 0.11266 258.43)"
+        ]
       },
       "action-selected-active": {
         "role": "primary",
-        "displayName": "Action Selected Active"
+        "displayName": "Action Selected Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.08256 256.04)",
+          "oklch(26.43% 0.08256 256.04)",
+          "oklch(37.86% 0.08256 256.04)",
+          "oklch(49.29% 0.08256 256.04)",
+          "oklch(60.71% 0.08256 256.04)",
+          "oklch(72.14% 0.08256 256.04)",
+          "oklch(83.57% 0.08256 256.04)",
+          "oklch(95.00% 0.08256 256.04)"
+        ]
       },
       "action-danger": {
         "role": "secondary",
-        "displayName": "Action Danger"
+        "displayName": "Action Danger",
+        "tonalRamp": [
+          "oklch(15.00% 0.09662 16.15)",
+          "oklch(26.43% 0.09662 16.15)",
+          "oklch(37.86% 0.09662 16.15)",
+          "oklch(49.29% 0.09662 16.15)",
+          "oklch(60.71% 0.09662 16.15)",
+          "oklch(72.14% 0.09662 16.15)",
+          "oklch(83.57% 0.09662 16.15)",
+          "oklch(95.00% 0.09662 16.15)"
+        ]
       },
       "action-danger-hovered": {
         "role": "secondary",
-        "displayName": "Action Danger Hovered"
+        "displayName": "Action Danger Hovered",
+        "tonalRamp": [
+          "oklch(15.00% 0.10542 16.74)",
+          "oklch(26.43% 0.10542 16.74)",
+          "oklch(37.86% 0.10542 16.74)",
+          "oklch(49.29% 0.10542 16.74)",
+          "oklch(60.71% 0.10542 16.74)",
+          "oklch(72.14% 0.10542 16.74)",
+          "oklch(83.57% 0.10542 16.74)",
+          "oklch(95.00% 0.10542 16.74)"
+        ]
       },
       "action-danger-active": {
         "role": "secondary",
-        "displayName": "Action Danger Active"
+        "displayName": "Action Danger Active",
+        "tonalRamp": [
+          "oklch(15.00% 0.08334 16.14)",
+          "oklch(26.43% 0.08334 16.14)",
+          "oklch(37.86% 0.08334 16.14)",
+          "oklch(49.29% 0.08334 16.14)",
+          "oklch(60.71% 0.08334 16.14)",
+          "oklch(72.14% 0.08334 16.14)",
+          "oklch(83.57% 0.08334 16.14)",
+          "oklch(95.00% 0.08334 16.14)"
+        ]
       },
-      "command-primary-detail": {
-        "role": "primary",
-        "displayName": "Command Primary Detail"
+      "action-text": {
+        "role": "neutral",
+        "displayName": "Action Text",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00)",
+          "oklch(26.43% 0.00000 0.00)",
+          "oklch(37.86% 0.00000 0.00)",
+          "oklch(49.29% 0.00000 0.00)",
+          "oklch(60.71% 0.00000 0.00)",
+          "oklch(72.14% 0.00000 0.00)",
+          "oklch(83.57% 0.00000 0.00)",
+          "oklch(95.00% 0.00000 0.00)"
+        ]
       },
       "status-ok": {
-        "role": "secondary",
-        "displayName": "Status Ok"
+        "role": "primary",
+        "displayName": "Status Ok",
+        "tonalRamp": [
+          "oklch(15.00% 0.18111 147.61)",
+          "oklch(26.43% 0.18111 147.61)",
+          "oklch(37.86% 0.18111 147.61)",
+          "oklch(49.29% 0.18111 147.61)",
+          "oklch(60.71% 0.18111 147.61)",
+          "oklch(72.14% 0.18111 147.61)",
+          "oklch(83.57% 0.18111 147.61)",
+          "oklch(95.00% 0.18111 147.61)"
+        ]
       },
       "status-error": {
         "role": "secondary",
-        "displayName": "Status Error"
+        "displayName": "Status Error",
+        "tonalRamp": [
+          "oklch(15.00% 0.18110 22.83)",
+          "oklch(26.43% 0.18110 22.83)",
+          "oklch(37.86% 0.18110 22.83)",
+          "oklch(49.29% 0.18110 22.83)",
+          "oklch(60.71% 0.18110 22.83)",
+          "oklch(72.14% 0.18110 22.83)",
+          "oklch(83.57% 0.18110 22.83)",
+          "oklch(95.00% 0.18110 22.83)"
+        ]
       },
       "status-warning": {
         "role": "secondary",
-        "displayName": "Status Warning"
+        "displayName": "Status Warning",
+        "tonalRamp": [
+          "oklch(15.00% 0.14138 84.42)",
+          "oklch(26.43% 0.14138 84.42)",
+          "oklch(37.86% 0.14138 84.42)",
+          "oklch(49.29% 0.14138 84.42)",
+          "oklch(60.71% 0.14138 84.42)",
+          "oklch(72.14% 0.14138 84.42)",
+          "oklch(83.57% 0.14138 84.42)",
+          "oklch(95.00% 0.14138 84.42)"
+        ]
       },
       "status-dim": {
         "role": "neutral",
-        "displayName": "Status Dim"
+        "displayName": "Status Dim",
+        "tonalRamp": [
+          "oklch(15.00% 0.01861 248.08)",
+          "oklch(26.43% 0.01861 248.08)",
+          "oklch(37.86% 0.01861 248.08)",
+          "oklch(49.29% 0.01861 248.08)",
+          "oklch(60.71% 0.01861 248.08)",
+          "oklch(72.14% 0.01861 248.08)",
+          "oklch(83.57% 0.01861 248.08)",
+          "oklch(95.00% 0.01861 248.08)"
+        ]
       },
       "render-status-error": {
         "role": "secondary",
-        "displayName": "Render Status Error"
+        "displayName": "Render Status Error",
+        "tonalRamp": [
+          "oklch(15.00% 0.17173 22.32)",
+          "oklch(26.43% 0.17173 22.32)",
+          "oklch(37.86% 0.17173 22.32)",
+          "oklch(49.29% 0.17173 22.32)",
+          "oklch(60.71% 0.17173 22.32)",
+          "oklch(72.14% 0.17173 22.32)",
+          "oklch(83.57% 0.17173 22.32)",
+          "oklch(95.00% 0.17173 22.32)"
+        ]
       },
       "render-status-dim": {
         "role": "neutral",
-        "displayName": "Render Status Dim"
+        "displayName": "Render Status Dim",
+        "tonalRamp": [
+          "oklch(15.00% 0.01588 264.47)",
+          "oklch(26.43% 0.01588 264.47)",
+          "oklch(37.86% 0.01588 264.47)",
+          "oklch(49.29% 0.01588 264.47)",
+          "oklch(60.71% 0.01588 264.47)",
+          "oklch(72.14% 0.01588 264.47)",
+          "oklch(83.57% 0.01588 264.47)",
+          "oklch(95.00% 0.01588 264.47)"
+        ]
       },
       "shortcut-hint": {
         "role": "neutral",
-        "displayName": "Shortcut Hint"
+        "displayName": "Shortcut Hint",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 0.00 / 0.352941)",
+          "oklch(26.43% 0.00000 0.00 / 0.352941)",
+          "oklch(37.86% 0.00000 0.00 / 0.352941)",
+          "oklch(49.29% 0.00000 0.00 / 0.352941)",
+          "oklch(60.71% 0.00000 0.00 / 0.352941)",
+          "oklch(72.14% 0.00000 0.00 / 0.352941)",
+          "oklch(83.57% 0.00000 0.00 / 0.352941)",
+          "oklch(95.00% 0.00000 0.00 / 0.352941)"
+        ]
       }
     },
     "typographyMeta": {
-      "display": {
-        "displayName": "Product Heading",
-        "purpose": "Existing product heading; base Regular face multiplied by 1.6 before UI scale."
-      },
-      "headline": {
-        "displayName": "Workspace Title",
-        "purpose": "workspace_header title; base Regular face multiplied by 1.2 before UI scale."
-      },
       "title": {
-        "displayName": "Dialog Heading",
-        "purpose": "Existing license/device emphasis; base Regular face multiplied by 1.15 before UI scale."
+        "displayName": "Restrained Title",
+        "purpose": "Home product name and existing dialog emphasis; the base Regular face multiplied by 1.15 before UI scale."
       },
       "body": {
         "displayName": "Native Body",
-        "purpose": "Embedded base Regular face, merged with the regional CJK chain; use native ImGui text metrics."
+        "purpose": "Embedded base Regular face with the regional CJK chain; workspace titles use this normal size too. Measure with native ImGui metrics."
       },
       "label": {
         "displayName": "Control Label",
-        "purpose": "Same face and size as body; measure labels in the active language."
+        "purpose": "Same face and size as body; measure each label in the current language."
       }
     },
     "shadows": [],
@@ -345,7 +1117,7 @@
       {
         "name": "native-workspace-split",
         "value": "960px",
-        "purpose": "Unscaled available content width in draw_workspace_panels. Multiply by ui_scale(); below it use full-width pages. This is not a CSS media query."
+        "purpose": "Unscaled available content width in draw_workspace_panels. Multiply by ui_scale(); below it use full-width tabs, otherwise scene left and properties right. This is not a CSS media query."
       }
     ]
   },
@@ -354,88 +1126,96 @@
       "name": "Ordinary Button",
       "kind": "button",
       "refersTo": "button-neutral",
-      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Native interaction remains authoritative.",
+      "description": "Explanatory scale-1 equivalent of the native control. Browser fonts, layout, and focus drawing may differ; the C++ implementation remains authoritative.",
       "html": "<button class=\"ds-button-neutral\">Open</button>",
-      "css": ".ds-button-neutral{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#293745;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-neutral:hover:not(:disabled){background:#304253;}.ds-button-neutral:active:not(:disabled){background:#34485B;}.ds-button-neutral:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-neutral:disabled{opacity:.6;cursor:default;}"
+      "css": ".ds-button-neutral{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#545454;color:#E6E6E6;padding:3px 6px;border:0;border-radius:3px;cursor:pointer;}.ds-button-neutral:hover:not(:disabled){background:#606060;}.ds-button-neutral:active:not(:disabled){background:#3D639C;}.ds-button-neutral:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-button-neutral:disabled{opacity:.6;cursor:default;}"
     },
     {
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Native interaction remains authoritative.",
+      "description": "Explanatory scale-1 equivalent of the native control. Browser fonts, layout, and focus drawing may differ; the C++ implementation remains authoritative.",
       "html": "<button class=\"ds-button-primary\">Start Training</button>",
-      "css": ".ds-button-primary{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#225B86;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-primary:hover:not(:disabled){background:#2B6A99;}.ds-button-primary:active:not(:disabled){background:#225075;}.ds-button-primary:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-primary:disabled{opacity:.6;cursor:default;}"
+      "css": ".ds-button-primary{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#4772B3;color:#FFFFFF;padding:3px 6px;border:0;border-radius:3px;cursor:pointer;}.ds-button-primary:hover:not(:disabled){background:#4067A0;}.ds-button-primary:active:not(:disabled){background:#345581;}.ds-button-primary:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-button-primary:disabled{opacity:.6;cursor:default;}"
     },
     {
       "name": "Selected Filter Button",
-      "kind": "chip",
+      "kind": "button",
       "refersTo": "button-selected",
-      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Selected remains a native button, with no pill shape.",
+      "description": "Explanatory scale-1 equivalent of the native control. Browser fonts, layout, and focus drawing may differ; the C++ implementation remains authoritative. Selected remains a native button; there is no pill component.",
       "html": "<button class=\"ds-button-selected\" aria-pressed=\"true\">All</button>",
-      "css": ".ds-button-selected{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#263F55;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-selected:hover:not(:disabled){background:#304E67;}.ds-button-selected:active:not(:disabled){background:#29445A;}.ds-button-selected:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-selected:disabled{opacity:.6;cursor:default;}"
+      "css": ".ds-button-selected{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#3D639C;color:#FFFFFF;padding:3px 6px;border:0;border-radius:3px;cursor:pointer;}.ds-button-selected:hover:not(:disabled){background:#4772B3;}.ds-button-selected:active:not(:disabled){background:#345581;}.ds-button-selected:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-button-selected:disabled{opacity:.6;cursor:default;}"
     },
     {
       "name": "Danger Button",
       "kind": "button",
       "refersTo": "button-danger",
-      "description": "Explanatory scale-1 native role swatch; browser font availability and drawing may differ. Native interaction remains authoritative.",
+      "description": "Explanatory scale-1 equivalent of the native control. Browser fonts, layout, and focus drawing may differ; the C++ implementation remains authoritative.",
       "html": "<button class=\"ds-button-danger\">Cancel</button>",
-      "css": ".ds-button-danger{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#773F47;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px;cursor:pointer;}.ds-button-danger:hover:not(:disabled){background:#8D4C54;}.ds-button-danger:active:not(:disabled){background:#65363E;}.ds-button-danger:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-button-danger:disabled{opacity:.6;cursor:default;}"
+      "css": ".ds-button-danger{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#8B444A;color:#FFFFFF;padding:3px 6px;border:0;border-radius:3px;cursor:pointer;}.ds-button-danger:hover:not(:disabled){background:#9B4C52;}.ds-button-danger:active:not(:disabled){background:#71363B;}.ds-button-danger:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-button-danger:disabled{opacity:.6;cursor:default;}"
     },
     {
       "name": "Text Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "Explanatory text-field palette, padding, and radius; native InputText retains the frame fill during hover and editing. Browser editing does not reproduce native interaction.",
+      "description": "Explanatory native text-field palette, padding, and radius. InputText retains its field fill during hover and editing; browser editing does not reproduce native interaction.",
       "html": "<input class=\"ds-input\" aria-label=\"Output path\" value=\"output/model.ply\">",
-      "css": ".ds-input{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#25313D;color:#E8EDF2;border:0;border-radius:4px;padding:5px 8px;caret-color:#CDE2F5;}.ds-input:hover,.ds-input:active{cursor:text;}.ds-input:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-input::selection{background:rgba(53,109,158,.65);}.ds-input:disabled{opacity:.6;}"
+      "css": ".ds-input{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#1D1D1D;color:#E6E6E6;border:0;border-radius:3px;padding:3px 6px;caret-color:#71A8FF;}.ds-input:hover,.ds-input:active{cursor:text;}.ds-input:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-input::selection{background:#3D639C;}.ds-input:disabled{opacity:.6;}"
     },
     {
       "name": "Workspace Tabs",
       "kind": "nav",
       "refersTo": "tab",
-      "description": "Explanatory native tab states. This static swatch does not implement tab selection or native keyboard handling.",
+      "description": "Explanatory native tab states, with a gray selected surface continuous with its editor. The static swatch does not implement tab switching or native keyboard handling; the optional overline is not shown.",
       "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Workspace\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Preview</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Settings</button></div>",
-      "css": ".ds-tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid #263F55;}.ds-tab{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#1B242D;color:#E8EDF2;padding:5px 8px;border:0;border-radius:4px 4px 0 0;cursor:pointer;}.ds-tab[aria-selected=\"true\"]{background:#263F55;}.ds-tab:hover,.ds-tab:active{background:#2A3D50;}.ds-tab:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}"
+      "css": ".ds-tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid #303030;}.ds-tab{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#1D1D1D;color:#E6E6E6;padding:3px 6px;border:0;border-radius:3px 3px 0 0;cursor:pointer;}.ds-tab[aria-selected=\"true\"]{background:#303030;}.ds-tab:hover,.ds-tab:active{background:#3D3D3D;}.ds-tab:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}"
     },
     {
       "name": "Workspace Action Band",
       "kind": "card",
       "refersTo": "workspace-actions",
-      "description": "Explanatory bordered native child. The actual child measures its height and remains outside scrolling pages.",
+      "description": "Explanatory bordered native child with persistent run controls. The real child measures its height and remains outside scrolling pages; this is not a runtime web card.",
       "html": "<section class=\"ds-actions\" aria-label=\"Run controls\"><button class=\"ds-actions-start\">Start Training</button><span class=\"ds-actions-status\">Ready</span></section>",
-      "css": ".ds-actions{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:#171E26;color:#E8EDF2;border:1px solid #334352;border-radius:4px;padding:10px 12px;}.ds-actions-start{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#225B86;color:#E8EDF2;border:0;border-radius:4px;padding:5px 8px;cursor:pointer;}.ds-actions-start:hover{background:#2B6A99;}.ds-actions-start:active{background:#225075;}.ds-actions-start:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}.ds-actions-status{color:#B0BFCC;}"
+      "css": ".ds-actions{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;background:#303030;color:#E6E6E6;border:1px solid #161616;border-radius:2px;padding:6px 8px;}.ds-actions-start{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#4772B3;color:#FFFFFF;border:0;border-radius:3px;padding:3px 6px;cursor:pointer;}.ds-actions-start:hover{background:#4067A0;}.ds-actions-start:active{background:#345581;}.ds-actions-start:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-actions-status{color:#B0B0B0;}"
     },
     {
       "name": "Command Row",
       "kind": "custom",
       "refersTo": "command-row-primary",
-      "description": "Explanatory title-and-description button. Native command_row measures wrapped text and retains a translated button ID.",
-      "html": "<button class=\"ds-command\"><span class=\"ds-command-title\">Open a Dataset...</span><span class=\"ds-command-detail\">A folder containing an already-processed dataset: COLMAP (sparse/0), Nerfstudio (transforms.json), or Metashape exports. The format is detected automatically.</span></button>",
-      "css": ".ds-command{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;white-space:normal;background:#225B86;color:#E8EDF2;border:0;border-radius:4px;padding:10px 12px;cursor:pointer;}.ds-command-detail{color:#D7E8F7;}.ds-command:hover{background:#2B6A99;}.ds-command:active{background:#225075;}.ds-command:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}"
+      "description": "Explanatory compact title button. Native command_row measures a wrapped title, retains the translated ID, and exposes the description on hover even when disabled. The browser title is only a tooltip equivalent.",
+      "html": "<button class=\"ds-command\" title=\"Open an already-processed dataset folder.\">Open a Dataset...</button>",
+      "css": ".ds-command{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;width:100%;text-align:left;white-space:normal;background:#4772B3;color:#FFFFFF;border:0;border-radius:3px;padding:4px 8px;cursor:pointer;}.ds-command:hover:not(:disabled){background:#4067A0;}.ds-command:active:not(:disabled){background:#345581;}.ds-command:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-command:disabled{opacity:.6;cursor:default;}"
     },
     {
       "name": "Shortcut Button",
       "kind": "custom",
       "refersTo": "button-key",
-      "description": "Explanatory inline-hint case with enough room. Native KeyButton measures fit and otherwise centers the label and exposes the key in hover help; this swatch does not implement that measurement.",
+      "description": "Explanatory inline-hint case with enough room. Native KeyButton measures fit, otherwise centers the label and exposes the key in hover help; this swatch does not implement the measurement.",
       "html": "<button class=\"ds-key\" title=\"Save (Ctrl+S)\"><span class=\"ds-key-label\">Save</span><span class=\"ds-key-hint\">Ctrl+S</span></button>",
-      "css": ".ds-key{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:inline-flex;align-items:center;justify-content:space-between;gap:6px;background:#293745;color:#E8EDF2;border:0;border-radius:4px;padding:5px 8px;cursor:pointer;}.ds-key-hint{color:rgba(255,255,255,.35294117647058826);}.ds-key:hover{background:#304253;}.ds-key:active{background:#34485B;}.ds-key:focus-visible{outline:2px solid #8CC4F3;outline-offset:3px;}"
+      "css": ".ds-key{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:inline-flex;align-items:center;justify-content:space-between;gap:4px;background:#545454;color:#E6E6E6;border:0;border-radius:3px;padding:3px 6px;cursor:pointer;}.ds-key-hint{color:rgba(255,255,255,.35294117647058826);}.ds-key:hover{background:#606060;}.ds-key:active{background:#3D639C;}.ds-key:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}"
+    },
+    {
+      "name": "Workspace Header",
+      "kind": "nav",
+      "refersTo": "workspace-header",
+      "description": "Explanatory compact native context strip at normal UI size. Native code measures Home, title, and context, wraps as needed, middle-elides long paths, and leaves navigation guards to callers; this short example does not reproduce that algorithm.",
+      "html": "<div class=\"ds-workspace-header\"><button class=\"ds-workspace-home\">&lt; Home</button><span class=\"ds-workspace-title\">Training</span><span class=\"ds-workspace-context\" title=\"demo/training-capture\">demo/training-capture</span></div>",
+      "css": ".ds-workspace-header{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:4px 6px;background:#242424;color:#E6E6E6;border:0;border-radius:0;}.ds-workspace-home{font:16px \"Spirula UI\",\"Source Sans 3\",sans-serif;background:#545454;color:#E6E6E6;padding:3px 6px;border:0;border-radius:3px;cursor:pointer;}.ds-workspace-home:hover{background:#606060;}.ds-workspace-home:active{background:#3D639C;}.ds-workspace-home:focus-visible{outline:2px solid #FFA028;outline-offset:3px;}.ds-workspace-context{color:#B0B0B0;}"
     }
   ],
   "narrative": {
-    "northStar": "Reconstruction laboratory workbench",
-    "overview": "Spirula Studio is a native Dear ImGui/GLFW workspace. Graphite surfaces, neutral controls, restrained blue state cues, and fine boundaries support dense reconstruction work. The embedded Source Sans-derived face and regional CJK chain provide one continuous typographic voice across the thirteen interface languages.\n\nContext, execution, content, and diagnostics have distinct places. Reusable controls measure translated text and adapt to the available pane; persistent actions stay reachable beside independently scrolling content. Input feedback is immediate, without decorative entrance animation. This contract records the implementation; Home and Render composition remain in the surface brief.",
+    "northStar": "Blender-referenced reconstruction editor",
+    "overview": "Spirula Studio uses Blender's neutral dark editor grammar within its native\nDear ImGui/GLFW application. Compact controls, narrow context headers, fine\nboundaries, and a large scene area support repeated reconstruction work.\nBlue identifies action and editable-value states; orange identifies focus\nand manipulation feedback. The product retains its own task names, workflows,\nand embedded Source Sans-derived face with regional CJK glyphs.\n\nContext, execution, content, and diagnostics have distinct places. Shared\ncontrols measure translated text; properties and previews own their scrolling\nareas, while execution controls remain reachable. Wide scene workspaces put\nproperties on the right and apply their changes to the scene in the same\nframe. Feedback is immediate native input feedback. This document records the\nbuilt system; task composition stays in the surface brief.",
     "keyCharacteristics": [
-      "Tonal surface layers and fine boundaries.",
-      "Neutral ordinary controls; explicit primary, selected, and danger roles.",
-      "One embedded Regular font chain with a small size hierarchy.",
+      "Achromatic editor surfaces, dark fields, and fine tonal boundaries.",
+      "Neutral ordinary controls, blue action/value states, and orange focus cues.",
+      "One embedded Regular font chain with restrained size emphasis.",
       "Measured wrapping, scaled geometry, and independently scrolling work areas."
     ],
     "rules": [
       {
         "name": "Meaning Before Accent",
-        "body": "Use the existing action, selection, focus, and status roles; a blue fill does not make every ordinary command primary.",
+        "body": "Use action blue for action and value states, orange for the existing focus and manipulation roles, and neutral fills for ordinary controls.",
         "section": "colors"
       },
       {
@@ -450,17 +1230,19 @@
       }
     ],
     "dos": [
-      "Do use ButtonStyle for Primary, Selected, and Danger roles and preserve the existing native button behavior.",
+      "Do use ButtonStyle for Primary, Selected, and Danger roles with its scoped white foreground and native behavior.",
       "Do scale handwritten geometry with px(), keep saved panel sizes unscaled, and rebuild style from its base before scaling.",
       "Do measure localized labels, wrap complete controls with FlowRow, and retain full context in hover help when paths are elided.",
       "Do keep execution controls outside scrolling pages and keep job polling and dialogs outside visibility-dependent callbacks.",
+      "Do evaluate properties before their scene preview even when the properties are placed on the right.",
       "Do use the embedded regional font chain and preserve translated message IDs when customizing a control."
     ],
     "donts": [
       "Don't introduce an unimplemented display face, weight hierarchy, letter spacing, shadow, or decorative animation as a system rule.",
+      "Don't substitute the bright primary fill behind ordinary-text selected controls; preserve their darker native selection role.",
       "Don't reserve shortcut space by guesswork or draw a hint over its label; use KeyButton's measured fit and tooltip fallback.",
       "Don't treat saved panel width as rendered pixels or overwrite the preference merely because a smaller window clamps it.",
-      "Don't promote a Home, Render, timeline, or gizmo-specific composition or color into a universal rule."
+      "Don't promote Home, Render, timeline, recent-category, or gizmo-specific composition and color into universal rules."
     ]
   }
 }

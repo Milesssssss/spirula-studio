@@ -37,8 +37,10 @@ or project-storage model.
 
 Keep the Spirula Studio name and factual product copy. The user authorized an
 overall UI redesign after the training-layout PR; the earlier layout fixes are
-part of that redesign. A restrained dark desktop workspace is the working
-direction, with a single clear primary action and the scene as the focal area.
+part of that redesign. The user subsequently pinned Blender as the reference
+for the whole interface: neutral dark editor surfaces, compact controls,
+right-hand properties, and a dominant scene area. Preserve Spirula's product
+identity, task names, native workflows, and embedded font coverage.
 
 ## Evidence on Hand
 

@@ -1,5 +1,10 @@
 # Studio workspace redesign
 
+This note records the overall workspace iteration published in `620b24e`.
+Its screenshots, tokens, and validation are historical. The subsequent
+user-directed visual system and current captures are documented in
+[Blender-referenced Studio interface](blender-ui-style.md).
+
 This iteration extends the training workspace introduced in `0dbec1c` across
 the native Dear ImGui application. Home becomes a useful record of recent work;
 each workspace makes its context, actions, content, and diagnostics legible.

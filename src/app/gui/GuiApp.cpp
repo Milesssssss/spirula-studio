@@ -3995,14 +3995,16 @@ void GuiApp::draw_language_menu() {
 // ===========================================================================
 
 void GuiApp::draw_home() {
-    ImGui::Dummy(ImVec2(0, px(8.0f)));
-    ImGui::SetWindowFontScale(1.6f);
+    const float available = ImGui::GetContentRegionAvail().x;
+    ImGui::PushFont(nullptr, ImGui::GetStyle().FontSizeBase * 1.15f);
     ui::Text(spirula::i18n::msg::brand::product);
-    ImGui::SetWindowFontScale(1.0f);
+    const float brand_width = ImGui::GetItemRectSize().x;
+    ImGui::PopFont();
+    const float tagline_width = ImGui::CalcTextSize(spirula::i18n::msg::brand::tagline.get()).x;
+    if (brand_width + px(16.0f) + tagline_width <= available)
+        ImGui::SameLine(0.0f, px(16.0f));
     ui::TextDisabledWrapped(spirula::i18n::msg::brand::tagline);
-    ImGui::Dummy(ImVec2(0, px(10.0f)));
     ImGui::Separator();
-    ImGui::Dummy(ImVec2(0, px(8.0f)));
 
     if (_runner.phase() != TrainRunner::Phase::Idle) {
         {
@@ -4017,7 +4019,7 @@ void GuiApp::draw_home() {
         ui::TextDisabledRaw(elide_middle(_cfg.data,
             std::max(1.0f, ImGui::GetContentRegionAvail().x)));
         ui::help_on_hover_raw(_cfg.data.c_str());
-        ImGui::Dummy(ImVec2(0, px(8.0f)));
+        ImGui::Spacing();
     }
 
     const bool wide = ImGui::GetContentRegionAvail().x >= px(1040.0f);
@@ -4079,14 +4081,14 @@ void GuiApp::draw_home() {
     };
 
     if (wide) {
-        const float gap = px(20.0f);
-        const float command_width = px(340.0f);
+        const float gap = px(6.0f);
+        const float command_width = px(300.0f);
         const float recent_width = ImGui::GetContentRegionAvail().x - command_width - gap;
         ImGui::BeginChild("##homerecent", ImVec2(recent_width, 0), ImGuiChildFlags_Borders);
         draw_home_recent(true);
         ImGui::EndChild();
         ImGui::SameLine(0.0f, gap);
-        ImGui::BeginChild("##home", ImVec2(0, 0));
+        ImGui::BeginChild("##home", ImVec2(0, 0), ImGuiChildFlags_Borders);
         ui::SeparatorText(msg::home_actions);
         commands(false);
         ImGui::EndChild();
@@ -4166,7 +4168,7 @@ void GuiApp::draw_home_recent(bool scroll) {
 
 bool GuiApp::draw_recent_row(const RecentItem& it, bool badge) {
     const float line = ImGui::GetTextLineHeight();
-    const float lead = px(4.0f), inset = px(10.0f);
+    const float lead = px(2.0f), inset = px(6.0f);
     const float height = 2.0f * line + lead + 2.0f * inset;
     const float w = ImGui::GetContentRegionAvail().x;
     const ImVec2 p = ImGui::GetCursorScreenPos();
@@ -9536,18 +9538,18 @@ void GuiApp::draw_compare_panes() {
     if (side != CompareView::Sidebar::None) {
         const float avail = ImGui::GetContentRegionAvail().x;
         const float h = ImGui::GetContentRegionAvail().y;
+        const ImVec2 origin = ImGui::GetCursorPos();
         const SidebarWidthLimits limits = viewer_sidebar_limits(avail);
         const float w = std::clamp(_edit_panel_w * ui_scale(), limits.minimum, limits.maximum);
+        const float pane_width = std::max(1.0f, avail - w - splitter_width());
+        // Draw properties first so their edits reach the scene in this frame.
+        ImGui::SetCursorPos(ImVec2(origin.x + pane_width + splitter_width(), origin.y));
         ImGui::BeginChild("##editpanel", ImVec2(w, 0), ImGuiChildFlags_Borders);
         if (side == CompareView::Sidebar::Render) _compare.render().draw_panel();
         else _compare.edit().draw_panel();
         ImGui::EndChild();
-        float dragged = w;
-        if (splitter_v("##editpanelsplit", &dragged, limits.minimum, limits.maximum, h)) {
-            _edit_panel_w = dragged / ui_scale();
-            _layout_dirty = true;
-        }
-        ImGui::BeginChild("##editpanes", ImVec2(0, 0));
+        ImGui::SetCursorPos(origin);
+        ImGui::BeginChild("##editpanes", ImVec2(pane_width, 0));
         if (side == CompareView::Sidebar::Render) {
             // The timeline runs under the panes, the width of all of them.
             const float tl = _compare.render().timeline_height();
@@ -9557,6 +9559,13 @@ void GuiApp::draw_compare_panes() {
             _compare.draw(0.0f);
         }
         ImGui::EndChild();
+        float dragged = pane_width;
+        if (splitter_v("##editpanelsplit", &dragged,
+                       avail - splitter_width() - limits.maximum,
+                       avail - splitter_width() - limits.minimum, h)) {
+            _edit_panel_w = (avail - splitter_width() - dragged) / ui_scale();
+            _layout_dirty = true;
+        }
         return;
     }
     _compare.draw(0.0f);

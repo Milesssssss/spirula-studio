@@ -18,27 +18,41 @@ ImVec4 color(unsigned rgb) {
 }  // namespace
 
 ButtonStyle::ButtonStyle(ButtonRole role) {
-    unsigned normal = 0x225B86, hovered = 0x2B6A99, active = 0x225075;
+    unsigned normal = 0x4772B3, hovered = 0x4067A0, active = 0x345581;
     if (role == ButtonRole::Selected) {
-        normal = 0x263F55;
-        hovered = 0x304E67;
-        active = 0x29445A;
+        normal = 0x3D639C;
+        hovered = 0x4772B3;
+        active = 0x345581;
     } else if (role == ButtonRole::Danger) {
-        normal = 0x773F47;
-        hovered = 0x8D4C54;
-        active = 0x65363E;
+        normal = 0x8B444A;
+        hovered = 0x9B4C52;
+        active = 0x71363B;
     }
     ImGui::PushStyleColor(ImGuiCol_Button, color(normal));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color(hovered));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, color(active));
+    ImGui::PushStyleColor(ImGuiCol_Text, color(0xFFFFFF));
 }
 
-ButtonStyle::~ButtonStyle() { ImGui::PopStyleColor(3); }
+ButtonStyle::~ButtonStyle() { ImGui::PopStyleColor(4); }
 
 bool workspace_header(const spirula::i18n::Msg& title,
                       const std::string& context, bool home_enabled,
                       const spirula::i18n::Msg* home_help) {
     namespace msg = spirula::i18n::msg::gui;
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBg));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(px(6.0f), px(4.0f)));
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 0.0f);
+    const bool visible = ImGui::BeginChild("##workspace_header", ImVec2(0, 0),
+        ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AlwaysAutoResize |
+            ImGuiChildFlags_AlwaysUseWindowPadding,
+        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    if (!visible) {
+        ImGui::EndChild();
+        ImGui::PopStyleVar(2);
+        ImGui::PopStyleColor();
+        return false;
+    }
     const ImGuiStyle& style = ImGui::GetStyle();
     const float left = ImGui::GetCursorPosX();
     const float width = std::max(1.0f, ImGui::GetContentRegionAvail().x);
@@ -53,7 +67,6 @@ bool workspace_header(const spirula::i18n::Msg& title,
     if (home_help) ui::help_on_hover_disabled(*home_help);
     ImGui::EndDisabled();
 
-    ImGui::PushFont(nullptr, style.FontSizeBase * 1.2f);
     const float title_width = ImGui::CalcTextSize(title.get()).x;
     const bool same_line = home_width + gap + title_width <= width;
     const float title_left = same_line ? left + home_width + gap : left;
@@ -65,7 +78,6 @@ bool workspace_header(const spirula::i18n::Msg& title,
     ImGui::PushTextWrapPos(right);
     ui::Text(title);
     ImGui::PopTextWrapPos();
-    ImGui::PopFont();
 
     if (!context.empty()) {
         const float next = title_left + title_width + gap;
@@ -81,22 +93,21 @@ bool workspace_header(const spirula::i18n::Msg& title,
         ui::help_on_hover_raw(context.c_str());
     }
     ImGui::EndGroup();
+    ImGui::EndChild();
+    ImGui::PopStyleVar(2);
+    ImGui::PopStyleColor();
     return home;
 }
 
 bool command_row(const spirula::i18n::Msg& title,
                  const spirula::i18n::Msg& description, bool primary) {
     const float width = std::max(1.0f, ImGui::GetContentRegionAvail().x);
-    const ImVec2 pad(px(12.0f), px(10.0f));
+    const ImVec2 pad(px(8.0f), px(4.0f));
     const float text_width = std::max(1.0f, width - 2.0f * pad.x);
     const char* name = title.get();
-    const char* detail = description.get();
     const ImVec2 title_size = ImGui::CalcTextSize(name, nullptr, false, text_width);
-    const float detail_height = *detail
-        ? ImGui::CalcTextSize(detail, nullptr, false, text_width).y : 0.0f;
-    const float gap = detail_height > 0.0f ? px(4.0f) : 0.0f;
     const float height = std::max(ImGui::GetFrameHeight(),
-        2.0f * pad.y + title_size.y + gap + detail_height);
+        2.0f * pad.y + title_size.y);
     const auto draw = [&] {
         return ui::ButtonRaw(ui::detail::label("", title.id), ImVec2(width, height));
     };
@@ -107,6 +118,7 @@ bool command_row(const spirula::i18n::Msg& title,
     } else {
         clicked = draw();
     }
+    ui::help_on_hover_disabled(description);
     if (!ImGui::IsItemVisible()) return clicked;
 
     const ImVec2 lo = ImGui::GetItemRectMin(), hi = ImGui::GetItemRectMax();
@@ -114,14 +126,9 @@ bool command_row(const spirula::i18n::Msg& title,
     ImDrawList* dl = ImGui::GetWindowDrawList();
     dl->PushClipRect(text_at, ImVec2(hi.x - pad.x, hi.y - pad.y), true);
     dl->AddText(ImGui::GetFont(), ImGui::GetFontSize(), text_at,
-                ImGui::GetColorU32(ImGuiCol_Text), name, nullptr, text_width);
-    if (detail_height > 0.0f) {
-        const ImU32 muted = primary ? ImGui::GetColorU32(color(0xD7E8F7))
-                                   : ImGui::GetColorU32(ImGuiCol_TextDisabled);
-        dl->AddText(ImGui::GetFont(), ImGui::GetFontSize(),
-                    ImVec2(text_at.x, text_at.y + title_size.y + gap), muted,
-                    detail, nullptr, text_width);
-    }
+                ImGui::GetColorU32(primary ? color(0xFFFFFF)
+                                          : ImGui::GetStyleColorVec4(ImGuiCol_Text)),
+                name, nullptr, text_width);
     dl->PopClipRect();
     return clicked;
 }
